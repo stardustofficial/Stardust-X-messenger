@@ -25,7 +25,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // ImgBB API Key
         const IMGBB_API_KEY = "550a3bcd47c1b0a86a9f2ba7a41770b6";
 
         window.db = db;
@@ -51,8 +50,6 @@
         window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
         window.signOut = signOut;
         window.onAuthStateChanged = onAuthStateChanged;
-
-        console.log('🚀 Stardust X Messenger initialized');
     </script>
 
     <style>
@@ -65,8 +62,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0f;
-            color: #e0e0e0;
+            background: #f5f7fa;
+            color: #1a1a2e;
             height: 100vh;
             overflow: hidden;
             user-select: none;
@@ -79,7 +76,7 @@
             background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-            background: #2a2a3a;
+            background: #c8d6e5;
             border-radius: 10px;
         }
 
@@ -90,7 +87,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #0a0a0f;
+            background: #f5f7fa;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -105,8 +102,8 @@
         .loader-spinner {
             width: 60px;
             height: 60px;
-            border: 3px solid #1a1a2e;
-            border-top: 3px solid #6c5ce7;
+            border: 3px solid #e8f0fe;
+            border-top: 3px solid #00b894;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -115,12 +112,12 @@
             font-size: 18px;
             font-weight: 300;
             letter-spacing: 4px;
-            color: #6c5ce7;
+            color: #00b894;
         }
         .loader-sub {
             margin-top: 8px;
             font-size: 12px;
-            color: #4a4a5a;
+            color: #8395a7;
             letter-spacing: 2px;
         }
         @keyframes spin {
@@ -134,7 +131,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #0a0a0f;
+            background: #f5f7fa;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -147,6 +144,9 @@
             width: 100%;
             max-width: 380px;
             padding: 40px 24px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
         }
         .login-logo {
             text-align: center;
@@ -159,15 +159,15 @@
         .login-logo h1 {
             font-size: 28px;
             font-weight: 700;
-            color: #fff;
+            color: #1a1a2e;
             margin-top: 12px;
             letter-spacing: 2px;
         }
         .login-logo span {
-            color: #6c5ce7;
+            color: #00b894;
         }
         .login-logo p {
-            color: #6a6a7a;
+            color: #8395a7;
             font-size: 13px;
             margin-top: 4px;
             letter-spacing: 1px;
@@ -175,25 +175,25 @@
         .login-input {
             width: 100%;
             padding: 14px 18px;
-            background: #14141e;
-            border: 1px solid #2a2a3e;
+            background: #f8f9fa;
+            border: 2px solid #e8f0fe;
             border-radius: 12px;
-            color: #e0e0e0;
+            color: #1a1a2e;
             font-size: 15px;
             margin-bottom: 14px;
             outline: none;
             transition: border 0.3s;
         }
         .login-input:focus {
-            border-color: #6c5ce7;
+            border-color: #00b894;
         }
         .login-input::placeholder {
-            color: #4a4a5a;
+            color: #a0aec0;
         }
         .login-btn {
             width: 100%;
             padding: 14px;
-            background: #6c5ce7;
+            background: #00b894;
             border: none;
             border-radius: 12px;
             color: #fff;
@@ -204,7 +204,7 @@
             margin-top: 8px;
         }
         .login-btn:hover {
-            background: #5a4bd1;
+            background: #00a381;
             transform: translateY(-2px);
         }
         .login-btn:active {
@@ -213,11 +213,11 @@
         .login-toggle {
             text-align: center;
             margin-top: 16px;
-            color: #6a6a7a;
+            color: #8395a7;
             font-size: 14px;
         }
         .login-toggle a {
-            color: #6c5ce7;
+            color: #00b894;
             cursor: pointer;
             text-decoration: none;
             font-weight: 500;
@@ -238,7 +238,7 @@
             display: none;
             height: 100vh;
             flex-direction: column;
-            background: #0a0a0f;
+            background: #f5f7fa;
         }
         #app.active {
             display: flex;
@@ -247,8 +247,8 @@
         /* Header */
         .app-header {
             padding: 16px 20px;
-            background: #0f0f18;
-            border-bottom: 1px solid #1a1a2e;
+            background: white;
+            border-bottom: 1px solid #e8f0fe;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -258,11 +258,11 @@
         .app-header .title {
             font-size: 18px;
             font-weight: 600;
-            color: #fff;
+            color: #1a1a2e;
             letter-spacing: 0.5px;
         }
         .app-header .title span {
-            color: #6c5ce7;
+            color: #00b894;
         }
         .app-header .header-actions {
             display: flex;
@@ -273,7 +273,7 @@
             width: 24px;
             height: 24px;
             fill: none;
-            stroke: #a0a0b0;
+            stroke: #4a4a5a;
             stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
@@ -281,7 +281,7 @@
             transition: stroke 0.3s;
         }
         .app-header .header-actions svg:hover {
-            stroke: #6c5ce7;
+            stroke: #00b894;
         }
         .header-badge {
             position: relative;
@@ -312,8 +312,8 @@
         /* Bottom Navigation */
         .bottom-nav {
             display: flex;
-            background: #0f0f18;
-            border-top: 1px solid #1a1a2e;
+            background: white;
+            border-top: 1px solid #e8f0fe;
             flex-shrink: 0;
             padding: 8px 0 env(safe-area-inset-bottom, 8px) 0;
         }
@@ -333,22 +333,22 @@
             width: 26px;
             height: 26px;
             fill: none;
-            stroke: #5a5a6a;
+            stroke: #a0aec0;
             stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
             transition: stroke 0.3s;
         }
         .bottom-nav .nav-item.active svg {
-            stroke: #6c5ce7;
+            stroke: #00b894;
         }
         .bottom-nav .nav-item .nav-label {
             font-size: 10px;
-            color: #5a5a6a;
+            color: #a0aec0;
             transition: color 0.3s;
         }
         .bottom-nav .nav-item.active .nav-label {
-            color: #6c5ce7;
+            color: #00b894;
         }
         .bottom-nav .nav-item .nav-badge {
             position: absolute;
@@ -381,17 +381,18 @@
             padding: 12px 20px;
             cursor: pointer;
             transition: background 0.2s;
-            border-bottom: 1px solid #12121e;
+            border-bottom: 1px solid #e8f0fe;
+            background: white;
             position: relative;
         }
         .chat-item:hover {
-            background: #14141e;
+            background: #f8f9fa;
         }
         .chat-item .avatar {
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            background: #1a1a2e;
+            background: #e8f0fe;
             flex-shrink: 0;
             overflow: hidden;
             margin-right: 14px;
@@ -400,7 +401,7 @@
             align-items: center;
             font-size: 18px;
             font-weight: 600;
-            color: #6c5ce7;
+            color: #00b894;
         }
         .chat-item .avatar img {
             width: 100%;
@@ -414,11 +415,11 @@
         .chat-item .chat-info .name {
             font-size: 15px;
             font-weight: 500;
-            color: #e0e0e0;
+            color: #1a1a2e;
         }
         .chat-item .chat-info .last-msg {
             font-size: 13px;
-            color: #6a6a7a;
+            color: #8395a7;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -431,10 +432,10 @@
         }
         .chat-item .chat-meta .time {
             font-size: 11px;
-            color: #4a4a5a;
+            color: #a0aec0;
         }
         .chat-item .chat-meta .unread {
-            background: #6c5ce7;
+            background: #00b894;
             color: #fff;
             font-size: 11px;
             font-weight: 700;
@@ -448,12 +449,12 @@
             margin-top: 4px;
         }
         .chat-item.highlight {
-            background: #1a1a2e;
+            background: #f0fdfa;
         }
         .empty-state {
             padding: 60px 20px;
             text-align: center;
-            color: #4a4a5a;
+            color: #8395a7;
         }
         .empty-state .icon {
             font-size: 48px;
@@ -461,7 +462,7 @@
         }
         .empty-state .title {
             font-size: 18px;
-            color: #e0e0e0;
+            color: #1a1a2e;
             margin-bottom: 6px;
         }
         .empty-state .sub {
@@ -476,34 +477,47 @@
             padding: 12px 20px;
             position: sticky;
             top: 0;
-            background: #0a0a0f;
+            background: #f5f7fa;
             z-index: 10;
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
         .contacts-search input {
-            width: 100%;
+            flex: 1;
             padding: 10px 16px;
-            background: #14141e;
-            border: 1px solid #2a2a3e;
+            background: white;
+            border: 2px solid #e8f0fe;
             border-radius: 10px;
-            color: #e0e0e0;
+            color: #1a1a2e;
             font-size: 14px;
             outline: none;
         }
         .contacts-search input:focus {
-            border-color: #6c5ce7;
+            border-color: #00b894;
         }
         .contacts-search input::placeholder {
-            color: #4a4a5a;
+            color: #a0aec0;
+        }
+        .contacts-search .search-icon {
+            width: 20px;
+            height: 20px;
+            stroke: #a0aec0;
+            stroke-width: 2;
+            fill: none;
         }
         .contact-section {
             padding: 0 20px;
+            background: white;
+            margin: 4px 0;
+            border-radius: 12px;
         }
         .contact-section .section-letter {
             font-size: 14px;
             font-weight: 700;
-            color: #6c5ce7;
+            color: #00b894;
             padding: 12px 0 6px 0;
-            border-bottom: 1px solid #1a1a2e;
+            border-bottom: 1px solid #e8f0fe;
         }
         .contact-item {
             display: flex;
@@ -511,16 +525,19 @@
             padding: 10px 0;
             cursor: pointer;
             transition: background 0.2s;
-            border-bottom: 1px solid #12121e;
+            border-bottom: 1px solid #e8f0fe;
+        }
+        .contact-item:last-child {
+            border-bottom: none;
         }
         .contact-item:hover {
-            background: #14141e;
+            background: #f8f9fa;
         }
         .contact-item .avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: #1a1a2e;
+            background: #e8f0fe;
             flex-shrink: 0;
             overflow: hidden;
             margin-right: 12px;
@@ -529,7 +546,7 @@
             align-items: center;
             font-size: 15px;
             font-weight: 600;
-            color: #6c5ce7;
+            color: #00b894;
         }
         .contact-item .avatar img {
             width: 100%;
@@ -538,11 +555,11 @@
         }
         .contact-item .contact-name {
             font-size: 14px;
-            color: #e0e0e0;
+            color: #1a1a2e;
         }
         .contact-item .contact-uid {
             font-size: 11px;
-            color: #4a4a5a;
+            color: #8395a7;
             margin-top: 1px;
         }
         .request-dot {
@@ -563,23 +580,35 @@
         .profile-container {
             padding: 20px;
             text-align: center;
+            background: white;
+            margin: 8px 16px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            position: relative;
         }
         .profile-avatar {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            background: #1a1a2e;
-            margin: 0 auto 16px;
+            background: #e8f0fe;
             overflow: hidden;
             position: relative;
-            border: 3px solid #6c5ce7;
+            border: 3px solid #00b894;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 700;
-            color: #6c5ce7;
+            color: #00b894;
             cursor: pointer;
+            flex-shrink: 0;
         }
         .profile-avatar img {
             width: 100%;
@@ -591,9 +620,9 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(0,0,0,0.7);
-            padding: 6px;
-            font-size: 10px;
+            background: rgba(0,0,0,0.6);
+            padding: 4px;
+            font-size: 9px;
             color: #fff;
             opacity: 0;
             transition: opacity 0.3s;
@@ -601,82 +630,73 @@
         .profile-avatar:hover .overlay {
             opacity: 1;
         }
-        .profile-name {
-            font-size: 22px;
-            font-weight: 600;
-            color: #fff;
+        .profile-info {
+            flex: 1;
+            text-align: left;
         }
-        .profile-name-input {
+        .profile-name-display {
             font-size: 20px;
             font-weight: 600;
-            color: #fff;
-            background: #14141e;
-            border: 1px solid #2a2a3e;
-            border-radius: 8px;
-            padding: 8px 16px;
-            text-align: center;
-            width: 80%;
-            margin: 0 auto;
-            outline: none;
+            color: #1a1a2e;
         }
-        .profile-name-input:focus {
-            border-color: #6c5ce7;
-        }
-        .profile-bio {
-            color: #8a8a9a;
+        .profile-bio-display {
+            color: #8395a7;
             font-size: 14px;
-            margin: 6px 0 20px;
-        }
-        .profile-bio-input {
-            color: #8a8a9a;
-            font-size: 14px;
-            background: #14141e;
-            border: 1px solid #2a2a3e;
-            border-radius: 8px;
-            padding: 8px 16px;
-            text-align: center;
-            width: 80%;
-            margin: 0 auto 20px;
-            outline: none;
-            display: block;
-        }
-        .profile-bio-input:focus {
-            border-color: #6c5ce7;
+            margin-top: 2px;
         }
         .profile-uid {
             font-size: 12px;
-            color: #4a4a5a;
-            background: #14141e;
-            padding: 6px 16px;
-            border-radius: 20px;
+            color: #a0aec0;
+            background: #f8f9fa;
+            padding: 4px 12px;
+            border-radius: 12px;
             display: inline-block;
-            margin-bottom: 20px;
+            margin-top: 4px;
+        }
+        .profile-edit-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+        .profile-edit-btn:hover {
+            background: #e8f0fe;
+        }
+        .profile-edit-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #00b894;
+            stroke-width: 2;
+            fill: none;
         }
         .profile-friends {
             text-align: left;
             margin-top: 20px;
+            border-top: 1px solid #e8f0fe;
+            padding-top: 16px;
         }
         .profile-friends .friends-title {
             font-size: 16px;
             font-weight: 600;
-            color: #e0e0e0;
+            color: #1a1a2e;
             margin-bottom: 12px;
         }
         .profile-friends .friend-chip {
             display: inline-block;
-            background: #14141e;
+            background: #e8f0fe;
             padding: 6px 14px;
             border-radius: 20px;
             margin: 4px 6px 4px 0;
             font-size: 13px;
-            color: #c0c0d0;
-            border: 1px solid #1a1a2e;
+            color: #1a1a2e;
         }
         .profile-actions {
             display: flex;
             gap: 12px;
             justify-content: center;
-            margin: 16px 0;
+            margin-top: 16px;
         }
         .profile-actions button {
             padding: 8px 24px;
@@ -687,31 +707,72 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        .profile-actions .save-btn {
-            background: #6c5ce7;
-            color: #fff;
-        }
-        .profile-actions .save-btn:hover {
-            background: #5a4bd1;
-        }
         .profile-actions .logout-btn {
-            background: #2a2a3e;
-            color: #e0e0e0;
+            background: #e8f0fe;
+            color: #1a1a2e;
         }
         .profile-actions .logout-btn:hover {
-            background: #3a3a4e;
+            background: #d5dce6;
+        }
+
+        /* Edit Profile Modal */
+        .edit-profile-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border: 2px solid #e8f0fe;
+            border-radius: 10px;
+            color: #1a1a2e;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 12px;
+        }
+        .edit-profile-input:focus {
+            border-color: #00b894;
         }
 
         /* Moments */
         .moments-container {
             padding: 0 0 16px 0;
         }
+        .moments-header {
+            padding: 12px 20px;
+            display: flex;
+            justify-content: flex-end;
+            background: white;
+            margin: 0 0 8px 0;
+            border-bottom: 1px solid #e8f0fe;
+        }
+        .moments-header .add-btn {
+            background: #00b894;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,184,148,0.3);
+        }
+        .moments-header .add-btn:hover {
+            transform: scale(1.05);
+        }
+        .moments-header .add-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
         .moment-post {
-            background: #14141e;
-            margin: 12px 16px;
+            background: white;
+            margin: 8px 16px;
             border-radius: 16px;
             padding: 16px;
-            border: 1px solid #1a1a2e;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #e8f0fe;
         }
         .moment-post .post-header {
             display: flex;
@@ -722,7 +783,7 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: #1a1a2e;
+            background: #e8f0fe;
             overflow: hidden;
             margin-right: 10px;
             flex-shrink: 0;
@@ -731,7 +792,7 @@
             align-items: center;
             font-size: 14px;
             font-weight: 600;
-            color: #6c5ce7;
+            color: #00b894;
         }
         .moment-post .post-header .avatar img {
             width: 100%;
@@ -740,16 +801,16 @@
         }
         .moment-post .post-header .post-author {
             font-weight: 500;
-            color: #e0e0e0;
+            color: #1a1a2e;
             font-size: 14px;
         }
         .moment-post .post-header .post-time {
             font-size: 11px;
-            color: #4a4a5a;
+            color: #a0aec0;
             margin-left: auto;
         }
         .moment-post .post-text {
-            color: #d0d0d0;
+            color: #1a1a2e;
             font-size: 14px;
             line-height: 1.6;
             margin-bottom: 10px;
@@ -759,6 +820,41 @@
             border-radius: 12px;
             max-height: 300px;
             object-fit: cover;
+            cursor: pointer;
+        }
+        .moment-post .post-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e8f0fe;
+        }
+        .moment-post .post-actions button {
+            background: none;
+            border: none;
+            color: #8395a7;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.3s;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .moment-post .post-actions button:hover {
+            color: #00b894;
+            background: #f0fdfa;
+        }
+        .moment-post .post-actions button.liked {
+            color: #00b894;
+        }
+        .moment-post .post-actions svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
         }
 
         /* Chat Window */
@@ -768,7 +864,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #0a0a0f;
+            background: #f5f7fa;
             z-index: 100;
             display: none;
             flex-direction: column;
@@ -778,8 +874,8 @@
         }
         .chat-window-header {
             padding: 12px 16px;
-            background: #0f0f18;
-            border-bottom: 1px solid #1a1a2e;
+            background: white;
+            border-bottom: 1px solid #e8f0fe;
             display: flex;
             align-items: center;
             flex-shrink: 0;
@@ -792,7 +888,7 @@
         .chat-window-header .back-btn svg {
             width: 24px;
             height: 24px;
-            stroke: #a0a0b0;
+            stroke: #1a1a2e;
             stroke-width: 2;
             fill: none;
         }
@@ -805,7 +901,7 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: #1a1a2e;
+            background: #e8f0fe;
             overflow: hidden;
             margin-right: 10px;
             flex-shrink: 0;
@@ -814,7 +910,7 @@
             align-items: center;
             font-size: 14px;
             font-weight: 600;
-            color: #6c5ce7;
+            color: #00b894;
         }
         .chat-window-header .chat-user .avatar img {
             width: 100%;
@@ -823,12 +919,12 @@
         }
         .chat-window-header .chat-user .name {
             font-weight: 500;
-            color: #e0e0e0;
+            color: #1a1a2e;
             font-size: 15px;
         }
         .chat-window-header .chat-user .status {
             font-size: 11px;
-            color: #4a4a5a;
+            color: #a0aec0;
         }
         .chat-window-header .call-actions {
             display: flex;
@@ -838,14 +934,27 @@
         .chat-window-header .call-actions svg {
             width: 22px;
             height: 22px;
-            stroke: #a0a0b0;
+            stroke: #4a4a5a;
             stroke-width: 2;
             fill: none;
             cursor: pointer;
             transition: stroke 0.3s;
         }
         .chat-window-header .call-actions svg:hover {
-            stroke: #6c5ce7;
+            stroke: #00b894;
+        }
+        .chat-window-header .chat-menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .chat-window-header .chat-menu-btn svg {
+            width: 22px;
+            height: 22px;
+            stroke: #4a4a5a;
+            stroke-width: 2;
+            fill: none;
         }
 
         .chat-messages {
@@ -867,24 +976,25 @@
         }
         .chat-message.sent {
             align-self: flex-end;
-            background: #6c5ce7;
+            background: #00b894;
             color: #fff;
             border-bottom-right-radius: 4px;
         }
         .chat-message.received {
             align-self: flex-start;
-            background: #14141e;
-            color: #e0e0e0;
+            background: white;
+            color: #1a1a2e;
             border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
         }
         .chat-message .msg-time {
             font-size: 10px;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.6);
             margin-top: 4px;
             text-align: right;
         }
         .chat-message.received .msg-time {
-            color: rgba(255,255,255,0.3);
+            color: #a0aec0;
         }
         .chat-message .msg-reactions {
             display: flex;
@@ -904,8 +1014,8 @@
 
         .chat-input-area {
             padding: 12px 16px;
-            background: #0f0f18;
-            border-top: 1px solid #1a1a2e;
+            background: white;
+            border-top: 1px solid #e8f0fe;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -914,26 +1024,26 @@
         .chat-input-area input {
             flex: 1;
             padding: 10px 16px;
-            background: #14141e;
-            border: 1px solid #2a2a3e;
+            background: #f8f9fa;
+            border: 2px solid #e8f0fe;
             border-radius: 24px;
-            color: #e0e0e0;
+            color: #1a1a2e;
             font-size: 14px;
             outline: none;
         }
         .chat-input-area input:focus {
-            border-color: #6c5ce7;
+            border-color: #00b894;
         }
         .chat-input-area .attachment-btn {
             background: none;
             border: none;
-            color: #6a6a7a;
+            color: #8395a7;
             font-size: 20px;
             cursor: pointer;
             padding: 4px;
         }
         .chat-input-area .send-btn {
-            background: #6c5ce7;
+            background: #00b894;
             border: none;
             border-radius: 50%;
             width: 42px;
@@ -946,7 +1056,7 @@
             flex-shrink: 0;
         }
         .chat-input-area .send-btn:hover {
-            background: #5a4bd1;
+            background: #00a381;
             transform: scale(1.05);
         }
         .chat-input-area .send-btn svg {
@@ -960,14 +1070,14 @@
         /* Context Menu */
         .context-menu {
             position: fixed;
-            background: #14141e;
-            border: 1px solid #2a2a3e;
+            background: white;
+            border: 1px solid #e8f0fe;
             border-radius: 12px;
             padding: 6px 0;
             z-index: 200;
             min-width: 180px;
             display: none;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
         .context-menu.active {
             display: block;
@@ -975,7 +1085,7 @@
         .context-menu .menu-item {
             padding: 10px 18px;
             font-size: 14px;
-            color: #e0e0e0;
+            color: #1a1a2e;
             cursor: pointer;
             transition: background 0.2s;
             display: flex;
@@ -987,7 +1097,7 @@
             text-align: left;
         }
         .context-menu .menu-item:hover {
-            background: #1a1a2e;
+            background: #f8f9fa;
         }
         .context-menu .menu-item.danger {
             color: #e74c6f;
@@ -1003,44 +1113,44 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.5);
             z-index: 300;
             display: none;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(4px);
         }
         .modal-overlay.active {
             display: flex;
         }
         .modal-content {
-            background: #14141e;
+            background: white;
             border-radius: 20px;
             padding: 28px 24px;
             max-width: 400px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            border: 1px solid #2a2a3e;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
         .modal-content h3 {
-            color: #e0e0e0;
+            color: #1a1a2e;
             font-size: 18px;
             margin-bottom: 16px;
         }
         .modal-content input, .modal-content textarea {
             width: 100%;
             padding: 12px 16px;
-            background: #0a0a0f;
-            border: 1px solid #2a2a3e;
+            background: #f8f9fa;
+            border: 2px solid #e8f0fe;
             border-radius: 10px;
-            color: #e0e0e0;
+            color: #1a1a2e;
             font-size: 14px;
             outline: none;
             margin-bottom: 12px;
         }
         .modal-content input:focus, .modal-content textarea:focus {
-            border-color: #6c5ce7;
+            border-color: #00b894;
         }
         .modal-content textarea {
             min-height: 80px;
@@ -1062,18 +1172,18 @@
             transition: all 0.3s;
         }
         .modal-content .modal-actions .primary-btn {
-            background: #6c5ce7;
+            background: #00b894;
             color: #fff;
         }
         .modal-content .modal-actions .primary-btn:hover {
-            background: #5a4bd1;
+            background: #00a381;
         }
         .modal-content .modal-actions .secondary-btn {
-            background: #2a2a3e;
-            color: #e0e0e0;
+            background: #e8f0fe;
+            color: #1a1a2e;
         }
         .modal-content .modal-actions .secondary-btn:hover {
-            background: #3a3a4e;
+            background: #d5dce6;
         }
 
         /* Call Screen */
@@ -1099,14 +1209,14 @@
             border-radius: 50%;
             background: #1a1a2e;
             overflow: hidden;
-            border: 3px solid #6c5ce7;
+            border: 3px solid #00b894;
             margin-bottom: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 48px;
             font-weight: 700;
-            color: #6c5ce7;
+            color: #00b894;
         }
         #callScreen .call-avatar img {
             width: 100%;
@@ -1121,7 +1231,7 @@
         }
         #callScreen .call-status {
             font-size: 14px;
-            color: #6a6a7a;
+            color: #8395a7;
             margin-bottom: 40px;
         }
         #callScreen .call-actions {
@@ -1162,7 +1272,7 @@
             background: #3a3a4e;
         }
         #callScreen .call-actions .call-btn.control-btn.active {
-            background: #6c5ce7;
+            background: #00b894;
         }
         #callScreen .call-reactions {
             display: flex;
@@ -1184,6 +1294,41 @@
             background: #2a2a3e;
         }
 
+        /* Chat Menu Dropdown */
+        .chat-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e8f0fe;
+            border-radius: 12px;
+            padding: 6px 0;
+            min-width: 180px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 50;
+        }
+        .chat-dropdown.active {
+            display: block;
+        }
+        .chat-dropdown .dropdown-item {
+            padding: 10px 18px;
+            font-size: 14px;
+            color: #1a1a2e;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+        .chat-dropdown .dropdown-item:hover {
+            background: #f8f9fa;
+        }
+        .chat-dropdown .dropdown-item.danger {
+            color: #e74c6f;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -1192,7 +1337,7 @@
             .login-container { padding: 20px 16px; }
             .chat-message { max-width: 90%; }
             .modal-content { padding: 20px 16px; }
-            .profile-avatar { width: 80px; height: 80px; }
+            .profile-avatar { width: 60px; height: 60px; font-size: 24px; }
         }
     </style>
 </head>
@@ -1210,9 +1355,9 @@
         <div class="login-container">
             <div class="login-logo">
                 <svg viewBox="0 0 24 24" width="60" height="60">
-                    <circle cx="12" cy="12" r="10" stroke="#6c5ce7" stroke-width="2" fill="none"/>
-                    <path d="M12 2 L12 22 M2 12 L22 12" stroke="#6c5ce7" stroke-width="2"/>
-                    <circle cx="12" cy="12" r="3" fill="#6c5ce7"/>
+                    <circle cx="12" cy="12" r="10" stroke="#00b894" stroke-width="2" fill="none"/>
+                    <path d="M12 2 L12 22 M2 12 L22 12" stroke="#00b894" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="3" fill="#00b894"/>
                 </svg>
                 <h1>Stardust <span>X</span></h1>
                 <p>messenger for the stars</p>
@@ -1233,7 +1378,7 @@
         <div class="app-header" id="appHeader">
             <div class="title" id="headerTitle">Stardust <span>X</span></div>
             <div class="header-actions" id="headerActions">
-                <svg viewBox="0 0 24 24" id="headerSearchBtn">
+                <svg viewBox="0 0 24 24" id="headerSearchBtn" style="display:none;">
                     <circle cx="11" cy="11" r="8"/>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                 </svg>
@@ -1256,6 +1401,10 @@
             <!-- Contacts -->
             <div id="contactsView" class="contacts-container hidden">
                 <div class="contacts-search">
+                    <svg viewBox="0 0 24 24" class="search-icon">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
                     <input type="text" id="contactSearch" placeholder="Search contacts..." />
                 </div>
                 <div id="contactsList"></div>
@@ -1263,21 +1412,38 @@
             
             <!-- Moments -->
             <div id="momentsView" class="moments-container hidden">
+                <div class="moments-header">
+                    <button class="add-btn" id="createMomentBtn">
+                        <svg viewBox="0 0 24 24">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                    </button>
+                </div>
                 <div id="momentsList"></div>
             </div>
             
             <!-- Profile -->
             <div id="profileView" class="profile-container hidden">
-                <div class="profile-avatar" id="profileAvatar">
-                    <span id="profileInitials">U</span>
-                    <div class="overlay">Change Photo</div>
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profileAvatar">
+                        <span id="profileInitials">U</span>
+                        <div class="overlay">Change Photo</div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name-display" id="profileNameDisplay">User</div>
+                        <div class="profile-bio-display" id="profileBioDisplay">No bio</div>
+                        <div class="profile-uid" id="profileUidDisplay">UID: loading...</div>
+                    </div>
+                    <button class="profile-edit-btn" id="profileEditBtn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                    </button>
                 </div>
                 <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;" />
-                <input type="text" id="profileNameInput" class="profile-name-input" placeholder="Your name" maxlength="30" />
-                <input type="text" id="profileBioInput" class="profile-bio-input" placeholder="Your bio" maxlength="100" />
-                <div class="profile-uid" id="profileUidDisplay">UID: loading...</div>
                 <div class="profile-actions">
-                    <button class="save-btn" id="profileSaveBtn">Save Profile</button>
                     <button class="logout-btn" id="logoutBtn">Logout</button>
                 </div>
                 <div class="profile-friends">
@@ -1348,6 +1514,20 @@
                     <polygon points="23 7 16 12 23 17 23 7"/>
                     <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
                 </svg>
+                <button class="chat-menu-btn" id="chatMenuBtn">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="5" r="2"/>
+                        <circle cx="12" cy="12" r="2"/>
+                        <circle cx="12" cy="19" r="2"/>
+                    </svg>
+                </button>
+                <div class="chat-dropdown" id="chatDropdown">
+                    <button class="dropdown-item" data-action="settings">⚙️ Settings</button>
+                    <button class="dropdown-item" data-action="blocked">🚫 Blocked Contacts</button>
+                    <button class="dropdown-item" data-action="callhistory">📞 Call History</button>
+                    <button class="dropdown-item" data-action="saved">💾 Saved Messages</button>
+                    <button class="dropdown-item danger" data-action="clear">🗑️ Clear Chat</button>
+                </div>
             </div>
         </div>
         <div class="chat-messages" id="chatMessages"></div>
@@ -1423,7 +1603,7 @@
 
     <script type="module">
         // ============================================================
-        // STARDUST X MESSENGER - FULL VERSION WITH IMGBB
+        // STARDUST X MESSENGER - COMPLETE VERSION
         // ============================================================
 
         const $ = (id) => document.getElementById(id);
@@ -1448,14 +1628,15 @@
         const contactSearch = $('contactSearch');
         const momentsView = $('momentsView');
         const momentsList = $('momentsList');
+        const createMomentBtn = $('createMomentBtn');
         const profileView = $('profileView');
-        const profileNameInput = $('profileNameInput');
-        const profileBioInput = $('profileBioInput');
+        const profileNameDisplay = $('profileNameDisplay');
+        const profileBioDisplay = $('profileBioDisplay');
         const profileUidDisplay = $('profileUidDisplay');
         const profileInitials = $('profileInitials');
         const profileAvatar = $('profileAvatar');
         const profilePhotoInput = $('profilePhotoInput');
-        const profileSaveBtn = $('profileSaveBtn');
+        const profileEditBtn = $('profileEditBtn');
         const profileFriendsList = $('profileFriendsList');
         const logoutBtn = $('logoutBtn');
         const bottomNav = $('bottomNav');
@@ -1472,6 +1653,8 @@
         const chatSendBtn = $('chatSendBtn');
         const chatAttachmentBtn = $('chatAttachmentBtn');
         const chatImageInput = $('chatImageInput');
+        const chatMenuBtn = $('chatMenuBtn');
+        const chatDropdown = $('chatDropdown');
         const audioCallBtn = $('audioCallBtn');
         const videoCallBtn = $('videoCallBtn');
         const contextMenu = $('contextMenu');
@@ -1508,6 +1691,9 @@
             callActive: false,
             callType: 'audio',
             replyTo: null,
+            savedMessages: [],
+            callHistory: [],
+            blockedUsers: [],
         };
 
         // Utility
@@ -1536,6 +1722,10 @@
             return date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
         }
 
+        function generate6DigitUID() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
         function showModal(title, bodyHTML, confirmText = 'Confirm', onConfirm = null) {
             modalTitle.textContent = title;
             modalBody.innerHTML = bodyHTML;
@@ -1556,12 +1746,12 @@
         }
 
         function showToast(msg) {
-            showModal('Notice', `<p style="color:#e0e0e0;">${msg}</p>`, 'OK', null);
+            showModal('Notice', `<p style="color:#1a1a2e;">${msg}</p>`, 'OK', null);
             setTimeout(hideModal, 2000);
         }
 
         // ============================================================
-        // IMGBB UPLOAD FUNCTION
+        // IMGBB UPLOAD
         // ============================================================
         async function uploadToImgBB(file) {
             const formData = new FormData();
@@ -1613,14 +1803,18 @@
                     await signInWithEmailAndPassword(auth, email, password);
                 } else {
                     const cred = await createUserWithEmailAndPassword(auth, email, password);
+                    const uid6 = generate6DigitUID();
                     await setDoc(doc(db, 'users', cred.user.uid), {
                         name: email.split('@')[0],
                         bio: '',
                         email: email,
                         photoURL: '',
+                        uid6: uid6,
                         createdAt: serverTimestamp(),
                         friends: [],
                         blocked: [],
+                        savedMessages: [],
+                        callHistory: [],
                     });
                 }
             } catch (err) {
@@ -1676,13 +1870,20 @@
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     state.userProfile = docSnap.data();
+                    state.savedMessages = state.userProfile.savedMessages || [];
+                    state.callHistory = state.userProfile.callHistory || [];
+                    state.blockedUsers = state.userProfile.blocked || [];
                 } else {
+                    const uid6 = generate6DigitUID();
                     state.userProfile = {
                         name: state.currentUser.email.split('@')[0],
                         bio: '',
                         photoURL: '',
+                        uid6: uid6,
                         friends: [],
                         blocked: [],
+                        savedMessages: [],
+                        callHistory: [],
                     };
                     await setDoc(docRef, state.userProfile);
                 }
@@ -1694,9 +1895,10 @@
 
         function updateProfileUI() {
             const name = state.userProfile.name || state.currentUser.email.split('@')[0];
-            profileNameInput.value = name;
-            profileBioInput.value = state.userProfile.bio || '';
-            profileUidDisplay.textContent = `UID: ${state.currentUID}`;
+            profileNameDisplay.textContent = name;
+            profileBioDisplay.textContent = state.userProfile.bio || 'No bio';
+            profileUidDisplay.textContent = `UID: ${state.userProfile.uid6 || 'loading...'}`;
+            profileInitials.textContent = getInitials(name);
             
             if (state.userProfile.photoURL) {
                 profileAvatar.innerHTML = `<img src="${state.userProfile.photoURL}" alt="Profile" /><div class="overlay">Change Photo</div>`;
@@ -1707,8 +1909,30 @@
         }
 
         // ============================================================
-        // PROFILE PHOTO
+        // PROFILE EDIT
         // ============================================================
+        profileEditBtn.addEventListener('click', () => {
+            const html = `
+                <input type="text" id="editNameInput" class="edit-profile-input" value="${state.userProfile.name || ''}" placeholder="Your name" />
+                <input type="text" id="editBioInput" class="edit-profile-input" value="${state.userProfile.bio || ''}" placeholder="Your bio" />
+            `;
+            showModal('Edit Profile', html, 'Save', async () => {
+                const name = document.getElementById('editNameInput').value.trim() || 'User';
+                const bio = document.getElementById('editBioInput').value.trim();
+                try {
+                    await updateDoc(doc(db, 'users', state.currentUID), { name, bio });
+                    state.userProfile.name = name;
+                    state.userProfile.bio = bio;
+                    updateProfileUI();
+                    showToast('Profile updated!');
+                    hideModal();
+                } catch (err) {
+                    console.error('Error saving profile:', err);
+                    showToast('Error saving profile');
+                }
+            });
+        });
+
         profileAvatar.addEventListener('click', () => {
             profilePhotoInput.click();
         });
@@ -1731,24 +1955,6 @@
             profilePhotoInput.value = '';
         });
 
-        // ============================================================
-        // PROFILE
-        // ============================================================
-        profileSaveBtn.addEventListener('click', async () => {
-            const name = profileNameInput.value.trim() || 'User';
-            const bio = profileBioInput.value.trim();
-            try {
-                await updateDoc(doc(db, 'users', state.currentUID), { name, bio });
-                state.userProfile.name = name;
-                state.userProfile.bio = bio;
-                updateProfileUI();
-                showToast('Profile updated!');
-            } catch (err) {
-                console.error('Error saving profile:', err);
-                showToast('Error saving profile');
-            }
-        });
-
         logoutBtn.addEventListener('click', async () => {
             if (confirm('Are you sure you want to logout?')) {
                 await signOut(auth);
@@ -1758,7 +1964,7 @@
         async function renderProfileFriends() {
             const friends = state.userProfile.friends || [];
             if (friends.length === 0) {
-                profileFriendsList.innerHTML = '<span style="color:#4a4a5a;font-size:13px;">No friends yet</span>';
+                profileFriendsList.innerHTML = '<span style="color:#8395a7;font-size:13px;">No friends yet</span>';
                 return;
             }
             let html = '';
@@ -1775,7 +1981,7 @@
                     console.error('Error loading friend:', err);
                 }
             }
-            profileFriendsList.innerHTML = html || '<span style="color:#4a4a5a;font-size:13px;">No friends yet</span>';
+            profileFriendsList.innerHTML = html || '<span style="color:#8395a7;font-size:13px;">No friends yet</span>';
         }
 
         // ============================================================
@@ -1809,7 +2015,6 @@
             };
             document.querySelector('.app-header .title').innerHTML = titles[tab] || 'Stardust <span>X</span>';
 
-            // Show/hide header actions
             if (tab === 'chats') {
                 headerSearchBtn.style.display = 'none';
                 headerMenuBtn.style.display = 'none';
@@ -1843,11 +2048,12 @@
         });
 
         function showContactMenu() {
+            const pending = state.friendRequests.filter(r => r.status === 'pending').length;
             const html = `
                 <div style="display:flex;flex-direction:column;gap:8px;">
-                    <button class="contact-menu-btn" data-action="addfriend" style="background:#1a1a2e;border:none;color:#e0e0e0;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">➕ Add Friend</button>
-                    <button class="contact-menu-btn" data-action="requests" style="background:#1a1a2e;border:none;color:#e0e0e0;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">📩 Incoming Requests <span id="reqCountBadge" style="background:#e74c6f;color:#fff;padding:2px 10px;border-radius:12px;font-size:12px;margin-left:8px;">${state.friendRequests.filter(r => r.status === 'pending').length}</span></button>
-                    <button class="contact-menu-btn" data-action="creategroup" style="background:#1a1a2e;border:none;color:#e0e0e0;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">👥 Create Group Chat</button>
+                    <button class="contact-menu-btn" data-action="addfriend" style="background:#f8f9fa;border:none;color:#1a1a2e;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">➕ Add Friend</button>
+                    <button class="contact-menu-btn" data-action="requests" style="background:#f8f9fa;border:none;color:#1a1a2e;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">📩 Incoming Requests <span style="background:#e74c6f;color:#fff;padding:2px 10px;border-radius:12px;font-size:12px;margin-left:8px;">${pending}</span></button>
+                    <button class="contact-menu-btn" data-action="creategroup" style="background:#f8f9fa;border:none;color:#1a1a2e;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">👥 Create Group Chat</button>
                 </div>
             `;
             showModal('Contacts Menu', html, 'Close', null);
@@ -1865,7 +2071,7 @@
         function showMomentsMenu() {
             const html = `
                 <div style="display:flex;flex-direction:column;gap:8px;">
-                    <button class="moments-menu-btn" data-action="create" style="background:#1a1a2e;border:none;color:#e0e0e0;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">✏️ Create Post</button>
+                    <button class="moments-menu-btn" data-action="create" style="background:#f8f9fa;border:none;color:#1a1a2e;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">✏️ Create Post</button>
                 </div>
             `;
             showModal('Moments Menu', html, 'Close', null);
@@ -1882,64 +2088,71 @@
         // ============================================================
         function showAddFriendModal() {
             const html = `
-                <input type="text" id="friendUIDInput" placeholder="Enter friend's UID" style="width:100%;padding:12px;background:#0a0a0f;border:1px solid #2a2a3e;border-radius:10px;color:#e0e0e0;font-size:14px;outline:none;" />
+                <input type="text" id="friendUIDInput" placeholder="Enter friend's 6-digit UID" style="width:100%;padding:12px;background:#f8f9fa;border:2px solid #e8f0fe;border-radius:10px;color:#1a1a2e;font-size:14px;outline:none;" />
                 <div id="friendSearchResult" style="margin-top:10px;"></div>
             `;
             showModal('Add Friend', html, 'Send Request', async () => {
-                const uid = document.getElementById('friendUIDInput').value.trim();
-                if (!uid) { showToast('Please enter a UID'); return; }
-                if (uid === state.currentUID) { showToast('You cannot add yourself'); return; }
-                await sendFriendRequest(uid);
+                const uid6 = document.getElementById('friendUIDInput').value.trim();
+                if (!uid6 || uid6.length !== 6) { showToast('Please enter a valid 6-digit UID'); return; }
+                if (uid6 === state.userProfile.uid6) { showToast('You cannot add yourself'); return; }
+                await sendFriendRequest(uid6);
             });
 
             const input = document.getElementById('friendUIDInput');
             input.addEventListener('input', async () => {
-                const uid = input.value.trim();
+                const uid6 = input.value.trim();
                 const resultDiv = document.getElementById('friendSearchResult');
-                if (!uid || uid.length < 4) { resultDiv.innerHTML = ''; return; }
+                if (!uid6 || uid6.length < 4) { resultDiv.innerHTML = ''; return; }
                 try {
-                    const docRef = doc(db, 'users', uid);
-                    const docSnap = await getDoc(docRef);
-                    if (docSnap.exists()) {
+                    const q = query(collection(db, 'users'), where('uid6', '==', uid6));
+                    const snap = await getDocs(q);
+                    if (!snap.empty) {
+                        const docSnap = snap.docs[0];
                         const data = docSnap.data();
+                        const uid = docSnap.id;
                         const isFriend = state.userProfile.friends && state.userProfile.friends.includes(uid);
                         const isPending = state.friendRequests.some(r => r.from === uid && r.status === 'pending');
                         resultDiv.innerHTML = `
-                            <div style="display:flex;align-items:center;gap:12px;padding:10px;background:#14141e;border-radius:10px;border:1px solid #2a2a3e;">
-                                <div style="width:40px;height:40px;border-radius:50%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-                                    ${data.photoURL ? `<img src="${data.photoURL}" style="width:100%;height:100%;object-fit:cover;" />` : `<span style="font-weight:600;color:#6c5ce7;">${getInitials(data.name)}</span>`}
+                            <div style="display:flex;align-items:center;gap:12px;padding:10px;background:#f8f9fa;border-radius:10px;border:2px solid #e8f0fe;">
+                                <div style="width:40px;height:40px;border-radius:50%;background:#e8f0fe;display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:600;color:#00b894;">
+                                    ${data.photoURL ? `<img src="${data.photoURL}" style="width:100%;height:100%;object-fit:cover;" />` : getInitials(data.name)}
                                 </div>
                                 <div>
-                                    <div style="color:#e0e0e0;font-weight:500;">${data.name || 'User'}</div>
-                                    <div style="color:#4a4a5a;font-size:12px;">${uid}</div>
-                                    ${isFriend ? '<div style="color:#6c5ce7;font-size:12px;">✓ Already friends</div>' : ''}
+                                    <div style="color:#1a1a2e;font-weight:500;">${data.name || 'User'}</div>
+                                    <div style="color:#8395a7;font-size:12px;">UID: ${data.uid6}</div>
+                                    ${isFriend ? '<div style="color:#00b894;font-size:12px;">✓ Already friends</div>' : ''}
                                     ${isPending ? '<div style="color:#f39c12;font-size:12px;">⏳ Request pending</div>' : ''}
                                 </div>
                             </div>
                         `;
                     } else {
-                        resultDiv.innerHTML = '<div style="color:#6a6a7a;padding:8px;">User not found</div>';
+                        resultDiv.innerHTML = '<div style="color:#8395a7;padding:8px;">User not found</div>';
                     }
                 } catch (err) {
-                    resultDiv.innerHTML = '<div style="color:#6a6a7a;padding:8px;">Error searching</div>';
+                    resultDiv.innerHTML = '<div style="color:#8395a7;padding:8px;">Error searching</div>';
                 }
             });
         }
 
-        async function sendFriendRequest(toUID) {
+        async function sendFriendRequest(uid6) {
             try {
+                const q = query(collection(db, 'users'), where('uid6', '==', uid6));
+                const snap = await getDocs(q);
+                if (snap.empty) { showToast('User not found'); return; }
+                const toUID = snap.docs[0].id;
+                
                 if (state.userProfile.friends && state.userProfile.friends.includes(toUID)) {
                     showToast('Already friends with this user');
                     return;
                 }
-                const q = query(
+                const reqQ = query(
                     collection(db, 'friendRequests'),
                     where('from', '==', state.currentUID),
                     where('to', '==', toUID),
                     where('status', '==', 'pending')
                 );
-                const snap = await getDocs(q);
-                if (!snap.empty) {
+                const reqSnap = await getDocs(reqQ);
+                if (!reqSnap.empty) {
                     showToast('Request already sent');
                     return;
                 }
@@ -1949,6 +2162,7 @@
                     status: 'pending',
                     timestamp: serverTimestamp(),
                     fromName: state.userProfile.name || 'User',
+                    fromUID: state.userProfile.uid6,
                 });
                 showToast('Friend request sent!');
                 hideModal();
@@ -1964,20 +2178,20 @@
         function showIncomingRequests() {
             const requests = state.friendRequests.filter(r => r.to === state.currentUID && r.status === 'pending');
             if (requests.length === 0) {
-                showModal('Incoming Requests', '<p style="color:#6a6a7a;">No pending requests</p>', 'Close', null);
+                showModal('Incoming Requests', '<p style="color:#8395a7;">No pending requests</p>', 'Close', null);
                 return;
             }
             let html = '<div style="display:flex;flex-direction:column;gap:12px;">';
             requests.forEach(req => {
                 html += `
-                    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:#0a0a0f;border-radius:10px;border:1px solid #1a1a2e;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:#f8f9fa;border-radius:10px;border:2px solid #e8f0fe;">
                         <div>
-                            <div style="color:#e0e0e0;font-weight:500;">${req.fromName || 'User'}</div>
-                            <div style="color:#4a4a5a;font-size:12px;">${req.from}</div>
+                            <div style="color:#1a1a2e;font-weight:500;">${req.fromName || 'User'}</div>
+                            <div style="color:#8395a7;font-size:12px;">UID: ${req.fromUID || req.from}</div>
                         </div>
                         <div style="display:flex;gap:8px;">
-                            <button class="req-accept" data-uid="${req.from}" style="background:#6c5ce7;border:none;color:#fff;padding:6px 16px;border-radius:8px;cursor:pointer;">Accept</button>
-                            <button class="req-deny" data-uid="${req.from}" style="background:#2a2a3e;border:none;color:#e0e0e0;padding:6px 16px;border-radius:8px;cursor:pointer;">Deny</button>
+                            <button class="req-accept" data-uid="${req.from}" style="background:#00b894;border:none;color:#fff;padding:6px 16px;border-radius:8px;cursor:pointer;">Accept</button>
+                            <button class="req-deny" data-uid="${req.from}" style="background:#e8f0fe;border:none;color:#1a1a2e;padding:6px 16px;border-radius:8px;cursor:pointer;">Deny</button>
                         </div>
                     </div>
                 `;
@@ -2025,6 +2239,7 @@
                 
                 const friendDoc = await getDoc(doc(db, 'users', fromUID));
                 const friendName = friendDoc.exists() ? friendDoc.data().name || 'User' : 'User';
+                const friendUID = friendDoc.exists() ? friendDoc.data().uid6 || fromUID : fromUID;
                 
                 if (!state.userProfile.friends) state.userProfile.friends = [];
                 if (!state.userProfile.friends.includes(fromUID)) {
@@ -2032,8 +2247,8 @@
                 }
                 
                 showModal('Contact Added', `
-                    <p style="color:#e0e0e0;margin-bottom:12px;">${friendName} is now your contact!</p>
-                    <input type="text" id="customNameInput" placeholder="Set a custom name (optional)" style="width:100%;padding:12px;background:#0a0a0f;border:1px solid #2a2a3e;border-radius:10px;color:#e0e0e0;font-size:14px;outline:none;" />
+                    <p style="color:#1a1a2e;margin-bottom:12px;">${friendName} (UID: ${friendUID}) is now your contact!</p>
+                    <input type="text" id="customNameInput" placeholder="Set a custom name (optional)" style="width:100%;padding:12px;background:#f8f9fa;border:2px solid #e8f0fe;border-radius:10px;color:#1a1a2e;font-size:14px;outline:none;" />
                 `, 'Save', async () => {
                     const customName = document.getElementById('customNameInput').value.trim();
                     if (customName) {
@@ -2134,7 +2349,7 @@
                             </div>
                             <div>
                                 <div class="contact-name">${item.name}</div>
-                                <div class="contact-uid">${item.uid}</div>
+                                <div class="contact-uid">UID: ${item.data.uid6 || item.uid.substring(0,8)}</div>
                             </div>
                         </div>
                     `;
@@ -2159,8 +2374,8 @@
         function showContactActions(uid) {
             const html = `
                 <div style="display:flex;flex-direction:column;gap:8px;">
-                    <button class="contact-action-btn" data-action="msg" style="background:#1a1a2e;border:none;color:#e0e0e0;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">💬 Send Message</button>
-                    <button class="contact-action-btn" data-action="profile" style="background:#1a1a2e;border:none;color:#e0e0e0;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">👤 See Profile</button>
+                    <button class="contact-action-btn" data-action="msg" style="background:#f8f9fa;border:none;color:#1a1a2e;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">💬 Send Message</button>
+                    <button class="contact-action-btn" data-action="profile" style="background:#f8f9fa;border:none;color:#1a1a2e;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">👤 See Profile</button>
                 </div>
             `;
             showModal('Contact Actions', html, 'Close', null);
@@ -2179,8 +2394,8 @@
         function showContactContextMenu(x, y, uid) {
             const html = `
                 <div style="display:flex;flex-direction:column;gap:4px;">
-                    <button class="ctx-btn" data-action="block" style="background:#1a1a2e;border:none;color:#e74c6f;padding:10px;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;">🚫 Block</button>
-                    <button class="ctx-btn" data-action="delete" style="background:#1a1a2e;border:none;color:#e74c6f;padding:10px;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;">🗑️ Delete Contact</button>
+                    <button class="ctx-btn" data-action="block" style="background:#f8f9fa;border:none;color:#e74c6f;padding:10px;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;">🚫 Block</button>
+                    <button class="ctx-btn" data-action="delete" style="background:#f8f9fa;border:none;color:#e74c6f;padding:10px;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;">🗑️ Delete Contact</button>
                 </div>
             `;
             showModal('Contact Options', html, 'Cancel', null);
@@ -2207,6 +2422,7 @@
                         friends: arrayRemove(state.currentUID)
                     });
                     state.userProfile.friends = (state.userProfile.friends || []).filter(f => f !== uid);
+                    state.blockedUsers = state.userProfile.blocked || [];
                     renderContacts();
                     renderProfileFriends();
                     showToast('User blocked');
@@ -2253,13 +2469,13 @@
                 
                 let html = `
                     <div style="text-align:center;padding:10px 0;">
-                        <div style="width:80px;height:80px;border-radius:50%;background:#1a1a2e;margin:0 auto 12px;overflow:hidden;border:2px solid #6c5ce7;display:flex;justify-content:center;align-items:center;font-size:32px;font-weight:700;color:#6c5ce7;">
+                        <div style="width:80px;height:80px;border-radius:50%;background:#e8f0fe;margin:0 auto 12px;overflow:hidden;border:2px solid #00b894;display:flex;justify-content:center;align-items:center;font-size:32px;font-weight:700;color:#00b894;">
                             ${data.photoURL ? `<img src="${data.photoURL}" style="width:100%;height:100%;object-fit:cover;" />` : getInitials(name)}
                         </div>
-                        <div style="font-size:18px;font-weight:600;color:#e0e0e0;">${name}</div>
-                        <div style="font-size:13px;color:#4a4a5a;margin:4px 0;">${data.bio || 'No bio'}</div>
-                        <div style="font-size:12px;color:#4a4a5a;background:#14141e;padding:4px 16px;border-radius:12px;display:inline-block;">UID: ${uid}</div>
-                        ${isFriend ? `<div style="margin-top:16px;"><button class="profile-msg-btn" style="background:#6c5ce7;border:none;color:#fff;padding:8px 20px;border-radius:10px;cursor:pointer;">💬 Message</button></div>` : ''}
+                        <div style="font-size:18px;font-weight:600;color:#1a1a2e;">${name}</div>
+                        <div style="font-size:13px;color:#8395a7;margin:4px 0;">${data.bio || 'No bio'}</div>
+                        <div style="font-size:12px;color:#8395a7;background:#f8f9fa;padding:4px 16px;border-radius:12px;display:inline-block;">UID: ${data.uid6 || uid.substring(0,8)}</div>
+                        ${isFriend ? `<div style="margin-top:16px;"><button class="profile-msg-btn" style="background:#00b894;border:none;color:#fff;padding:8px 20px;border-radius:10px;cursor:pointer;">💬 Message</button></div>` : ''}
                     </div>
                 `;
                 showModal('User Profile', html, 'Close', null);
@@ -2322,7 +2538,129 @@
             state.chatListeners.forEach(unsub => unsub());
             state.chatListeners = [];
             contextMenu.classList.remove('active');
+            chatDropdown.classList.remove('active');
         });
+
+        // ============================================================
+        // CHAT DROPDOWN MENU
+        // ============================================================
+        chatMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            chatDropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', () => {
+            chatDropdown.classList.remove('active');
+        });
+
+        chatDropdown.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', async () => {
+                const action = item.dataset.action;
+                chatDropdown.classList.remove('active');
+                
+                if (action === 'settings') {
+                    showToast('Settings (coming soon)');
+                } else if (action === 'blocked') {
+                    showBlockedContacts();
+                } else if (action === 'callhistory') {
+                    showCallHistory();
+                } else if (action === 'saved') {
+                    showSavedMessages();
+                } else if (action === 'clear') {
+                    if (confirm('Clear all messages in this chat?')) {
+                        const chatId = [state.currentUID, state.chatPartnerId].sort().join('_');
+                        const messagesRef = collection(db, 'chats', chatId, 'messages');
+                        const snap = await getDocs(messagesRef);
+                        snap.forEach(async (docSnap) => {
+                            await deleteDoc(doc(db, 'chats', chatId, 'messages', docSnap.id));
+                        });
+                        showToast('Chat cleared');
+                    }
+                }
+            });
+        });
+
+        function showBlockedContacts() {
+            const blocked = state.blockedUsers || [];
+            if (blocked.length === 0) {
+                showModal('Blocked Contacts', '<p style="color:#8395a7;">No blocked contacts</p>', 'Close', null);
+                return;
+            }
+            let html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+            blocked.forEach(async (uid) => {
+                try {
+                    const docRef = doc(db, 'users', uid);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        html += `
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:#f8f9fa;border-radius:8px;">
+                                <span>${data.name || 'User'} (${data.uid6 || uid.substring(0,8)})</span>
+                                <button class="unblock-btn" data-uid="${uid}" style="background:#00b894;border:none;color:#fff;padding:4px 12px;border-radius:6px;cursor:pointer;">Unblock</button>
+                            </div>
+                        `;
+                    }
+                } catch (err) {
+                    console.error('Error loading blocked user:', err);
+                }
+            });
+            html += '</div>';
+            showModal('Blocked Contacts', html, 'Close', null);
+            document.querySelectorAll('.unblock-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const uid = btn.dataset.uid;
+                    await updateDoc(doc(db, 'users', state.currentUID), {
+                        blocked: arrayRemove(uid)
+                    });
+                    state.blockedUsers = state.userProfile.blocked || [];
+                    showToast('User unblocked');
+                    hideModal();
+                    showBlockedContacts();
+                });
+            });
+        }
+
+        function showCallHistory() {
+            const history = state.callHistory || [];
+            if (history.length === 0) {
+                showModal('Call History', '<p style="color:#8395a7;">No call history</p>', 'Close', null);
+                return;
+            }
+            let html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+            history.slice().reverse().forEach(call => {
+                const type = call.type === 'audio' ? '📞' : '📹';
+                html += `
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:#f8f9fa;border-radius:8px;">
+                        <div>
+                            <span>${type} ${call.name || 'Unknown'}</span>
+                            <div style="font-size:11px;color:#8395a7;">${formatTime(call.timestamp)}</div>
+                        </div>
+                        <span style="color:${call.status === 'missed' ? '#e74c6f' : '#00b894'};">${call.status || 'completed'}</span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            showModal('Call History', html, 'Close', null);
+        }
+
+        function showSavedMessages() {
+            const saved = state.savedMessages || [];
+            if (saved.length === 0) {
+                showModal('Saved Messages', '<p style="color:#8395a7;">No saved messages</p>', 'Close', null);
+                return;
+            }
+            let html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+            saved.forEach((msg, index) => {
+                html += `
+                    <div style="padding:10px;background:#f8f9fa;border-radius:8px;border-left:3px solid #00b894;">
+                        <div style="font-size:13px;color:#1a1a2e;">${msg.text || '📷 Image'}</div>
+                        <div style="font-size:10px;color:#8395a7;margin-top:4px;">${msg.from || 'Unknown'} • ${formatTime(msg.timestamp)}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            showModal('Saved Messages', html, 'Close', null);
+        }
 
         // ============================================================
         // LOAD CHAT MESSAGES
@@ -2522,7 +2860,6 @@
             menu.style.left = Math.min(x, window.innerWidth - 200) + 'px';
             menu.style.top = Math.min(y, window.innerHeight - 300) + 'px';
             
-            // Show/hide options based on message ownership
             const items = menu.querySelectorAll('.menu-item');
             items.forEach(item => {
                 const action = item.dataset.action;
@@ -2535,7 +2872,6 @@
             
             menu.classList.add('active');
             
-            // Close on click outside
             const closeMenu = (e) => {
                 if (!menu.contains(e.target)) {
                     menu.classList.remove('active');
@@ -2547,7 +2883,6 @@
             }, 100);
         }
 
-        // Context menu actions
         contextMenu.querySelectorAll('.menu-item').forEach(item => {
             item.addEventListener('click', async () => {
                 const action = item.dataset.action;
@@ -2596,7 +2931,7 @@
             const emojis = ['😊', '❤️', '🔥', '👏', '😂', '😮', '😢', '🙏'];
             let html = '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">';
             emojis.forEach(emoji => {
-                html += `<button class="reaction-btn" data-emoji="${emoji}" style="background:#1a1a2e;border:none;font-size:28px;padding:8px 12px;border-radius:10px;cursor:pointer;transition:all 0.2s;">${emoji}</button>`;
+                html += `<button class="reaction-btn" data-emoji="${emoji}" style="background:#f8f9fa;border:none;font-size:28px;padding:8px 12px;border-radius:10px;cursor:pointer;transition:all 0.2s;">${emoji}</button>`;
             });
             html += '</div>';
             showModal('React', html, 'Cancel', null);
@@ -2646,7 +2981,7 @@
                     if (docSnap.exists()) {
                         const data = docSnap.data();
                         const name = data.name || 'User';
-                        html += `<button class="forward-contact" data-uid="${uid}" style="background:#1a1a2e;border:none;color:#e0e0e0;padding:10px 16px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">${name}</button>`;
+                        html += `<button class="forward-contact" data-uid="${uid}" style="background:#f8f9fa;border:none;color:#1a1a2e;padding:10px 16px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">${name}</button>`;
                     }
                 } catch (err) {
                     console.error('Error loading contact:', err);
@@ -2687,7 +3022,7 @@
 
         function showEditMessageModal(msg) {
             const html = `
-                <input type="text" id="editMsgInput" value="${msg.text || ''}" style="width:100%;padding:12px;background:#0a0a0f;border:1px solid #2a2a3e;border-radius:10px;color:#e0e0e0;font-size:14px;outline:none;" />
+                <input type="text" id="editMsgInput" value="${msg.text || ''}" style="width:100%;padding:12px;background:#f8f9fa;border:2px solid #e8f0fe;border-radius:10px;color:#1a1a2e;font-size:14px;outline:none;" />
             `;
             showModal('Edit Message', html, 'Save', async () => {
                 const newText = document.getElementById('editMsgInput').value.trim();
@@ -2788,9 +3123,9 @@
         function showChatItemContextMenu(x, y, uid) {
             const html = `
                 <div style="display:flex;flex-direction:column;gap:4px;">
-                    <button class="chat-ctx-btn" data-action="pin" style="background:#1a1a2e;border:none;color:#e0e0e0;padding:10px;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;">📌 Pin</button>
-                    <button class="chat-ctx-btn" data-action="block" style="background:#1a1a2e;border:none;color:#e74c6f;padding:10px;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;">🚫 Block</button>
-                    <button class="chat-ctx-btn" data-action="delete" style="background:#1a1a2e;border:none;color:#e74c6f;padding:10px;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;">🗑️ Delete Chat</button>
+                    <button class="chat-ctx-btn" data-action="pin" style="background:#f8f9fa;border:none;color:#1a1a2e;padding:10px;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;">📌 Pin</button>
+                    <button class="chat-ctx-btn" data-action="block" style="background:#f8f9fa;border:none;color:#e74c6f;padding:10px;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;">🚫 Block</button>
+                    <button class="chat-ctx-btn" data-action="delete" style="background:#f8f9fa;border:none;color:#e74c6f;padding:10px;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;">🗑️ Delete Chat</button>
                 </div>
             `;
             showModal('Chat Options', html, 'Cancel', null);
@@ -2815,10 +3150,12 @@
         // ============================================================
         // MOMENTS
         // ============================================================
+        createMomentBtn.addEventListener('click', showCreateMomentModal);
+
         function showCreateMomentModal() {
             const html = `
-                <textarea id="momentText" placeholder="What's on your mind?" style="width:100%;padding:12px;background:#0a0a0f;border:1px solid #2a2a3e;border-radius:10px;color:#e0e0e0;font-size:14px;outline:none;min-height:80px;resize:vertical;"></textarea>
-                <input type="file" id="momentImageInput" accept="image/*" style="margin:8px 0;color:#e0e0e0;" />
+                <textarea id="momentText" placeholder="What's on your mind?" style="width:100%;padding:12px;background:#f8f9fa;border:2px solid #e8f0fe;border-radius:10px;color:#1a1a2e;font-size:14px;outline:none;min-height:80px;resize:vertical;"></textarea>
+                <input type="file" id="momentImageInput" accept="image/*" style="margin:8px 0;color:#1a1a2e;" />
                 <div id="momentPreview" style="margin-top:8px;"></div>
             `;
             showModal('Create Post', html, 'Post', async () => {
@@ -2842,11 +3179,13 @@
                         uid: state.currentUID,
                         name: state.userProfile.name || 'User',
                         photoURL: state.userProfile.photoURL || '',
+                        uid6: state.userProfile.uid6,
                         text: text || '',
                         imageURL: imageURL,
                         timestamp: serverTimestamp(),
                         likes: [],
                         comments: [],
+                        saves: [],
                     });
                     showToast('Post created!');
                     hideModal();
@@ -2880,23 +3219,240 @@
                     data.id = docSnap.id;
                     const div = document.createElement('div');
                     div.className = 'moment-post';
+                    
+                    const isLiked = data.likes && data.likes.includes(state.currentUID);
+                    const isSaved = data.saves && data.saves.includes(state.currentUID);
+                    const likeCount = data.likes ? data.likes.length : 0;
+                    const saveCount = data.saves ? data.saves.length : 0;
+                    
                     div.innerHTML = `
                         <div class="post-header">
                             <div class="avatar">
                                 ${data.photoURL ? `<img src="${data.photoURL}" />` : getInitials(data.name)}
                             </div>
-                            <div class="post-author">${data.name || 'User'}</div>
+                            <div class="post-author">${data.name || 'User'} <span style="color:#8395a7;font-size:11px;">UID: ${data.uid6 || 'N/A'}</span></div>
                             <div class="post-time">${formatTime(data.timestamp)}</div>
                         </div>
                         ${data.text ? `<div class="post-text">${data.text}</div>` : ''}
                         ${data.imageURL ? `<img src="${data.imageURL}" class="post-image" onclick="window.open('${data.imageURL}', '_blank')" />` : ''}
+                        <div class="post-actions">
+                            <button class="moment-like ${isLiked ? 'liked' : ''}" data-id="${data.id}">
+                                <svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                                ${likeCount > 0 ? likeCount : ''}
+                            </button>
+                            <button class="moment-comment" data-id="${data.id}">
+                                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                ${data.comments ? data.comments.length : 0}
+                            </button>
+                            <button class="moment-save ${isSaved ? 'liked' : ''}" data-id="${data.id}">
+                                <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                                ${saveCount > 0 ? saveCount : ''}
+                            </button>
+                            <button class="moment-share" data-id="${data.id}">
+                                <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                            </button>
+                            <button class="moment-download" data-id="${data.id}">
+                                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            </button>
+                        </div>
                     `;
                     momentsList.appendChild(div);
+                });
+                
+                // Add event listeners for moment actions
+                document.querySelectorAll('.moment-like').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        await toggleMomentLike(id);
+                    });
+                });
+                
+                document.querySelectorAll('.moment-comment').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        await showMomentComments(id);
+                    });
+                });
+                
+                document.querySelectorAll('.moment-save').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        await toggleMomentSave(id);
+                    });
+                });
+                
+                document.querySelectorAll('.moment-share').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        await shareMoment(id);
+                    });
+                });
+                
+                document.querySelectorAll('.moment-download').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        await downloadMomentImage(id);
+                    });
                 });
             }, (err) => {
                 console.error('Error loading moments:', err);
             });
             state.unsubscribers.push(unsubscribe);
+        }
+
+        async function toggleMomentLike(momentId) {
+            try {
+                const docRef = doc(db, 'moments', momentId);
+                const docSnap = await getDoc(docRef);
+                if (!docSnap.exists()) return;
+                const data = docSnap.data();
+                const likes = data.likes || [];
+                if (likes.includes(state.currentUID)) {
+                    await updateDoc(docRef, { likes: arrayRemove(state.currentUID) });
+                } else {
+                    await updateDoc(docRef, { likes: arrayUnion(state.currentUID) });
+                }
+            } catch (err) {
+                console.error('Error toggling like:', err);
+            }
+        }
+
+        async function showMomentComments(momentId) {
+            try {
+                const docRef = doc(db, 'moments', momentId);
+                const docSnap = await getDoc(docRef);
+                if (!docSnap.exists()) return;
+                const data = docSnap.data();
+                const comments = data.comments || [];
+                
+                let html = '<div style="max-height:300px;overflow-y:auto;margin-bottom:12px;">';
+                if (comments.length === 0) {
+                    html += '<p style="color:#8395a7;">No comments yet</p>';
+                } else {
+                    comments.forEach(comment => {
+                        html += `
+                            <div style="padding:8px 0;border-bottom:1px solid #e8f0fe;">
+                                <strong style="color:#00b894;">${comment.name || 'User'}:</strong>
+                                <span style="color:#1a1a2e;">${comment.text}</span>
+                                <div style="font-size:10px;color:#8395a7;">${formatTime(comment.timestamp)}</div>
+                            </div>
+                        `;
+                    });
+                }
+                html += '</div>';
+                html += `
+                    <input type="text" id="commentInput" placeholder="Write a comment..." style="width:100%;padding:12px;background:#f8f9fa;border:2px solid #e8f0fe;border-radius:10px;color:#1a1a2e;font-size:14px;outline:none;" />
+                `;
+                showModal('Comments', html, 'Post', async () => {
+                    const text = document.getElementById('commentInput').value.trim();
+                    if (!text) { showToast('Please write a comment'); return; }
+                    
+                    const comment = {
+                        uid: state.currentUID,
+                        name: state.userProfile.name || 'User',
+                        text: text,
+                        timestamp: serverTimestamp(),
+                    };
+                    await updateDoc(docRef, { comments: arrayUnion(comment) });
+                    showToast('Comment added!');
+                    hideModal();
+                });
+            } catch (err) {
+                console.error('Error showing comments:', err);
+                showToast('Error loading comments');
+            }
+        }
+
+        async function toggleMomentSave(momentId) {
+            try {
+                const docRef = doc(db, 'moments', momentId);
+                const docSnap = await getDoc(docRef);
+                if (!docSnap.exists()) return;
+                const data = docSnap.data();
+                const saves = data.saves || [];
+                
+                if (saves.includes(state.currentUID)) {
+                    await updateDoc(docRef, { saves: arrayRemove(state.currentUID) });
+                    // Remove from saved messages
+                    const savedMessages = state.userProfile.savedMessages || [];
+                    const filtered = savedMessages.filter(msg => msg.momentId !== momentId);
+                    await updateDoc(doc(db, 'users', state.currentUID), { savedMessages: filtered });
+                    state.savedMessages = filtered;
+                    showToast('Unsaved');
+                } else {
+                    await updateDoc(docRef, { saves: arrayUnion(state.currentUID) });
+                    // Add to saved messages
+                    const savedMsg = {
+                        momentId: momentId,
+                        text: data.text || '📷 Image',
+                        from: data.name || 'User',
+                        timestamp: data.timestamp,
+                    };
+                    const savedMessages = state.userProfile.savedMessages || [];
+                    savedMessages.push(savedMsg);
+                    await updateDoc(doc(db, 'users', state.currentUID), { savedMessages: savedMessages });
+                    state.savedMessages = savedMessages;
+                    showToast('Saved!');
+                }
+            } catch (err) {
+                console.error('Error toggling save:', err);
+            }
+        }
+
+        async function shareMoment(momentId) {
+            try {
+                const docRef = doc(db, 'moments', momentId);
+                const docSnap = await getDoc(docRef);
+                if (!docSnap.exists()) return;
+                const data = docSnap.data();
+                
+                const shareData = {
+                    title: `${data.name || 'User'}'s Moment`,
+                    text: data.text || '',
+                    url: data.imageURL || '',
+                };
+                
+                if (navigator.share) {
+                    try {
+                        await navigator.share(shareData);
+                    } catch (err) {
+                        console.log('Share cancelled');
+                    }
+                } else {
+                    // Fallback - copy to clipboard
+                    const text = `${data.text || 'Check out this moment!'} ${data.imageURL || ''}`;
+                    navigator.clipboard.writeText(text);
+                    showToast('Link copied to clipboard!');
+                }
+            } catch (err) {
+                console.error('Error sharing moment:', err);
+            }
+        }
+
+        async function downloadMomentImage(momentId) {
+            try {
+                const docRef = doc(db, 'moments', momentId);
+                const docSnap = await getDoc(docRef);
+                if (!docSnap.exists()) return;
+                const data = docSnap.data();
+                
+                if (!data.imageURL) {
+                    showToast('No image to download');
+                    return;
+                }
+                
+                const a = document.createElement('a');
+                a.href = data.imageURL;
+                a.target = '_blank';
+                a.download = `moment_${momentId}.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                showToast('Downloading...');
+            } catch (err) {
+                console.error('Error downloading image:', err);
+                showToast('Error downloading image');
+            }
         }
 
         // ============================================================
@@ -2926,6 +3482,19 @@
             callVideoToggleBtn.innerHTML = type === 'audio' 
                 ? `<svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>`
                 : `<svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+            
+            // Add to call history
+            const callRecord = {
+                type: type,
+                name: partner.name || 'User',
+                uid: state.chatPartnerId,
+                timestamp: serverTimestamp(),
+                status: 'completed',
+            };
+            const history = state.callHistory || [];
+            history.push(callRecord);
+            state.callHistory = history;
+            updateDoc(doc(db, 'users', state.currentUID), { callHistory: history });
         }
 
         callEndBtn.addEventListener('click', () => {
@@ -2949,7 +3518,7 @@
         });
 
         callChatBtn.addEventListener('click', () => {
-            showToast('Chat during call (feature coming soon)');
+            showToast('Chat during call (coming soon)');
         });
 
         callReactions.addEventListener('click', (e) => {
@@ -2969,14 +3538,14 @@
                 return;
             }
             let html = `
-                <input type="text" id="groupNameInput" placeholder="Group name" style="width:100%;padding:12px;background:#0a0a0f;border:1px solid #2a2a3e;border-radius:10px;color:#e0e0e0;font-size:14px;outline:none;margin-bottom:12px;" />
+                <input type="text" id="groupNameInput" placeholder="Group name" style="width:100%;padding:12px;background:#f8f9fa;border:2px solid #e8f0fe;border-radius:10px;color:#1a1a2e;font-size:14px;outline:none;margin-bottom:12px;" />
                 <div style="max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;">
             `;
             friends.forEach(uid => {
                 html += `
-                    <label style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#0a0a0f;border-radius:8px;cursor:pointer;">
+                    <label style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f8f9fa;border-radius:8px;cursor:pointer;">
                         <input type="checkbox" class="group-member" value="${uid}" />
-                        <span style="color:#e0e0e0;font-size:14px;">${uid.substring(0,8)}...</span>
+                        <span style="color:#1a1a2e;font-size:14px;">${uid.substring(0,8)}...</span>
                     </label>
                 `;
             });
