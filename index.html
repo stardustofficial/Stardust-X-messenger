@@ -144,6 +144,88 @@
             transition: background 0.2s;
         }
         .action-cancel:active { background: #c8e6c9; }
+
+        /* Professional Popup */
+        .custom-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(6px);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .custom-popup-overlay.active { display: flex; }
+        .custom-popup {
+            background: #ffffff;
+            border-radius: 28px;
+            max-width: 380px;
+            width: 100%;
+            padding: 30px 24px 24px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: popIn 0.3s ease;
+        }
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .custom-popup-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #e5f0e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        .custom-popup-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a2e1a;
+            margin-bottom: 6px;
+        }
+        .custom-popup-desc {
+            font-size: 14px;
+            color: #2b7a4b;
+            opacity: 0.7;
+            margin-bottom: 20px;
+        }
+        .custom-popup-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #b8d0b8;
+            border-radius: 16px;
+            font-size: 15px;
+            margin-bottom: 12px;
+            background: #f0f7f0;
+            color: #1a2e1a;
+            outline: none;
+        }
+        .custom-popup-input:focus { border-color: #2b7a4b; box-shadow: 0 0 0 3px rgba(43, 122, 75, 0.15); }
+        .custom-popup-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .custom-popup-buttons button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .custom-popup-buttons .primary { background: #2b7a4b; color: white; }
+        .custom-popup-buttons .primary:hover { background: #1e5a35; }
+        .custom-popup-buttons .secondary { background: #e5f0e5; color: #2b7a4b; }
+        .custom-popup-buttons .secondary:hover { background: #c8e6c9; }
+        .custom-popup-buttons .danger { background: #dc2626; color: white; }
+        .custom-popup-buttons .danger:hover { background: #b91c1c; }
     </style>
 </head>
 <body>
@@ -179,6 +261,22 @@
                 <p class="text-xs text-[#2b7a4b]">Already have an account? <span onclick="switchToLogin()" class="font-bold cursor-pointer hover:underline">Sign in</span></p>
             </div>
             <p class="text-[9px] text-[#2b7a4b] opacity-50 mt-6">End-to-end encrypted</p>
+        </div>
+    </div>
+
+    <!-- CUSTOM POPUP -->
+    <div id="custom-popup" class="custom-popup-overlay">
+        <div class="custom-popup">
+            <div class="custom-popup-icon">
+                <svg class="w-8 h-8 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <div class="custom-popup-title" id="popup-title">Action</div>
+            <div class="custom-popup-desc" id="popup-desc">Enter details below</div>
+            <input id="popup-input" class="custom-popup-input" placeholder="Type here...">
+            <div class="custom-popup-buttons">
+                <button class="secondary" onclick="closePopup()">Cancel</button>
+                <button class="primary" id="popup-confirm-btn" onclick="confirmPopup()">Confirm</button>
+            </div>
         </div>
     </div>
 
@@ -694,12 +792,38 @@
             callIsFloating: false, viewProfileUid: null, isMuted: false,
             pipFullscreen: false, selectedPostId: null, editingPostId: null,
             contactActionUid: null, postActionId: null,
+            popupCallback: null,
         };
 
         const $ = id => document.getElementById(id);
         const loadingScreen = $('loading-screen');
         const loginScreen = $('login-screen');
         const appLayout = $('app-layout');
+
+        // ---------- CUSTOM POPUP ----------
+        window.showPopup = function(title, desc, placeholder, confirmText, callback, inputType = 'text') {
+            $('popup-title').textContent = title;
+            $('popup-desc').textContent = desc;
+            $('popup-input').placeholder = placeholder || 'Type here...';
+            $('popup-input').value = '';
+            $('popup-input').type = inputType || 'text';
+            $('popup-confirm-btn').textContent = confirmText || 'Confirm';
+            state.popupCallback = callback;
+            document.getElementById('custom-popup').classList.add('active');
+            setTimeout(() => $('popup-input').focus(), 100);
+        };
+
+        window.closePopup = function() {
+            document.getElementById('custom-popup').classList.remove('active');
+            state.popupCallback = null;
+        };
+
+        window.confirmPopup = function() {
+            if (state.popupCallback) {
+                state.popupCallback($('popup-input').value);
+            }
+            closePopup();
+        };
 
         // ---------- ACTION SHEET HELPERS ----------
         window.openActionSheet = function(id) {
@@ -723,24 +847,29 @@
             closeActionSheet('contact-action-sheet');
 
             if (action === 'delete') {
-                if (confirm(`Delete ${contact.name} from your contacts?`)) {
-                    const key1 = 'bond_' + state.currentUser.uid + '_' + uid;
-                    const key2 = 'bond_' + uid + '_' + state.currentUser.uid;
-                    const updates = {};
-                    updates['friendships/' + key1] = null;
-                    updates['friendships/' + key2] = null;
-                    update(ref(db), updates).then(() => alert('Contact deleted.'));
-                }
+                showPopup('Delete Contact', `Remove ${contact.name} from your contacts?`, '', 'Delete', (val) => {
+                    if (val !== null) {
+                        const key1 = 'bond_' + state.currentUser.uid + '_' + uid;
+                        const key2 = 'bond_' + uid + '_' + state.currentUser.uid;
+                        const updates = {};
+                        updates['friendships/' + key1] = null;
+                        updates['friendships/' + key2] = null;
+                        update(ref(db), updates);
+                    }
+                });
             } else if (action === 'block') {
-                if (confirm(`Block ${contact.name}? They won't be able to message or call you.`)) {
-                    if (!state.blocked.includes(uid)) {
-                        state.blocked.push(uid);
-                        set(ref(db, 'blocked/' + state.currentUser.uid), state.blocked);
-                        alert('User blocked.');
-                    } else alert('Already blocked.');
-                }
+                showPopup('Block User', `Block ${contact.name}? They won't be able to message or call you.`, '', 'Block', (val) => {
+                    if (val !== null) {
+                        if (!state.blocked.includes(uid)) {
+                            state.blocked.push(uid);
+                            set(ref(db, 'blocked/' + state.currentUser.uid), state.blocked);
+                        }
+                    }
+                });
             } else if (action === 'report') {
-                alert(`Report ${contact.name}? This will notify our moderation team.`);
+                showPopup('Report User', `Report ${contact.name}? This will notify our moderation team.`, '', 'Report', (val) => {
+                    alert('Thank you for your report. We will review this user.');
+                });
             }
             state.contactActionUid = null;
         };
@@ -763,16 +892,18 @@
                 state.editingPostId = postId;
                 $('post-edit-modal').classList.remove('hidden');
             } else if (action === 'delete') {
-                if (confirm('Delete this post permanently?')) {
-                    const dbRef = ref(db, 'posts');
-                    onValue(dbRef, (snap) => {
-                        const data = snap.val();
-                        if (data) {
-                            const key = Object.keys(data).find(k => data[k].id === postId);
-                            if (key) remove(ref(db, 'posts/' + key)).then(() => alert('Post deleted.'));
-                        }
-                    }, { onlyOnce: true });
-                }
+                showPopup('Delete Post', 'Are you sure you want to delete this post permanently?', '', 'Delete', (val) => {
+                    if (val !== null) {
+                        const dbRef = ref(db, 'posts');
+                        onValue(dbRef, (snap) => {
+                            const data = snap.val();
+                            if (data) {
+                                const key = Object.keys(data).find(k => data[k].id === postId);
+                                if (key) remove(ref(db, 'posts/' + key));
+                            }
+                        }, { onlyOnce: true });
+                    }
+                });
             } else if (action === 'comments') {
                 openCommentsManagement(postId);
             }
@@ -1186,24 +1317,25 @@
         window.openCommentModal = function(postId) {
             const post = state.posts.find(p => p.id === postId);
             if (!post) return;
-            const comment = prompt('Write a comment:');
-            if (comment && comment.trim()) {
-                const dbRef = ref(db, 'posts');
-                onValue(dbRef, (snap) => {
-                    const data = snap.val();
-                    if (data) {
-                        const key = Object.keys(data).find(k => data[k].id === postId);
-                        if (key) {
-                            push(ref(db, 'posts/' + key + '/comments'), {
-                                authorUID: state.currentUser.uid,
-                                authorName: state.currentUser.name,
-                                text: comment.trim(),
-                                timestamp: Date.now()
-                            });
+            showPopup('Add Comment', 'Write your comment below:', 'Type comment...', 'Post', (val) => {
+                if (val && val.trim()) {
+                    const dbRef = ref(db, 'posts');
+                    onValue(dbRef, (snap) => {
+                        const data = snap.val();
+                        if (data) {
+                            const key = Object.keys(data).find(k => data[k].id === postId);
+                            if (key) {
+                                push(ref(db, 'posts/' + key + '/comments'), {
+                                    authorUID: state.currentUser.uid,
+                                    authorName: state.currentUser.name,
+                                    text: val.trim(),
+                                    timestamp: Date.now()
+                                });
+                            }
                         }
-                    }
-                }, { onlyOnce: true });
-            }
+                    }, { onlyOnce: true });
+                }
+            });
         };
 
         window.openImageViewer = function(src) {
@@ -1380,7 +1512,11 @@
             const key = getChatKey(state.currentUser.uid, state.activeChat);
             const msgs = state.chats[key] || {};
             const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === state.selectedMessage.timestamp && msgs[k].sender === state.selectedMessage.sender);
-            if (msgKey) { if (confirm('Delete this message?')) remove(ref(db, 'chats/' + key + '/' + msgKey)); }
+            if (msgKey) {
+                showPopup('Delete Message', 'Delete this message for everyone?', '', 'Delete', (val) => {
+                    if (val !== null) remove(ref(db, 'chats/' + key + '/' + msgKey));
+                });
+            }
             closeContextMenu();
         };
 
@@ -1418,9 +1554,12 @@
             const reqKey = Object.keys(state.chats).find(k => state.chats[k]?.from === uid && state.chats[k]?.to === state.currentUser.uid);
             if (reqKey) updates['friendRequests/' + reqKey] = null;
             update(ref(db), updates).then(() => {
-                const name = prompt('Enter a name for this contact:', uid);
-                if (name) update(ref(db, 'users/' + uid), { name });
-                alert('Friend added!');
+                showPopup('Name this contact', 'Enter a name for this contact:', contact.name || uid, 'Save', (val) => {
+                    if (val && val.trim()) {
+                        update(ref(db, 'users/' + uid), { name: val.trim() });
+                    }
+                    alert('Friend added!');
+                });
             });
         };
 
@@ -1849,6 +1988,55 @@
                 container.appendChild(div);
             }
             if (filtered.length === 0) container.innerHTML = '<p class="text-center text-[#2b7a4b] opacity-50 text-sm py-4">No contacts found</p>';
+        };
+
+        // ---------- FIX: Save Edited Post ----------
+        window.saveEditedPost = function() {
+            const text = $('post-edit-text').value.trim();
+            if (!text || !state.editingPostId) return;
+            const dbRef = ref(db, 'posts');
+            onValue(dbRef, (snap) => {
+                const data = snap.val();
+                if (data) {
+                    const key = Object.keys(data).find(k => data[k].id === state.editingPostId);
+                    if (key) {
+                        update(ref(db, 'posts/' + key), { text }).then(() => {
+                            closeModal('post-edit-modal');
+                            state.editingPostId = null;
+                            alert('Post updated!');
+                        });
+                    }
+                }
+            }, { onlyOnce: true });
+        };
+
+        // ---------- FIX: Manage Comments ----------
+        window.openCommentsManagement = function(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post || !post.comments) { alert('No comments to manage.'); return; }
+            const container = $('comments-management-list');
+            container.innerHTML = '';
+            const comments = Object.entries(post.comments);
+            if (comments.length === 0) { container.innerHTML = '<p class="text-center text-[#2b7a4b] opacity-50 text-sm py-4">No comments.</p>'; }
+            for (let [key, comment] of comments) {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
+                div.innerHTML = `
+                    <span class="text-xs"><span class="font-bold">${comment.authorName}:</span> ${comment.text}</span>
+                    <button onclick="deleteComment('${postId}','${key}')" class="bg-red-100 text-red-600 px-2 py-1 rounded-lg text-xs font-bold">Delete</button>
+                `;
+                container.appendChild(div);
+            }
+            $('post-comments-modal').classList.remove('hidden');
+        };
+
+        window.deleteComment = function(postId, commentKey) {
+            showPopup('Delete Comment', 'Delete this comment?', '', 'Delete', (val) => {
+                if (val !== null) {
+                    remove(ref(db, 'posts/' + postId + '/comments/' + commentKey));
+                    openCommentsManagement(postId);
+                }
+            });
         };
 
         // ---------- INIT ----------
