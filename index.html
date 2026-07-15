@@ -80,6 +80,70 @@
         .call-fullscreen-video { width: 100%; height: 100%; object-fit: cover; }
         .call-pip-video { position: absolute; top: 20px; right: 20px; width: 120px; height: 170px; border-radius: 16px; border: 2px solid #3b9b5e; object-fit: cover; z-index: 10; background: #000; cursor: pointer; }
         .call-pip-video:hover { border-color: #6fcf97; }
+        
+        /* Custom Action Sheet */
+        .action-sheet-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .action-sheet-overlay.active { display: flex; }
+        .action-sheet {
+            background: #ffffff;
+            border-radius: 24px 24px 0 0;
+            max-width: 500px;
+            width: 100%;
+            padding: 20px 16px 30px;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .action-sheet-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a2e1a;
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5f0e5;
+            margin-bottom: 12px;
+        }
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: #f0f7f0;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a2e1a;
+        }
+        .action-item:active { background: #c8e6c9; }
+        .action-item.danger { color: #dc2626; }
+        .action-item .icon { width: 24px; height: 24px; flex-shrink: 0; }
+        .action-cancel {
+            margin-top: 12px;
+            padding: 14px;
+            border-radius: 14px;
+            background: #e5f0e5;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+            color: #2b7a4b;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .action-cancel:active { background: #c8e6c9; }
     </style>
 </head>
 <body>
@@ -211,27 +275,27 @@
                     </h3>
                     <div class="grid grid-cols-2 gap-2">
                         <a href="https://stardustofficial.github.io/Stardust-ball-game/" target="_blank" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-3 text-center hover:shadow-md transition">
-                            <div class="text-2xl mb-1">🏀</div>
+                            <svg class="w-8 h-8 mx-auto mb-1 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <p class="text-[10px] font-bold text-[#1a2e1a]">Roller Splash Pro</p>
                         </a>
                         <a href="https://stardustofficial.github.io/Troll-game/" target="_blank" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-3 text-center hover:shadow-md transition">
-                            <div class="text-2xl mb-1">👾</div>
+                            <svg class="w-8 h-8 mx-auto mb-1 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <p class="text-[10px] font-bold text-[#1a2e1a]">Troll Game</p>
                         </a>
                         <a href="https://stardustofficial.github.io/Stardust-hub/" target="_blank" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-3 text-center hover:shadow-md transition">
-                            <div class="text-2xl mb-1">🌐</div>
+                            <svg class="w-8 h-8 mx-auto mb-1 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"></path></svg>
                             <p class="text-[10px] font-bold text-[#1a2e1a]">Stardust Hub</p>
                         </a>
                         <a href="https://stardustofficial.github.io/Stardust-media/" target="_blank" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-3 text-center hover:shadow-md transition">
-                            <div class="text-2xl mb-1">📺</div>
+                            <svg class="w-8 h-8 mx-auto mb-1 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                             <p class="text-[10px] font-bold text-[#1a2e1a]">Stardust Media</p>
                         </a>
                         <a href="https://stardust-ai.onrender.com/" target="_blank" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-3 text-center hover:shadow-md transition">
-                            <div class="text-2xl mb-1">🤖</div>
+                            <svg class="w-8 h-8 mx-auto mb-1 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                             <p class="text-[10px] font-bold text-[#1a2e1a]">Stardust AI</p>
                         </a>
                         <a href="https://stardustofficial.github.io/Stardust-store/" target="_blank" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-3 text-center hover:shadow-md transition">
-                            <div class="text-2xl mb-1">🛒</div>
+                            <svg class="w-8 h-8 mx-auto mb-1 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                             <p class="text-[10px] font-bold text-[#1a2e1a]">Stardust Store</p>
                         </a>
                     </div>
@@ -258,6 +322,46 @@
         </nav>
     </div>
 
+    <!-- ACTION SHEET - Contact Menu -->
+    <div id="contact-action-sheet" class="action-sheet-overlay">
+        <div class="action-sheet">
+            <div class="action-sheet-title">Contact Actions</div>
+            <div class="action-item" onclick="contactAction('delete')">
+                <svg class="icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                Delete Contact
+            </div>
+            <div class="action-item" onclick="contactAction('block')">
+                <svg class="icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                Block User
+            </div>
+            <div class="action-item" onclick="contactAction('report')">
+                <svg class="icon text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                Report User
+            </div>
+            <div class="action-cancel" onclick="closeActionSheet('contact-action-sheet')">Cancel</div>
+        </div>
+    </div>
+
+    <!-- ACTION SHEET - Post Menu -->
+    <div id="post-action-sheet" class="action-sheet-overlay">
+        <div class="action-sheet">
+            <div class="action-sheet-title">Manage Moment</div>
+            <div class="action-item" onclick="postAction('edit')">
+                <svg class="icon text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                Edit
+            </div>
+            <div class="action-item danger" onclick="postAction('delete')">
+                <svg class="icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                Delete
+            </div>
+            <div class="action-item" onclick="postAction('comments')">
+                <svg class="icon text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                Manage Comments
+            </div>
+            <div class="action-cancel" onclick="closeActionSheet('post-action-sheet')">Cancel</div>
+        </div>
+    </div>
+
     <!-- CHAT WINDOW MODAL -->
     <div id="chat-window-modal" class="hidden fixed inset-0 bg-[#e5f0e5] z-50 flex flex-col max-w-md mx-auto w-full h-full border-x border-[#b8d0b8]">
         <header class="p-3 bg-white border-b border-[#b8d0b8] flex justify-between items-center">
@@ -280,7 +384,6 @@
         </header>
         <div id="chat-messages-container" class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar flex flex-col relative">
             <div id="chat-typing-indicator" class="text-xs text-[#2b7a4b] italic hidden">Typing...</div>
-            <!-- Reactions display will be inline in messages -->
         </div>
         <div id="msg-context-menu" class="hidden absolute bottom-20 left-4 right-4 bg-white border border-[#b8d0b8] rounded-2xl shadow-xl p-3 z-50">
             <div class="flex flex-wrap gap-2 mb-2">
@@ -321,19 +424,14 @@
 
     <!-- CALL INTERFACE OVERLAY -->
     <div id="call-interface-overlay" class="hidden fixed inset-0 bg-black/98 z-[80] flex flex-col items-center justify-between p-4 max-w-md mx-auto w-full call-fullscreen-bg">
-        <!-- Remote Video Full Screen -->
         <div class="w-full flex-1 relative bg-black rounded-3xl overflow-hidden">
             <video id="call-remote-video" autoplay playsinline class="w-full h-full object-cover"></video>
-            <!-- Local Video PIP -->
             <video id="call-local-video" autoplay muted playsinline class="call-pip-video" onclick="swapPipFullscreen()"></video>
-            <!-- Call Status -->
             <div class="absolute top-4 left-4 bg-black/50 px-3 py-1 rounded-full text-white/80 text-xs">● Encrypted</div>
             <div class="absolute bottom-20 left-0 right-0 text-center">
                 <p id="call-status-lbl" class="text-white/60 text-sm">Connecting...</p>
             </div>
         </div>
-        
-        <!-- Bottom Navigation -->
         <div id="call-bottom-nav" class="w-full flex justify-center items-center gap-3 py-3 px-2 bg-black/40 backdrop-blur-sm rounded-3xl mt-2">
             <button onclick="toggleCallReactions()" class="call-bottom-btn p-3 rounded-full w-11 h-11 flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -351,8 +449,6 @@
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 8l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.725-.94l-2.512-.628a1 1 0 00-.734.216l-1.68 1.68a15.093 15.093 0 01-6.728-6.728l1.68-1.68a1 1 0 00.216-.734l-.628-2.512A1 1 0 0010.28 3H5z"></path></svg>
             </button>
         </div>
-        
-        <!-- Reactions Popup -->
         <div id="call-reactions-popup" class="hidden absolute bottom-28 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md border border-[#b8d0b8] rounded-2xl p-3 shadow-2xl z-20 flex gap-2 flex-wrap justify-center">
             <button onclick="sendCallReaction('🔥')" class="text-2xl hover:scale-125 transition p-1">🔥</button>
             <button onclick="sendCallReaction('❤️')" class="text-2xl hover:scale-125 transition p-1">❤️</button>
@@ -363,8 +459,6 @@
             <button onclick="sendCallReaction('😢')" class="text-2xl hover:scale-125 transition p-1">😢</button>
             <button onclick="sendCallReaction('💀')" class="text-2xl hover:scale-125 transition p-1">💀</button>
         </div>
-        
-        <!-- Call Chat Overlay -->
         <div id="call-chat-overlay" class="hidden absolute inset-0 bg-black/80 backdrop-blur-sm z-15 flex flex-col p-4 pt-12">
             <div class="flex justify-between items-center mb-3">
                 <span class="text-xs font-bold text-white/70">Call Chat</span>
@@ -376,8 +470,6 @@
                 <button onclick="sendCallChatMessage()" class="bg-[#2b7a4b] px-4 py-2 rounded-xl text-xs font-bold text-white">Send</button>
             </div>
         </div>
-        
-        <!-- Incoming Call Actions -->
         <div id="incoming-call-actions" class="hidden flex gap-4 w-full mb-2 px-2">
             <button onclick="acceptIncomingCall()" class="flex-1 bg-[#3b9b5e] hover:bg-[#2b7a4b] text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#2b7a4b]/30 transition">Accept</button>
             <button onclick="rejectIncomingCall()" class="flex-1 bg-red-600 hover:bg-red-500 text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-red-600/30 transition">Reject</button>
@@ -601,12 +693,91 @@
             callSeconds: 0, callActive: false, callPeerId: null, callIsVideo: false,
             callIsFloating: false, viewProfileUid: null, isMuted: false,
             pipFullscreen: false, selectedPostId: null, editingPostId: null,
+            contactActionUid: null, postActionId: null,
         };
 
         const $ = id => document.getElementById(id);
         const loadingScreen = $('loading-screen');
         const loginScreen = $('login-screen');
         const appLayout = $('app-layout');
+
+        // ---------- ACTION SHEET HELPERS ----------
+        window.openActionSheet = function(id) {
+            document.getElementById(id).classList.add('active');
+        };
+        window.closeActionSheet = function(id) {
+            document.getElementById(id).classList.remove('active');
+        };
+
+        // ---------- CONTACT ACTION SHEET ----------
+        window.openContactActions = function(uid) {
+            state.contactActionUid = uid;
+            openActionSheet('contact-action-sheet');
+        };
+
+        window.contactAction = function(action) {
+            const uid = state.contactActionUid;
+            if (!uid) return;
+            const contact = state.contacts.find(c => c.uid === uid);
+            if (!contact) return;
+            closeActionSheet('contact-action-sheet');
+
+            if (action === 'delete') {
+                if (confirm(`Delete ${contact.name} from your contacts?`)) {
+                    const key1 = 'bond_' + state.currentUser.uid + '_' + uid;
+                    const key2 = 'bond_' + uid + '_' + state.currentUser.uid;
+                    const updates = {};
+                    updates['friendships/' + key1] = null;
+                    updates['friendships/' + key2] = null;
+                    update(ref(db), updates).then(() => alert('Contact deleted.'));
+                }
+            } else if (action === 'block') {
+                if (confirm(`Block ${contact.name}? They won't be able to message or call you.`)) {
+                    if (!state.blocked.includes(uid)) {
+                        state.blocked.push(uid);
+                        set(ref(db, 'blocked/' + state.currentUser.uid), state.blocked);
+                        alert('User blocked.');
+                    } else alert('Already blocked.');
+                }
+            } else if (action === 'report') {
+                alert(`Report ${contact.name}? This will notify our moderation team.`);
+            }
+            state.contactActionUid = null;
+        };
+
+        // ---------- POST ACTION SHEET ----------
+        window.openPostActions = function(postId) {
+            state.postActionId = postId;
+            openActionSheet('post-action-sheet');
+        };
+
+        window.postAction = function(action) {
+            const postId = state.postActionId;
+            if (!postId) return;
+            const post = state.posts.find(p => p.id === postId);
+            if (!post || post.author !== state.currentUser.uid) return;
+            closeActionSheet('post-action-sheet');
+
+            if (action === 'edit') {
+                $('post-edit-text').value = post.text;
+                state.editingPostId = postId;
+                $('post-edit-modal').classList.remove('hidden');
+            } else if (action === 'delete') {
+                if (confirm('Delete this post permanently?')) {
+                    const dbRef = ref(db, 'posts');
+                    onValue(dbRef, (snap) => {
+                        const data = snap.val();
+                        if (data) {
+                            const key = Object.keys(data).find(k => data[k].id === postId);
+                            if (key) remove(ref(db, 'posts/' + key)).then(() => alert('Post deleted.'));
+                        }
+                    }, { onlyOnce: true });
+                }
+            } else if (action === 'comments') {
+                openCommentsManagement(postId);
+            }
+            state.postActionId = null;
+        };
 
         // ---------- AUTH ----------
         window.switchToSignup = () => { $('login-form').classList.add('hidden'); $('signup-form').classList.remove('hidden'); };
@@ -832,7 +1003,7 @@
                     </div>
                     <div class="flex items-center space-x-1">
                         <button onclick="event.stopPropagation(); openChat('${contact.uid}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
-                        <button onclick="event.stopPropagation(); toggleContactMenu('${contact.uid}')" class="contact-menu-btn p-1">
+                        <button onclick="event.stopPropagation(); openContactActions('${contact.uid}')" class="contact-menu-btn p-1">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
                         </button>
                     </div>
@@ -841,30 +1012,6 @@
             }
             placeholder.classList.toggle('hidden', sorted.length > 0);
         }
-
-        window.toggleContactMenu = function(uid) {
-            const actions = ['Delete Contact', 'Block', 'Report'];
-            const choice = confirm(`Choose action for ${state.contacts.find(c=>c.uid===uid)?.name}:\n\n1. Delete Contact\n2. Block\n3. Report`);
-            if (choice === null) return;
-            if (choice === true) {
-                // Delete - remove friendship
-                const key1 = 'bond_' + state.currentUser.uid + '_' + uid;
-                const key2 = 'bond_' + uid + '_' + state.currentUser.uid;
-                const updates = {};
-                updates['friendships/' + key1] = null;
-                updates['friendships/' + key2] = null;
-                update(ref(db), updates).then(() => alert('Contact deleted.'));
-            } else if (choice === false) {
-                const subChoice = confirm('Block this user? They won\'t be able to message or call you.');
-                if (subChoice) {
-                    if (!state.blocked.includes(uid)) {
-                        state.blocked.push(uid);
-                        set(ref(db, 'blocked/' + state.currentUser.uid), state.blocked);
-                        alert('User blocked.');
-                    } else alert('Already blocked.');
-                }
-            }
-        };
 
         function renderMoments() {
             const container = $('moments-feed');
@@ -892,7 +1039,7 @@
                         </div>
                         <div class="flex items-center space-x-1">
                             <span class="text-[9px] text-[#2b7a4b] opacity-50">${new Date(post.timestamp).toLocaleString()}</span>
-                            ${isOwner ? `<button onclick="event.stopPropagation(); togglePostMenu('${post.id}')" class="post-menu-btn p-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>` : ''}
+                            ${isOwner ? `<button onclick="event.stopPropagation(); openPostActions('${post.id}')" class="post-menu-btn p-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>` : ''}
                         </div>
                     </div>
                     <p class="text-sm text-[#1a2e1a] whitespace-pre-wrap">${post.text}</p>
@@ -918,79 +1065,6 @@
                 container.appendChild(div);
             }
         }
-
-        window.togglePostMenu = function(postId) {
-            const post = state.posts.find(p => p.id === postId);
-            if (!post || post.author !== state.currentUser.uid) return;
-            state.selectedPostId = postId;
-            const choice = confirm(`Manage your moment:\n\n1. Edit\n2. Delete\n3. Manage Comments`);
-            if (choice === null) return;
-            if (choice === true) {
-                // Edit
-                $('post-edit-text').value = post.text;
-                state.editingPostId = postId;
-                $('post-edit-modal').classList.remove('hidden');
-            } else if (choice === false) {
-                // Delete or Manage Comments
-                const subChoice = confirm('Choose:\n\n1. Delete Post\n2. Manage Comments');
-                if (subChoice === null) return;
-                if (subChoice === true) {
-                    // Delete
-                    if (confirm('Delete this post permanently?')) {
-                        const dbRef = ref(db, 'posts');
-                        onValue(dbRef, (snap) => {
-                            const data = snap.val();
-                            if (data) {
-                                const key = Object.keys(data).find(k => data[k].id === postId);
-                                if (key) remove(ref(db, 'posts/' + key)).then(() => alert('Post deleted.'));
-                            }
-                        }, { onlyOnce: true });
-                    }
-                } else {
-                    // Manage Comments
-                    openCommentsManagement(postId);
-                }
-            }
-        };
-
-        window.saveEditedPost = function() {
-            const text = $('post-edit-text').value.trim();
-            if (!text || !state.editingPostId) return;
-            const dbRef = ref(db, 'posts');
-            onValue(dbRef, (snap) => {
-                const data = snap.val();
-                if (data) {
-                    const key = Object.keys(data).find(k => data[k].id === state.editingPostId);
-                    if (key) update(ref(db, 'posts/' + key), { text }).then(() => { closeModal('post-edit-modal'); state.editingPostId = null; });
-                }
-            }, { onlyOnce: true });
-        };
-
-        window.openCommentsManagement = function(postId) {
-            const post = state.posts.find(p => p.id === postId);
-            if (!post || !post.comments) { alert('No comments to manage.'); return; }
-            const container = $('comments-management-list');
-            container.innerHTML = '';
-            const comments = Object.entries(post.comments);
-            if (comments.length === 0) { container.innerHTML = '<p class="text-center text-[#2b7a4b] opacity-50 text-sm py-4">No comments.</p>'; }
-            for (let [key, comment] of comments) {
-                const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
-                div.innerHTML = `
-                    <span class="text-xs"><span class="font-bold">${comment.authorName}:</span> ${comment.text}</span>
-                    <button onclick="deleteComment('${postId}','${key}')" class="bg-red-100 text-red-600 px-2 py-1 rounded-lg text-xs font-bold">Delete</button>
-                `;
-                container.appendChild(div);
-            }
-            $('post-comments-modal').classList.remove('hidden');
-        };
-
-        window.deleteComment = function(postId, commentKey) {
-            if (confirm('Delete this comment?')) {
-                remove(ref(db, 'posts/' + postId + '/comments/' + commentKey));
-                openCommentsManagement(postId);
-            }
-        };
 
         function renderProfile() {
             const u = state.currentUser;
@@ -1547,7 +1621,6 @@
         };
 
         window.swapPipFullscreen = function() {
-            // Swap local and remote video feeds
             const remoteVideo = document.getElementById('call-remote-video');
             const localVideo = document.getElementById('call-local-video');
             const remoteStream = remoteVideo.srcObject;
@@ -1788,5 +1861,6 @@
         });
         console.log('Stardust X Messenger loaded.');
     </script>
+
 </body>
 </html>
