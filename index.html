@@ -223,6 +223,13 @@
             background: rgba(0,0,0,0.6);
             backdrop-filter: blur(4px);
         }
+        
+        .clickable-row {
+            cursor: pointer;
+        }
+        .clickable-row:active {
+            background: #c8e6c9;
+        }
     </style>
 </head>
 <body>
@@ -264,7 +271,7 @@
     </div>
 
     <!-- MAIN APP -->
-    <div id="app-layout" class="hidden flex-1 flex flex-col pb-16 max-w-md mx-auto w-full bg-[#e5f0e5] min-h-screen relative border-x border-[#b8d0b8] shadow-xl">
+    <div id="app-layout" class="hidden flex-1 flex-col pb-16 max-w-md mx-auto w-full bg-[#e5f0e5] min-h-screen relative border-x border-[#b8d0b8] shadow-xl" style="display:none;">
         
         <!-- TOP BAR -->
         <div id="top-bar" class="bg-white border-b border-[#b8d0b8] px-4 py-3 flex justify-between items-center sticky top-0 z-30">
@@ -355,21 +362,21 @@
                         Quick Games
                     </h3>
                     <div class="grid grid-cols-2 gap-3">
-                        <div onclick="playGame('tictac')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
-                            <div class="text-3xl mb-1">❌⭕</div>
-                            <p class="text-xs font-bold text-[#1a2e1a]">Tic Tac Toe</p>
+                        <div onclick="playGame('chess')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
+                            <div class="text-3xl mb-1">♟️</div>
+                            <p class="text-xs font-bold text-[#1a2e1a]">Chess</p>
                         </div>
-                        <div onclick="playGame('memory')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
-                            <div class="text-3xl mb-1">🧠</div>
-                            <p class="text-xs font-bold text-[#1a2e1a]">Memory Match</p>
-                        </div>
-                        <div onclick="playGame('snake')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
-                            <div class="text-3xl mb-1">🐍</div>
-                            <p class="text-xs font-bold text-[#1a2e1a]">Snake</p>
-                        </div>
-                        <div onclick="playGame('puzzle')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
+                        <div onclick="playGame('sudoku')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
                             <div class="text-3xl mb-1">🧩</div>
-                            <p class="text-xs font-bold text-[#1a2e1a]">Slide Puzzle</p>
+                            <p class="text-xs font-bold text-[#1a2e1a]">Sudoku</p>
+                        </div>
+                        <div onclick="playGame('solitaire')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
+                            <div class="text-3xl mb-1">🃏</div>
+                            <p class="text-xs font-bold text-[#1a2e1a]">Solitaire</p>
+                        </div>
+                        <div onclick="playGame('trivia')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
+                            <div class="text-3xl mb-1">❓</div>
+                            <p class="text-xs font-bold text-[#1a2e1a]">Trivia Quiz</p>
                         </div>
                     </div>
                 </div>
@@ -507,8 +514,8 @@
             <button onclick="toggleCallReactions()" class="call-bottom-btn p-3 rounded-full w-11 h-11 flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </button>
-            <button onclick="toggleVideoDuringCall()" id="call-toggle-video-btn" class="call-bottom-btn p-3 rounded-full w-11 h-11 flex items-center justify-center">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            <button onclick="toggleMute()" id="call-mute-btn" class="call-bottom-btn p-3 rounded-full w-11 h-11 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
             </button>
             <button onclick="minimizeCallWindow()" class="call-bottom-btn p-3 rounded-full w-11 h-11 flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3m0 18v-3a2 2 0 012-2h3M3 16h3a2 2 0 012 2v3"></path></svg>
@@ -771,6 +778,7 @@
             callIsVideo: false,
             callIsFloating: false,
             viewProfileUid: null,
+            isMuted: false,
         };
 
         // DOM refs
@@ -824,7 +832,6 @@
                     online: true,
                 });
                 alert('Account created! Your UID: ' + uid);
-                // Auto login after signup
                 await signInWithEmailAndPassword(auth, email, pass);
                 $('btn-signup-text').classList.remove('hidden');
                 $('btn-signup-spinner').classList.add('hidden');
@@ -835,11 +842,13 @@
             }
         };
 
+        // Auto-login handling - show loading for logged in users
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                // Show loading immediately
                 loadingScreen.classList.remove('hidden');
                 loginScreen.classList.add('hidden');
-                appLayout.classList.add('hidden');
+                appLayout.style.display = 'none';
 
                 const snap = await get(ref(db, 'users'));
                 const users = snap.val() || {};
@@ -863,8 +872,8 @@
 
                 setTimeout(() => {
                     loadingScreen.classList.add('hidden');
-                    appLayout.classList.remove('hidden');
-                }, 300);
+                    appLayout.style.display = 'flex';
+                }, 400);
 
                 listenToRealtime();
 
@@ -875,7 +884,7 @@
             } else {
                 loadingScreen.classList.add('hidden');
                 loginScreen.classList.remove('hidden');
-                appLayout.classList.add('hidden');
+                appLayout.style.display = 'none';
                 if (state.peerInstance) { state.peerInstance.destroy(); state.peerInstance = null; }
             }
         });
@@ -1031,7 +1040,7 @@
                 const unread = msgs.filter(m => m.sender === otherUid && !m.read).length;
                 hasChats = true;
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-3 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition';
+                div.className = 'flex items-center justify-between p-3 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition clickable-row';
                 div.innerHTML = `
                     <div class="flex items-center space-x-3" onclick="openChat('${otherUid}')">
                         <img src="${contact.pfp || ''}" class="w-10 h-10 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
@@ -1068,16 +1077,16 @@
                     container.appendChild(header);
                 }
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition contact-list-item';
+                div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition clickable-row';
                 div.innerHTML = `
-                    <div class="flex items-center space-x-3" onclick="openProfileView('${contact.uid}')">
+                    <div class="flex items-center space-x-3 w-full" onclick="openChat('${contact.uid}')">
                         <img src="${contact.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
-                        <div>
+                        <div class="flex-1">
                             <p class="font-bold text-sm text-[#1a2e1a]">${contact.name}</p>
                             <p class="text-[10px] text-[#2b7a4b] font-mono">@${contact.uid}</p>
                         </div>
                     </div>
-                    <button onclick="openChat('${contact.uid}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
+                    <button onclick="event.stopPropagation(); openChat('${contact.uid}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
                 `;
                 container.appendChild(div);
             }
@@ -1098,7 +1107,7 @@
 
             for (let post of state.posts) {
                 const author = state.allUsers.find(u => u.uid === post.author) || state.currentUser;
-                const isSaved = state.savedPosts.includes(post.id);
+                const isSaved = state.savedPosts && state.savedPosts.includes(post.id);
                 const likesCount = post.likes ? Object.keys(post.likes).length : 0;
                 const commentsCount = post.comments ? Object.keys(post.comments).length : 0;
                 const isLiked = post.likes && post.likes[state.currentUser.uid] === true;
@@ -1221,14 +1230,12 @@
         window.likePost = function(postId) {
             const post = state.posts.find(p => p.id === postId);
             if (!post) return;
-            const postKey = Object.keys(state.chats).find(k => state.chats[k]?.id === postId);
             const likes = post.likes || {};
             if (likes[state.currentUser.uid]) {
                 delete likes[state.currentUser.uid];
             } else {
                 likes[state.currentUser.uid] = true;
             }
-            // Find the post in DB
             const dbRef = ref(db, 'posts');
             onValue(dbRef, (snap) => {
                 const data = snap.val();
@@ -1716,11 +1723,12 @@
             const targetUid = state.activeChat;
             const targetPeerId = 'stardust_' + targetUid;
             if (!state.peerInstance) return alert('Peer not ready');
+            
+            state.callIsVideo = type === 'video';
 
             navigator.mediaDevices.getUserMedia({ audio: true, video: type === 'video' })
                 .then(stream => {
                     state.callStream = stream;
-                    state.callIsVideo = type === 'video';
                     const call = state.peerInstance.call(targetPeerId, stream);
                     state.call = call;
                     state.callPeerId = targetUid;
@@ -1731,7 +1739,11 @@
                         document.getElementById('call-status-lbl').innerText = 'Connected';
                         startCallTimer();
                     });
-                    call.on('close', () => terminateCall());
+                    call.on('close', () => {
+                        terminateCall();
+                        // Return to chat
+                        closeChatWindow();
+                    });
                 }).catch(err => alert('Camera/Mic access denied: ' + err.message));
         };
 
@@ -1752,7 +1764,10 @@
                         document.getElementById('call-status-lbl').innerText = 'Connected';
                         startCallTimer();
                     });
-                    state.call.on('close', () => terminateCall());
+                    state.call.on('close', () => {
+                        terminateCall();
+                        closeChatWindow();
+                    });
                 }).catch(err => alert('Failed to answer: ' + err.message));
         };
 
@@ -1776,6 +1791,7 @@
                 document.getElementById('call-local-video').srcObject = state.callStream;
             } else {
                 document.getElementById('call-video-container').style.display = 'none';
+                document.getElementById('call-local-video').style.display = 'none';
             }
         }
 
@@ -1788,6 +1804,7 @@
             document.getElementById('incoming-call-actions').classList.remove('hidden');
             document.getElementById('call-bottom-nav').classList.add('hidden');
             document.getElementById('call-video-container').style.display = 'none';
+            state.callIsVideo = true; // default for incoming
         }
 
         window.terminateCall = function() {
@@ -1802,6 +1819,8 @@
             if (state.callDurationInterval) clearInterval(state.callDurationInterval);
             state.callSeconds = 0;
             document.getElementById('floating-call-duration').innerText = '00:00';
+            state.isMuted = false;
+            document.getElementById('call-mute-btn').innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>`;
         };
 
         function startCallTimer() {
@@ -1839,25 +1858,26 @@
             document.getElementById('call-interface-overlay').classList.remove('hidden');
             if (state.callIsVideo) {
                 document.getElementById('call-video-container').style.display = 'flex';
+                document.getElementById('call-local-video').style.display = 'block';
             }
         };
 
-        window.toggleVideoDuringCall = function() {
+        window.toggleMute = function() {
             if (!state.callStream) return;
-            const videoTrack = state.callStream.getVideoTracks()[0];
-            if (videoTrack) {
-                state.callIsVideo = !state.callIsVideo;
-                videoTrack.enabled = state.callIsVideo;
-                if (state.callIsVideo) {
-                    document.getElementById('call-local-video').style.display = 'block';
-                    document.getElementById('call-video-container').style.display = 'flex';
-                } else {
-                    document.getElementById('call-local-video').style.display = 'none';
-                    document.getElementById('call-video-container').style.display = 'none';
-                }
+            state.isMuted = !state.isMuted;
+            const audioTrack = state.callStream.getAudioTracks()[0];
+            if (audioTrack) {
+                audioTrack.enabled = !state.isMuted;
+            }
+            const btn = document.getElementById('call-mute-btn');
+            if (state.isMuted) {
+                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" stroke="currentColor"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path></svg>`;
+            } else {
+                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>`;
             }
         };
 
+        // Call reactions
         window.toggleCallReactions = function() {
             document.getElementById('call-reactions-popup').classList.toggle('hidden');
         };
@@ -2027,7 +2047,7 @@
         window.openSavedPosts = function() {
             const container = $('saved-posts-list');
             container.innerHTML = '';
-            const saved = state.posts.filter(p => state.savedPosts.includes(p.id));
+            const saved = state.posts.filter(p => state.savedPosts && state.savedPosts.includes(p.id));
             if (saved.length === 0) {
                 $('no-saved-posts').classList.remove('hidden');
             } else {
@@ -2106,14 +2126,14 @@
 
         // ---------- GAMES & SHORTS ----------
         window.playGame = function(game) {
-            if (game === 'tictac') {
-                window.open('https://playtictac.com', '_blank');
-            } else if (game === 'memory') {
-                window.open('https://memory-match.com', '_blank');
-            } else if (game === 'snake') {
-                window.open('https://playsnake.com', '_blank');
-            } else if (game === 'puzzle') {
-                window.open('https://slidepuzzle.com', '_blank');
+            const games = {
+                'chess': 'https://lichess.org/',
+                'sudoku': 'https://sudoku.com/',
+                'solitaire': 'https://solitaire.com/',
+                'trivia': 'https://triviaplaza.com/'
+            };
+            if (games[game]) {
+                window.open(games[game], '_blank');
             }
         };
 
@@ -2169,16 +2189,16 @@
             const filtered = state.contacts.filter(c => c.name.toLowerCase().includes(query) || c.uid.includes(query));
             for (let contact of filtered) {
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition';
+                div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition clickable-row';
                 div.innerHTML = `
-                    <div class="flex items-center space-x-3" onclick="openProfileView('${contact.uid}')">
+                    <div class="flex items-center space-x-3 w-full" onclick="openChat('${contact.uid}')">
                         <img src="${contact.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
                         <div>
                             <p class="font-bold text-sm text-[#1a2e1a]">${contact.name}</p>
                             <p class="text-[10px] text-[#2b7a4b] font-mono">@${contact.uid}</p>
                         </div>
                     </div>
-                    <button onclick="openChat('${contact.uid}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
+                    <button onclick="event.stopPropagation(); openChat('${contact.uid}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
                 `;
                 container.appendChild(div);
             }
