@@ -23,213 +23,63 @@
         }
     </script>
     <style>
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: #2b7a4b #d1e0d1;
-        }
+        * { scrollbar-width: thin; scrollbar-color: #2b7a4b #d1e0d1; }
         *::-webkit-scrollbar { width: 4px; }
         *::-webkit-scrollbar-track { background: #d1e0d1; border-radius: 10px; }
         *::-webkit-scrollbar-thumb { background: #2b7a4b; border-radius: 10px; }
 
-        body {
-            background: #e5f0e5;
-            color: #1a2e1a;
-            font-family: system-ui, -apple-system, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        body { background: #e5f0e5; color: #1a2e1a; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
 
-        .spinner {
-            border: 2px solid rgba(255,255,255,0.1);
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border-left-color: #2b7a4b;
-            animation: spin 0.8s linear infinite;
-        }
+        .spinner { border: 2px solid rgba(255,255,255,0.1); width: 20px; height: 20px; border-radius: 50%; border-left-color: #2b7a4b; animation: spin 0.8s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .floating-call-window {
-            position: fixed;
-            width: 160px;
-            height: 200px;
-            border-radius: 20px;
-            overflow: hidden;
-            z-index: 100;
-            border: 2px solid #2b7a4b;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            cursor: grab;
-            background: #1a2e1a;
-        }
+        .floating-call-window { position: fixed; width: 160px; height: 200px; border-radius: 20px; overflow: hidden; z-index: 100; border: 2px solid #2b7a4b; box-shadow: 0 20px 60px rgba(0,0,0,0.3); cursor: grab; background: #1a2e1a; }
         .floating-call-window:active { cursor: grabbing; }
         .floating-call-window video { width: 100%; height: 100%; object-fit: cover; }
-        .floating-call-window .caller-pfp {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.7);
-        }
-        .floating-call-window .caller-pfp img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 2px solid #3b9b5e;
-            object-fit: cover;
-        }
-        .floating-call-window .call-duration {
-            position: absolute;
-            bottom: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.7);
-            color: white;
-            font-size: 10px;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-        }
-        .floating-minimize-btn {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            background: rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            cursor: pointer;
-            z-index: 10;
-            backdrop-filter: blur(4px);
-        }
+        .floating-call-window .caller-pfp { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.7); }
+        .floating-call-window .caller-pfp img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #3b9b5e; object-fit: cover; }
+        .floating-call-window .call-duration { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 2px 12px; border-radius: 20px; font-weight: bold; }
+        .floating-minimize-btn { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; z-index: 10; backdrop-filter: blur(4px); }
 
-        .call-fullscreen-bg {
-            background: radial-gradient(ellipse at center, #0a1a0a 0%, #000000 100%);
-        }
-        .call-pfp-ring {
-            box-shadow: 0 0 60px rgba(59, 155, 94, 0.3), 0 0 120px rgba(59, 155, 94, 0.1);
-        }
-        .call-status-pulse {
-            animation: pulseGlow 2s ease-in-out infinite;
-        }
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-        .call-bottom-btn {
-            background: rgba(30, 50, 30, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.2s ease;
-            color: white;
-        }
+        .call-fullscreen-bg { background: radial-gradient(ellipse at center, #0a1a0a 0%, #000000 100%); }
+        .call-pfp-ring { box-shadow: 0 0 60px rgba(59, 155, 94, 0.3), 0 0 120px rgba(59, 155, 94, 0.1); }
+        .call-status-pulse { animation: pulseGlow 2s ease-in-out infinite; }
+        @keyframes pulseGlow { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        .call-bottom-btn { background: rgba(30, 50, 30, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s ease; color: white; }
         .call-bottom-btn:hover { transform: scale(1.05); }
         .call-bottom-btn:active { transform: scale(0.95); }
-        .call-end-btn {
-            background: rgba(200, 30, 30, 0.9);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(200, 30, 30, 0.5);
-            transition: all 0.2s ease;
-            color: white;
-        }
+        .call-end-btn { background: rgba(200, 30, 30, 0.9); backdrop-filter: blur(10px); border: 2px solid rgba(200, 30, 30, 0.5); transition: all 0.2s ease; color: white; }
         .call-end-btn:hover { transform: scale(1.05); }
         .call-end-btn:active { transform: scale(0.95); }
 
-        .call-reaction-float {
-            position: fixed;
-            font-size: 40px;
-            pointer-events: none;
-            z-index: 200;
-            animation: floatUp 1.2s ease-out forwards;
-        }
-        @keyframes floatUp {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-120px) scale(1.3); }
-        }
+        .call-reaction-float { position: fixed; font-size: 40px; pointer-events: none; z-index: 200; animation: floatUp 1.2s ease-out forwards; }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-120px) scale(1.3); } }
 
-        #loading-screen {
-            position: fixed;
-            inset: 0;
-            background: #e5f0e5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            transition: opacity 0.4s ease;
-        }
+        #loading-screen { position: fixed; inset: 0; background: #e5f0e5; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.4s ease; }
         #loading-screen.hidden { opacity: 0; pointer-events: none; }
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(0,0,0,0.1);
-            border-top-color: #2b7a4b;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 16px;
-        }
+        .loading-spinner { width: 40px; height: 40px; border: 3px solid rgba(0,0,0,0.1); border-top-color: #2b7a4b; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
 
-        .chat-bubble-self {
-            background: #2b7a4b;
-            color: white;
-            border-radius: 18px 18px 4px 18px;
-        }
-        .chat-bubble-other {
-            background: #c8e6c9;
-            color: #1a2e1a;
-            border-radius: 18px 18px 18px 4px;
-        }
+        .chat-bubble-self { background: #2b7a4b; color: white; border-radius: 18px 18px 4px 18px; }
+        .chat-bubble-other { background: #c8e6c9; color: #1a2e1a; border-radius: 18px 18px 18px 4px; }
 
-        .tab-active {
-            color: #2b7a4b;
-            border-bottom: 2px solid #2b7a4b;
-        }
-
-        .input-field {
-            background: #ffffff;
-            border: 1px solid #b8d0b8;
-            border-radius: 24px;
-            padding: 10px 16px;
-            font-size: 14px;
-            width: 100%;
-            color: #1a2e1a;
-        }
-        .input-field:focus {
-            outline: none;
-            border-color: #2b7a4b;
-            box-shadow: 0 0 0 2px rgba(43, 122, 75, 0.2);
-        }
+        .tab-active { color: #2b7a4b; border-bottom: 2px solid #2b7a4b; }
+        .input-field { background: #ffffff; border: 1px solid #b8d0b8; border-radius: 24px; padding: 10px 16px; font-size: 14px; width: 100%; color: #1a2e1a; }
+        .input-field:focus { outline: none; border-color: #2b7a4b; box-shadow: 0 0 0 2px rgba(43, 122, 75, 0.2); }
         
-        .game-card {
-            transition: transform 0.2s;
-        }
-        .game-card:active {
-            transform: scale(0.96);
-        }
-        
-        .moment-card {
-            transition: all 0.2s;
-        }
-        .moment-card:active {
-            transform: scale(0.99);
-        }
-        
-        .profile-modal-overlay {
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-        }
-        
-        .clickable-row {
-            cursor: pointer;
-        }
-        .clickable-row:active {
-            background: #c8e6c9;
-        }
+        .game-card { transition: transform 0.2s; }
+        .game-card:active { transform: scale(0.96); }
+        .moment-card { transition: all 0.2s; }
+        .moment-card:active { transform: scale(0.99); }
+        .profile-modal-overlay { background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
+        .clickable-row { cursor: pointer; }
+        .clickable-row:active { background: #c8e6c9; }
+        .contact-menu-btn { background: none; border: none; color: #2b7a4b; padding: 4px 8px; border-radius: 8px; cursor: pointer; }
+        .contact-menu-btn:hover { background: #c8e6c9; }
+        .post-menu-btn { background: none; border: none; color: #2b7a4b; padding: 4px; border-radius: 8px; cursor: pointer; }
+        .post-menu-btn:hover { background: #c8e6c9; }
+        .call-fullscreen-video { width: 100%; height: 100%; object-fit: cover; }
+        .call-pip-video { position: absolute; top: 20px; right: 20px; width: 120px; height: 170px; border-radius: 16px; border: 2px solid #3b9b5e; object-fit: cover; z-index: 10; background: #000; cursor: pointer; }
+        .call-pip-video:hover { border-color: #6fcf97; }
     </style>
 </head>
 <body>
@@ -253,9 +103,7 @@
                     <span id="btn-login-text">Sign In</span>
                     <div id="btn-login-spinner" class="spinner hidden"></div>
                 </button>
-                <p class="text-xs text-[#2b7a4b] mt-4">
-                    Don't have an account? <span onclick="switchToSignup()" class="font-bold cursor-pointer hover:underline">Create one</span>
-                </p>
+                <p class="text-xs text-[#2b7a4b] mt-4">Don't have an account? <span onclick="switchToSignup()" class="font-bold cursor-pointer hover:underline">Create one</span></p>
             </div>
             <div id="signup-form" class="space-y-4 hidden mt-4">
                 <input type="email" id="signup-email" placeholder="Email address" class="w-full px-4 py-3 bg-[#f0f7f0] border border-[#b8d0b8] rounded-xl text-sm focus:outline-none focus:border-[#2b7a4b] transition text-center">
@@ -340,7 +188,7 @@
                 <div id="no-moments-placeholder" class="text-center text-[#2b7a4b] opacity-60 text-sm py-10">No moments yet. Share something!</div>
             </section>
 
-            <!-- PROFILE TAB - Games & Cartoons -->
+            <!-- PROFILE TAB -->
             <section id="profile-tab" class="hidden space-y-4">
                 <!-- Profile Card -->
                 <div class="bg-white rounded-3xl border border-[#b8d0b8] p-5 shadow-sm">
@@ -355,60 +203,37 @@
                     </div>
                 </div>
 
-                <!-- Games Section -->
+                <!-- Stardust Ecosystem Links -->
                 <div>
                     <h3 class="text-sm font-bold text-[#2b7a4b] mb-2 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Quick Games
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"></path></svg>
+                        Stardust Ecosystem
                     </h3>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div onclick="playGame('chess')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
-                            <div class="text-3xl mb-1">♟️</div>
-                            <p class="text-xs font-bold text-[#1a2e1a]">Chess</p>
-                        </div>
-                        <div onclick="playGame('sudoku')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
-                            <div class="text-3xl mb-1">🧩</div>
-                            <p class="text-xs font-bold text-[#1a2e1a]">Sudoku</p>
-                        </div>
-                        <div onclick="playGame('solitaire')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
-                            <div class="text-3xl mb-1">🃏</div>
-                            <p class="text-xs font-bold text-[#1a2e1a]">Solitaire</p>
-                        </div>
-                        <div onclick="playGame('trivia')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
-                            <div class="text-3xl mb-1">❓</div>
-                            <p class="text-xs font-bold text-[#1a2e1a]">Trivia Quiz</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Cartoons / Animated Shorts -->
-                <div>
-                    <h3 class="text-sm font-bold text-[#2b7a4b] mb-2 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                        Cartoons
-                    </h3>
-                    <div class="space-y-2">
-                        <div onclick="watchShort('https://www.youtube.com/embed/4jM_6r8kH_U')" class="bg-white rounded-2xl border border-[#b8d0b8] p-3 flex items-center gap-3 cursor-pointer hover:shadow-md transition">
-                            <div class="w-16 h-16 bg-[#e5f0e5] rounded-xl flex items-center justify-center text-2xl">🐱</div>
-                            <div>
-                                <p class="font-bold text-sm text-[#1a2e1a]">Tom & Jerry</p>
-                                <p class="text-xs text-[#2b7a4b] opacity-60">Watch now</p>
-                            </div>
-                        </div>
-                        <div onclick="watchShort('https://www.youtube.com/embed/2s6e_aHrzRw')" class="bg-white rounded-2xl border border-[#b8d0b8] p-3 flex items-center gap-3 cursor-pointer hover:shadow-md transition">
-                            <div class="w-16 h-16 bg-[#e5f0e5] rounded-xl flex items-center justify-center text-2xl">🦸</div>
-                            <div>
-                                <p class="font-bold text-sm text-[#1a2e1a]">Superhero Cartoon</p>
-                                <p class="text-xs text-[#2b7a4b] opacity-60">Watch now</p>
-                            </div>
-                        </div>
-                        <div onclick="watchShort('https://www.youtube.com/embed/8Tpo0d0p-Cw')" class="bg-white rounded-2xl border border-[#b8d0b8] p-3 flex items-center gap-3 cursor-pointer hover:shadow-md transition">
-                            <div class="w-16 h-16 bg-[#e5f0e5] rounded-xl flex items-center justify-center text-2xl">🤖</div>
-                            <div>
-                                <p class="font-bold text-sm text-[#1a2e1a]">Robot Cartoon</p>
-                                <p class="text-xs text-[#2b7a4b] opacity-60">Watch now</p>
-                            </div>
-                        </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <a href="https://stardustofficial.github.io/Stardust-ball-game/" target="_blank" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-3 text-center hover:shadow-md transition">
+                            <div class="text-2xl mb-1">🏀</div>
+                            <p class="text-[10px] font-bold text-[#1a2e1a]">Roller Splash Pro</p>
+                        </a>
+                        <a href="https://stardustofficial.github.io/Troll-game/" target="_blank" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-3 text-center hover:shadow-md transition">
+                            <div class="text-2xl mb-1">👾</div>
+                            <p class="text-[10px] font-bold text-[#1a2e1a]">Troll Game</p>
+                        </a>
+                        <a href="https://stardustofficial.github.io/Stardust-hub/" target="_blank" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-3 text-center hover:shadow-md transition">
+                            <div class="text-2xl mb-1">🌐</div>
+                            <p class="text-[10px] font-bold text-[#1a2e1a]">Stardust Hub</p>
+                        </a>
+                        <a href="https://stardustofficial.github.io/Stardust-media/" target="_blank" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-3 text-center hover:shadow-md transition">
+                            <div class="text-2xl mb-1">📺</div>
+                            <p class="text-[10px] font-bold text-[#1a2e1a]">Stardust Media</p>
+                        </a>
+                        <a href="https://stardust-ai.onrender.com/" target="_blank" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-3 text-center hover:shadow-md transition">
+                            <div class="text-2xl mb-1">🤖</div>
+                            <p class="text-[10px] font-bold text-[#1a2e1a]">Stardust AI</p>
+                        </a>
+                        <a href="https://stardustofficial.github.io/Stardust-store/" target="_blank" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-3 text-center hover:shadow-md transition">
+                            <div class="text-2xl mb-1">🛒</div>
+                            <p class="text-[10px] font-bold text-[#1a2e1a]">Stardust Store</p>
+                        </a>
                     </div>
                 </div>
             </section>
@@ -455,6 +280,7 @@
         </header>
         <div id="chat-messages-container" class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar flex flex-col relative">
             <div id="chat-typing-indicator" class="text-xs text-[#2b7a4b] italic hidden">Typing...</div>
+            <!-- Reactions display will be inline in messages -->
         </div>
         <div id="msg-context-menu" class="hidden absolute bottom-20 left-4 right-4 bg-white border border-[#b8d0b8] rounded-2xl shadow-xl p-3 z-50">
             <div class="flex flex-wrap gap-2 mb-2">
@@ -494,23 +320,21 @@
     </div>
 
     <!-- CALL INTERFACE OVERLAY -->
-    <div id="call-interface-overlay" class="hidden fixed inset-0 bg-black/98 z-[80] flex flex-col items-center justify-between p-6 max-w-md mx-auto w-full call-fullscreen-bg">
-        <div class="text-center mt-6 space-y-2 w-full">
-            <div class="inline-flex items-center justify-center p-1 px-3 rounded-full bg-[#2b7a4b]/30 border border-[#2b7a4b]/50 text-[#3b9b5e] text-[10px] font-black uppercase tracking-widest call-status-pulse">● Encrypted</div>
-            <div class="flex justify-center mt-6">
-                <div class="w-28 h-28 rounded-full overflow-hidden border-4 border-[#3b9b5e]/50 call-pfp-ring bg-[#1a2e1a]">
-                    <img id="call-peer-pfp" src="" class="w-full h-full object-cover" alt="Caller">
-                </div>
-            </div>
-            <h2 id="call-peer-name" class="text-2xl font-black text-white mt-4">User</h2>
-            <p id="call-peer-uid" class="text-[#3b9b5e] text-sm font-mono">@123456</p>
-            <p id="call-status-lbl" class="text-white/50 text-xs mt-1 call-status-pulse">Connecting...</p>
-        </div>
-        <div class="w-full flex-1 flex flex-col items-center justify-center my-2 relative bg-[#1a2e1a]/50 rounded-3xl overflow-hidden border border-[#2b7a4b]/30" id="call-video-container" style="display:none;">
+    <div id="call-interface-overlay" class="hidden fixed inset-0 bg-black/98 z-[80] flex flex-col items-center justify-between p-4 max-w-md mx-auto w-full call-fullscreen-bg">
+        <!-- Remote Video Full Screen -->
+        <div class="w-full flex-1 relative bg-black rounded-3xl overflow-hidden">
             <video id="call-remote-video" autoplay playsinline class="w-full h-full object-cover"></video>
-            <video id="call-local-video" autoplay muted playsinline class="absolute top-3 right-3 w-20 h-28 bg-black rounded-2xl object-cover border-2 border-[#3b9b5e] z-10 shadow-lg" style="display:none;"></video>
+            <!-- Local Video PIP -->
+            <video id="call-local-video" autoplay muted playsinline class="call-pip-video" onclick="swapPipFullscreen()"></video>
+            <!-- Call Status -->
+            <div class="absolute top-4 left-4 bg-black/50 px-3 py-1 rounded-full text-white/80 text-xs">● Encrypted</div>
+            <div class="absolute bottom-20 left-0 right-0 text-center">
+                <p id="call-status-lbl" class="text-white/60 text-sm">Connecting...</p>
+            </div>
         </div>
-        <div id="call-bottom-nav" class="w-full flex justify-center items-center gap-3 pb-4 px-2">
+        
+        <!-- Bottom Navigation -->
+        <div id="call-bottom-nav" class="w-full flex justify-center items-center gap-3 py-3 px-2 bg-black/40 backdrop-blur-sm rounded-3xl mt-2">
             <button onclick="toggleCallReactions()" class="call-bottom-btn p-3 rounded-full w-11 h-11 flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </button>
@@ -527,7 +351,9 @@
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 8l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.725-.94l-2.512-.628a1 1 0 00-.734.216l-1.68 1.68a15.093 15.093 0 01-6.728-6.728l1.68-1.68a1 1 0 00.216-.734l-.628-2.512A1 1 0 0010.28 3H5z"></path></svg>
             </button>
         </div>
-        <div id="call-reactions-popup" class="hidden absolute bottom-24 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md border border-[#b8d0b8] rounded-2xl p-3 shadow-2xl z-20 flex gap-2 flex-wrap justify-center">
+        
+        <!-- Reactions Popup -->
+        <div id="call-reactions-popup" class="hidden absolute bottom-28 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md border border-[#b8d0b8] rounded-2xl p-3 shadow-2xl z-20 flex gap-2 flex-wrap justify-center">
             <button onclick="sendCallReaction('🔥')" class="text-2xl hover:scale-125 transition p-1">🔥</button>
             <button onclick="sendCallReaction('❤️')" class="text-2xl hover:scale-125 transition p-1">❤️</button>
             <button onclick="sendCallReaction('😂')" class="text-2xl hover:scale-125 transition p-1">😂</button>
@@ -537,6 +363,8 @@
             <button onclick="sendCallReaction('😢')" class="text-2xl hover:scale-125 transition p-1">😢</button>
             <button onclick="sendCallReaction('💀')" class="text-2xl hover:scale-125 transition p-1">💀</button>
         </div>
+        
+        <!-- Call Chat Overlay -->
         <div id="call-chat-overlay" class="hidden absolute inset-0 bg-black/80 backdrop-blur-sm z-15 flex flex-col p-4 pt-12">
             <div class="flex justify-between items-center mb-3">
                 <span class="text-xs font-bold text-white/70">Call Chat</span>
@@ -548,7 +376,9 @@
                 <button onclick="sendCallChatMessage()" class="bg-[#2b7a4b] px-4 py-2 rounded-xl text-xs font-bold text-white">Send</button>
             </div>
         </div>
-        <div id="incoming-call-actions" class="hidden flex gap-4 w-full mb-4 px-2">
+        
+        <!-- Incoming Call Actions -->
+        <div id="incoming-call-actions" class="hidden flex gap-4 w-full mb-2 px-2">
             <button onclick="acceptIncomingCall()" class="flex-1 bg-[#3b9b5e] hover:bg-[#2b7a4b] text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#2b7a4b]/30 transition">Accept</button>
             <button onclick="rejectIncomingCall()" class="flex-1 bg-red-600 hover:bg-red-500 text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-red-600/30 transition">Reject</button>
         </div>
@@ -597,12 +427,17 @@
 
     <!-- CREATE GROUP MODAL -->
     <div id="create-group-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div class="bg-white w-full max-w-sm rounded-3xl border border-[#b8d0b8] p-4 max-h-[75vh]">
+        <div class="bg-white w-full max-w-sm rounded-3xl border border-[#b8d0b8] p-4 max-h-[80vh]">
             <div class="flex justify-between items-center pb-3 border-b border-[#b8d0b8]">
                 <span class="text-sm font-bold text-[#2b7a4b]">Create Group</span>
                 <button onclick="closeModal('create-group-modal')" class="text-[#2b7a4b]">✕</button>
             </div>
             <input id="group-name-input" placeholder="Group name" class="w-full input-field mt-3">
+            <input id="group-bio-input" placeholder="Group bio" class="w-full input-field mt-2">
+            <div class="mt-3">
+                <label class="text-xs font-medium text-[#2b7a4b]">Group Avatar</label>
+                <input type="file" id="group-pfp-input" accept="image/*" class="w-full text-xs text-[#2b7a4b] file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#e5f0e5] file:text-[#2b7a4b]">
+            </div>
             <div id="group-contact-selection" class="mt-3 space-y-1 max-h-48 overflow-y-auto"></div>
             <button onclick="createGroup()" class="w-full bg-[#2b7a4b] text-white py-2.5 rounded-xl text-sm font-bold mt-3">Create Group</button>
         </div>
@@ -632,18 +467,9 @@
                 <button onclick="closeModal('edit-profile-modal')" class="text-[#2b7a4b]">✕</button>
             </div>
             <div class="space-y-3">
-                <div>
-                    <label class="text-xs font-medium text-[#2b7a4b]">Name</label>
-                    <input id="edit-profile-name" class="w-full input-field" placeholder="Your name">
-                </div>
-                <div>
-                    <label class="text-xs font-medium text-[#2b7a4b]">Bio</label>
-                    <textarea id="edit-profile-bio" class="w-full input-field resize-none h-16" placeholder="Tell about yourself"></textarea>
-                </div>
-                <div>
-                    <label class="text-xs font-medium text-[#2b7a4b]">Profile Picture</label>
-                    <input type="file" id="edit-profile-pfp" accept="image/*" class="w-full text-xs text-[#2b7a4b] file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#e5f0e5] file:text-[#2b7a4b]">
-                </div>
+                <div><label class="text-xs font-medium text-[#2b7a4b]">Name</label><input id="edit-profile-name" class="w-full input-field" placeholder="Your name"></div>
+                <div><label class="text-xs font-medium text-[#2b7a4b]">Bio</label><textarea id="edit-profile-bio" class="w-full input-field resize-none h-16" placeholder="Tell about yourself"></textarea></div>
+                <div><label class="text-xs font-medium text-[#2b7a4b]">Profile Picture</label><input type="file" id="edit-profile-pfp" accept="image/*" class="w-full text-xs text-[#2b7a4b] file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#e5f0e5] file:text-[#2b7a4b]"></div>
                 <button onclick="saveProfile()" class="w-full bg-[#2b7a4b] text-white py-2.5 rounded-xl text-sm font-bold">Save Changes</button>
             </div>
         </div>
@@ -701,14 +527,6 @@
         </div>
     </div>
 
-    <!-- SHORTS VIEWER MODAL -->
-    <div id="shorts-viewer" class="hidden fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-4">
-        <button onclick="closeModal('shorts-viewer')" class="absolute top-4 right-4 text-white bg-black/50 px-4 py-2 rounded-xl text-sm z-10">✕</button>
-        <div class="w-full max-w-md aspect-video bg-black rounded-3xl overflow-hidden">
-            <iframe id="shorts-iframe" src="" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
     <!-- PROFILE VIEW MODAL -->
     <div id="profile-view-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 profile-modal-overlay">
         <div class="bg-white w-full max-w-sm rounded-3xl border border-[#b8d0b8] p-5 max-h-[80vh] overflow-y-auto">
@@ -727,6 +545,29 @@
                     <button onclick="viewProfileAddFriend()" class="flex-1 bg-[#e5f0e5] text-[#2b7a4b] py-2 rounded-xl text-sm font-bold border border-[#b8d0b8]">Add Friend</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- POST EDIT MODAL -->
+    <div id="post-edit-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white w-full max-w-sm rounded-3xl border border-[#b8d0b8] p-5">
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-sm font-bold text-[#2b7a4b]">Edit Moment</span>
+                <button onclick="closeModal('post-edit-modal')" class="text-[#2b7a4b]">✕</button>
+            </div>
+            <textarea id="post-edit-text" class="w-full h-24 input-field resize-none mb-3"></textarea>
+            <button onclick="saveEditedPost()" class="w-full bg-[#2b7a4b] text-white py-2.5 rounded-xl text-sm font-bold">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- POST COMMENTS MANAGEMENT MODAL -->
+    <div id="post-comments-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white w-full max-w-sm rounded-3xl border border-[#b8d0b8] p-4 max-h-[70vh]">
+            <div class="flex justify-between items-center pb-3 border-b border-[#b8d0b8]">
+                <span class="text-sm font-bold text-[#2b7a4b]">Manage Comments</span>
+                <button onclick="closeModal('post-comments-modal')" class="text-[#2b7a4b]">✕</button>
+            </div>
+            <div id="comments-management-list" class="mt-3 overflow-y-auto space-y-2 max-h-60"></div>
         </div>
     </div>
 
@@ -752,50 +593,24 @@
 
         const IMGBB_API = '550a3bcd47c1b0a86a9f2ba7a41770b6';
 
-        // State
         let state = {
-            currentUser: null,
-            allUsers: [],
-            contacts: [],
-            chats: {},
-            messages: {},
-            posts: [],
-            friendRequests: [],
-            callHistory: [],
-            blocked: [],
-            savedPosts: [],
-            activeChat: null,
-            selectedMessage: null,
-            typingTimeout: null,
-            isTyping: false,
-            peerInstance: null,
-            call: null,
-            callStream: null,
-            callDurationInterval: null,
-            callSeconds: 0,
-            callActive: false,
-            callPeerId: null,
-            callIsVideo: false,
-            callIsFloating: false,
-            viewProfileUid: null,
-            isMuted: false,
+            currentUser: null, allUsers: [], contacts: [], chats: {}, messages: {}, posts: [],
+            friendRequests: [], callHistory: [], blocked: [], savedPosts: [], activeChat: null,
+            selectedMessage: null, typingTimeout: null, isTyping: false,
+            peerInstance: null, call: null, callStream: null, callDurationInterval: null,
+            callSeconds: 0, callActive: false, callPeerId: null, callIsVideo: false,
+            callIsFloating: false, viewProfileUid: null, isMuted: false,
+            pipFullscreen: false, selectedPostId: null, editingPostId: null,
         };
 
-        // DOM refs
         const $ = id => document.getElementById(id);
         const loadingScreen = $('loading-screen');
         const loginScreen = $('login-screen');
         const appLayout = $('app-layout');
 
         // ---------- AUTH ----------
-        window.switchToSignup = () => {
-            $('login-form').classList.add('hidden');
-            $('signup-form').classList.remove('hidden');
-        };
-        window.switchToLogin = () => {
-            $('signup-form').classList.add('hidden');
-            $('login-form').classList.remove('hidden');
-        };
+        window.switchToSignup = () => { $('login-form').classList.add('hidden'); $('signup-form').classList.remove('hidden'); };
+        window.switchToLogin = () => { $('signup-form').classList.add('hidden'); $('login-form').classList.remove('hidden'); };
 
         window.handleLogin = async () => {
             const email = $('login-email').value.trim();
@@ -803,13 +618,7 @@
             if (!email || !pass) return alert('Please fill all fields');
             $('btn-login-text').classList.add('hidden');
             $('btn-login-spinner').classList.remove('hidden');
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } catch (e) {
-                alert('Login failed: ' + e.message);
-                $('btn-login-text').classList.remove('hidden');
-                $('btn-login-spinner').classList.add('hidden');
-            }
+            try { await signInWithEmailAndPassword(auth, email, pass); } catch (e) { alert('Login failed: ' + e.message); $('btn-login-text').classList.remove('hidden'); $('btn-login-spinner').classList.add('hidden'); }
         };
 
         window.handleSignup = async () => {
@@ -821,66 +630,33 @@
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
                 const uid = String(Math.floor(100000 + Math.random() * 900000));
-                await set(ref(db, 'users/' + uid), {
-                    uid: uid,
-                    email: email,
-                    name: 'User_' + uid,
-                    bio: 'Hey there! I\'m using Stardust X.',
-                    pfp: '',
-                    createdAt: Date.now(),
-                    lastSeen: Date.now(),
-                    online: true,
-                });
+                await set(ref(db, 'users/' + uid), { uid, email, name: 'User_' + uid, bio: 'Hey there! I\'m using Stardust X.', pfp: '', createdAt: Date.now(), lastSeen: Date.now(), online: true });
                 alert('Account created! Your UID: ' + uid);
                 await signInWithEmailAndPassword(auth, email, pass);
                 $('btn-signup-text').classList.remove('hidden');
                 $('btn-signup-spinner').classList.add('hidden');
-            } catch (e) {
-                alert('Signup failed: ' + e.message);
-                $('btn-signup-text').classList.remove('hidden');
-                $('btn-signup-spinner').classList.add('hidden');
-            }
+            } catch (e) { alert('Signup failed: ' + e.message); $('btn-signup-text').classList.remove('hidden'); $('btn-signup-spinner').classList.add('hidden'); }
         };
 
-        // Auto-login handling - show loading for logged in users
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Show loading immediately
                 loadingScreen.classList.remove('hidden');
                 loginScreen.classList.add('hidden');
                 appLayout.style.display = 'none';
-
                 const snap = await get(ref(db, 'users'));
                 const users = snap.val() || {};
                 let found = null;
-                for (let key in users) {
-                    if (users[key].email === user.email) found = { ...users[key], dbKey: key };
-                }
-                if (!found) {
-                    alert('User data not found. Please re-login.');
-                    await signOut(auth);
-                    loadingScreen.classList.add('hidden');
-                    loginScreen.classList.remove('hidden');
-                    return;
-                }
+                for (let key in users) { if (users[key].email === user.email) found = { ...users[key], dbKey: key }; }
+                if (!found) { alert('User data not found. Please re-login.'); await signOut(auth); loadingScreen.classList.add('hidden'); loginScreen.classList.remove('hidden'); return; }
                 state.currentUser = found;
                 await update(ref(db, 'users/' + found.uid), { online: true, lastSeen: Date.now() });
-
                 await loadAllData();
                 renderAll();
                 initPeer();
-
-                setTimeout(() => {
-                    loadingScreen.classList.add('hidden');
-                    appLayout.style.display = 'flex';
-                }, 400);
-
+                setTimeout(() => { loadingScreen.classList.add('hidden'); appLayout.style.display = 'flex'; }, 400);
                 listenToRealtime();
-
-                $('btn-login-text').classList.remove('hidden');
-                $('btn-login-spinner').classList.add('hidden');
-                $('btn-signup-text').classList.remove('hidden');
-                $('btn-signup-spinner').classList.add('hidden');
+                $('btn-login-text').classList.remove('hidden'); $('btn-login-spinner').classList.add('hidden');
+                $('btn-signup-text').classList.remove('hidden'); $('btn-signup-spinner').classList.add('hidden');
             } else {
                 loadingScreen.classList.add('hidden');
                 loginScreen.classList.remove('hidden');
@@ -894,25 +670,20 @@
             const snap = await get(ref(db, 'users'));
             const users = snap.val() || {};
             state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid);
-
             const friendSnap = await get(ref(db, 'friendships'));
             const friendships = friendSnap.val() || {};
             state.contacts = [];
             for (let key in friendships) {
                 if (key.startsWith('bond_') && friendships[key] === 'confirmed') {
                     const parts = key.split('_');
-                    const uid1 = parts[1];
-                    const uid2 = parts[2];
+                    const uid1 = parts[1], uid2 = parts[2];
                     let contactUid = uid1 === state.currentUser.uid ? uid2 : uid1;
                     if (contactUid) {
                         const user = state.allUsers.find(u => u.uid === contactUid);
-                        if (user && !state.contacts.find(c => c.uid === contactUid)) {
-                            state.contacts.push(user);
-                        }
+                        if (user && !state.contacts.find(c => c.uid === contactUid)) state.contacts.push(user);
                     }
                 }
             }
-
             const reqSnap = await get(ref(db, 'friendRequests'));
             const reqs = reqSnap.val() || {};
             state.friendRequests = [];
@@ -922,7 +693,6 @@
                     if (fromUser) state.friendRequests.push({ ...reqs[key], fromUser });
                 }
             }
-
             const chatSnap = await get(ref(db, 'chats'));
             state.chats = chatSnap.val() || {};
             state.messages = {};
@@ -932,47 +702,34 @@
                     state.messages[key] = Object.values(msgs).sort((a,b) => a.timestamp - b.timestamp);
                 }
             }
-
             const postSnap = await get(ref(db, 'posts'));
             state.posts = postSnap.val() ? Object.values(postSnap.val()).sort((a,b) => b.timestamp - a.timestamp) : [];
-
             const callSnap = await get(ref(db, 'callHistory'));
             state.callHistory = callSnap.val() ? Object.values(callSnap.val()).filter(c => c.user === state.currentUser.uid) : [];
-
             const blockSnap = await get(ref(db, 'blocked/' + state.currentUser.uid));
             state.blocked = blockSnap.val() || [];
-
             const savedSnap = await get(ref(db, 'saved/' + state.currentUser.uid));
             state.savedPosts = savedSnap.val() || [];
         }
 
         function listenToRealtime() {
-            onValue(ref(db, 'users'), (snap) => {
-                const users = snap.val() || {};
-                state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid);
-                renderAll();
-            });
-
+            onValue(ref(db, 'users'), (snap) => { const users = snap.val() || {}; state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid); renderAll(); });
             onValue(ref(db, 'friendships'), (snap) => {
                 const friendships = snap.val() || {};
                 state.contacts = [];
                 for (let key in friendships) {
                     if (key.startsWith('bond_') && friendships[key] === 'confirmed') {
                         const parts = key.split('_');
-                        const uid1 = parts[1];
-                        const uid2 = parts[2];
+                        const uid1 = parts[1], uid2 = parts[2];
                         let contactUid = uid1 === state.currentUser.uid ? uid2 : uid1;
                         if (contactUid) {
                             const user = state.allUsers.find(u => u.uid === contactUid);
-                            if (user && !state.contacts.find(c => c.uid === contactUid)) {
-                                state.contacts.push(user);
-                            }
+                            if (user && !state.contacts.find(c => c.uid === contactUid)) state.contacts.push(user);
                         }
                     }
                 }
                 renderAll();
             });
-
             onValue(ref(db, 'friendRequests'), (snap) => {
                 const reqs = snap.val() || {};
                 state.friendRequests = [];
@@ -984,7 +741,6 @@
                 }
                 renderAll();
             });
-
             onValue(ref(db, 'chats'), (snap) => {
                 state.chats = snap.val() || {};
                 state.messages = {};
@@ -997,16 +753,13 @@
                 renderAll();
                 if (state.activeChat) renderChatMessages();
             });
-
             onValue(ref(db, 'posts'), (snap) => {
                 state.posts = snap.val() ? Object.values(snap.val()).sort((a,b) => b.timestamp - a.timestamp) : [];
                 renderAll();
             });
-
             onValue(ref(db, 'callHistory'), (snap) => {
                 state.callHistory = snap.val() ? Object.values(snap.val()).filter(c => c.user === state.currentUser.uid) : [];
             });
-
             onValue(ref(db, 'saved/' + state.currentUser.uid), (snap) => {
                 state.savedPosts = snap.val() || [];
             });
@@ -1029,7 +782,6 @@
             const placeholder = $('no-chats-placeholder');
             container.innerHTML = '';
             let hasChats = false;
-
             const chatKeys = Object.keys(state.chats).filter(key => key.includes(state.currentUser.uid));
             for (let key of chatKeys) {
                 const otherUid = key.replace(state.currentUser.uid, '').replace('_text_', '').replace('_', '');
@@ -1042,7 +794,7 @@
                 const div = document.createElement('div');
                 div.className = 'flex items-center justify-between p-3 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition clickable-row';
                 div.innerHTML = `
-                    <div class="flex items-center space-x-3" onclick="openChat('${otherUid}')">
+                    <div class="flex items-center space-x-3 w-full" onclick="openChat('${otherUid}')">
                         <img src="${contact.pfp || ''}" class="w-10 h-10 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
                         <div class="flex-1 min-w-0">
                             <p class="font-bold text-sm text-[#1a2e1a]">${contact.name}</p>
@@ -1056,7 +808,6 @@
                 `;
                 container.appendChild(div);
             }
-
             placeholder.classList.toggle('hidden', hasChats);
         }
 
@@ -1064,20 +815,13 @@
             const container = $('contacts-list');
             const placeholder = $('no-contacts-placeholder');
             container.innerHTML = '';
-            
             const sorted = [...state.contacts].sort((a,b) => a.name.localeCompare(b.name));
             let currentLetter = '';
             for (let contact of sorted) {
                 const letter = contact.name.charAt(0).toUpperCase();
-                if (letter !== currentLetter) {
-                    currentLetter = letter;
-                    const header = document.createElement('div');
-                    header.className = 'text-xs font-bold text-[#2b7a4b] opacity-60 py-1 px-2';
-                    header.innerText = letter;
-                    container.appendChild(header);
-                }
+                if (letter !== currentLetter) { currentLetter = letter; const header = document.createElement('div'); header.className = 'text-xs font-bold text-[#2b7a4b] opacity-60 py-1 px-2'; header.innerText = letter; container.appendChild(header); }
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition clickable-row';
+                div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] transition clickable-row';
                 div.innerHTML = `
                     <div class="flex items-center space-x-3 w-full" onclick="openChat('${contact.uid}')">
                         <img src="${contact.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
@@ -1086,32 +830,55 @@
                             <p class="text-[10px] text-[#2b7a4b] font-mono">@${contact.uid}</p>
                         </div>
                     </div>
-                    <button onclick="event.stopPropagation(); openChat('${contact.uid}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
+                    <div class="flex items-center space-x-1">
+                        <button onclick="event.stopPropagation(); openChat('${contact.uid}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
+                        <button onclick="event.stopPropagation(); toggleContactMenu('${contact.uid}')" class="contact-menu-btn p-1">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                        </button>
+                    </div>
                 `;
                 container.appendChild(div);
             }
-
             placeholder.classList.toggle('hidden', sorted.length > 0);
         }
+
+        window.toggleContactMenu = function(uid) {
+            const actions = ['Delete Contact', 'Block', 'Report'];
+            const choice = confirm(`Choose action for ${state.contacts.find(c=>c.uid===uid)?.name}:\n\n1. Delete Contact\n2. Block\n3. Report`);
+            if (choice === null) return;
+            if (choice === true) {
+                // Delete - remove friendship
+                const key1 = 'bond_' + state.currentUser.uid + '_' + uid;
+                const key2 = 'bond_' + uid + '_' + state.currentUser.uid;
+                const updates = {};
+                updates['friendships/' + key1] = null;
+                updates['friendships/' + key2] = null;
+                update(ref(db), updates).then(() => alert('Contact deleted.'));
+            } else if (choice === false) {
+                const subChoice = confirm('Block this user? They won\'t be able to message or call you.');
+                if (subChoice) {
+                    if (!state.blocked.includes(uid)) {
+                        state.blocked.push(uid);
+                        set(ref(db, 'blocked/' + state.currentUser.uid), state.blocked);
+                        alert('User blocked.');
+                    } else alert('Already blocked.');
+                }
+            }
+        };
 
         function renderMoments() {
             const container = $('moments-feed');
             const placeholder = $('no-moments-placeholder');
             container.innerHTML = '';
-
-            if (state.posts.length === 0) {
-                placeholder.classList.remove('hidden');
-                return;
-            }
+            if (state.posts.length === 0) { placeholder.classList.remove('hidden'); return; }
             placeholder.classList.add('hidden');
-
             for (let post of state.posts) {
                 const author = state.allUsers.find(u => u.uid === post.author) || state.currentUser;
                 const isSaved = state.savedPosts && state.savedPosts.includes(post.id);
                 const likesCount = post.likes ? Object.keys(post.likes).length : 0;
                 const commentsCount = post.comments ? Object.keys(post.comments).length : 0;
                 const isLiked = post.likes && post.likes[state.currentUser.uid] === true;
-                
+                const isOwner = post.author === state.currentUser.uid;
                 const div = document.createElement('div');
                 div.className = 'bg-white rounded-2xl border border-[#b8d0b8] p-4 shadow-sm moment-card';
                 div.innerHTML = `
@@ -1123,11 +890,13 @@
                                 <span class="text-[10px] text-[#2b7a4b] opacity-50 block">@${author.uid}</span>
                             </div>
                         </div>
-                        <span class="text-[9px] text-[#2b7a4b] opacity-50">${new Date(post.timestamp).toLocaleString()}</span>
+                        <div class="flex items-center space-x-1">
+                            <span class="text-[9px] text-[#2b7a4b] opacity-50">${new Date(post.timestamp).toLocaleString()}</span>
+                            ${isOwner ? `<button onclick="event.stopPropagation(); togglePostMenu('${post.id}')" class="post-menu-btn p-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>` : ''}
+                        </div>
                     </div>
                     <p class="text-sm text-[#1a2e1a] whitespace-pre-wrap">${post.text}</p>
                     ${post.image ? `<img src="${post.image}" class="mt-2 rounded-xl max-h-60 w-full object-cover cursor-pointer" onclick="openImageViewer('${post.image}')">` : ''}
-                    
                     <div class="flex items-center justify-between mt-3 pt-2 border-t border-[#e5f0e5]">
                         <button onclick="likePost('${post.id}')" class="flex items-center gap-1 text-xs ${isLiked ? 'text-[#2b7a4b] font-bold' : 'text-[#2b7a4b] opacity-60'}">
                             <svg class="w-4 h-4" fill="${isLiked ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
@@ -1150,6 +919,79 @@
             }
         }
 
+        window.togglePostMenu = function(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post || post.author !== state.currentUser.uid) return;
+            state.selectedPostId = postId;
+            const choice = confirm(`Manage your moment:\n\n1. Edit\n2. Delete\n3. Manage Comments`);
+            if (choice === null) return;
+            if (choice === true) {
+                // Edit
+                $('post-edit-text').value = post.text;
+                state.editingPostId = postId;
+                $('post-edit-modal').classList.remove('hidden');
+            } else if (choice === false) {
+                // Delete or Manage Comments
+                const subChoice = confirm('Choose:\n\n1. Delete Post\n2. Manage Comments');
+                if (subChoice === null) return;
+                if (subChoice === true) {
+                    // Delete
+                    if (confirm('Delete this post permanently?')) {
+                        const dbRef = ref(db, 'posts');
+                        onValue(dbRef, (snap) => {
+                            const data = snap.val();
+                            if (data) {
+                                const key = Object.keys(data).find(k => data[k].id === postId);
+                                if (key) remove(ref(db, 'posts/' + key)).then(() => alert('Post deleted.'));
+                            }
+                        }, { onlyOnce: true });
+                    }
+                } else {
+                    // Manage Comments
+                    openCommentsManagement(postId);
+                }
+            }
+        };
+
+        window.saveEditedPost = function() {
+            const text = $('post-edit-text').value.trim();
+            if (!text || !state.editingPostId) return;
+            const dbRef = ref(db, 'posts');
+            onValue(dbRef, (snap) => {
+                const data = snap.val();
+                if (data) {
+                    const key = Object.keys(data).find(k => data[k].id === state.editingPostId);
+                    if (key) update(ref(db, 'posts/' + key), { text }).then(() => { closeModal('post-edit-modal'); state.editingPostId = null; });
+                }
+            }, { onlyOnce: true });
+        };
+
+        window.openCommentsManagement = function(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post || !post.comments) { alert('No comments to manage.'); return; }
+            const container = $('comments-management-list');
+            container.innerHTML = '';
+            const comments = Object.entries(post.comments);
+            if (comments.length === 0) { container.innerHTML = '<p class="text-center text-[#2b7a4b] opacity-50 text-sm py-4">No comments.</p>'; }
+            for (let [key, comment] of comments) {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
+                div.innerHTML = `
+                    <span class="text-xs"><span class="font-bold">${comment.authorName}:</span> ${comment.text}</span>
+                    <button onclick="deleteComment('${postId}','${key}')" class="bg-red-100 text-red-600 px-2 py-1 rounded-lg text-xs font-bold">Delete</button>
+                `;
+                container.appendChild(div);
+            }
+            $('post-comments-modal').classList.remove('hidden');
+        };
+
+        window.deleteComment = function(postId, commentKey) {
+            if (confirm('Delete this comment?')) {
+                remove(ref(db, 'posts/' + postId + '/comments/' + commentKey));
+                openCommentsManagement(postId);
+            }
+        };
+
         function renderProfile() {
             const u = state.currentUser;
             if (!u) return;
@@ -1163,10 +1005,7 @@
             const container = $('incoming-requests-list');
             const placeholder = $('no-incoming-requests');
             container.innerHTML = '';
-            if (state.friendRequests.length === 0) {
-                placeholder.classList.remove('hidden');
-                return;
-            }
+            if (state.friendRequests.length === 0) { placeholder.classList.remove('hidden'); return; }
             placeholder.classList.add('hidden');
             for (let req of state.friendRequests) {
                 const div = document.createElement('div');
@@ -1191,23 +1030,13 @@
         function renderIncomingRequestsBadge() {
             const badge = $('menu-request-badge');
             const count = state.friendRequests.length;
-            if (count > 0) {
-                badge.innerText = count;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
+            if (count > 0) { badge.innerText = count; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
         }
 
         function renderContactBadge() {
             const badge = $('nav-contact-badge');
             const count = state.friendRequests.length;
-            if (count > 0) {
-                badge.innerText = count;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
+            if (count > 0) { badge.innerText = count; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
         }
 
         function renderChatBadge() {
@@ -1218,12 +1047,7 @@
                 const otherUid = key.replace(state.currentUser.uid, '').replace('_text_', '').replace('_', '');
                 total += msgs.filter(m => m.sender === otherUid && !m.read).length;
             }
-            if (total > 0) {
-                badge.innerText = total;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
+            if (total > 0) { badge.innerText = total; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
         }
 
         // ---------- POST INTERACTIONS ----------
@@ -1231,19 +1055,14 @@
             const post = state.posts.find(p => p.id === postId);
             if (!post) return;
             const likes = post.likes || {};
-            if (likes[state.currentUser.uid]) {
-                delete likes[state.currentUser.uid];
-            } else {
-                likes[state.currentUser.uid] = true;
-            }
+            if (likes[state.currentUser.uid]) delete likes[state.currentUser.uid];
+            else likes[state.currentUser.uid] = true;
             const dbRef = ref(db, 'posts');
             onValue(dbRef, (snap) => {
                 const data = snap.val();
                 if (data) {
                     const key = Object.keys(data).find(k => data[k].id === postId);
-                    if (key) {
-                        update(ref(db, 'posts/' + key), { likes: likes });
-                    }
+                    if (key) update(ref(db, 'posts/' + key), { likes });
                 }
             }, { onlyOnce: true });
         };
@@ -1252,11 +1071,8 @@
             const post = state.posts.find(p => p.id === postId);
             if (!post) return;
             let saved = state.savedPosts || [];
-            if (saved.includes(postId)) {
-                saved = saved.filter(id => id !== postId);
-            } else {
-                saved.push(postId);
-            }
+            if (saved.includes(postId)) saved = saved.filter(id => id !== postId);
+            else saved.push(postId);
             set(ref(db, 'saved/' + state.currentUser.uid), saved);
             state.savedPosts = saved;
             renderAll();
@@ -1287,14 +1103,7 @@
             const post = state.posts.find(p => p.id === postId);
             if (!post) return;
             const key = getChatKey(state.currentUser.uid, uid);
-            const msg = {
-                sender: state.currentUser.uid,
-                text: '📤 Shared Moment: ' + post.text + (post.image ? ' [Image]' : ''),
-                timestamp: Date.now(),
-                read: false,
-                reactions: {},
-                replyTo: null,
-            };
+            const msg = { sender: state.currentUser.uid, text: '📤 Shared Moment: ' + post.text + (post.image ? ' [Image]' : ''), timestamp: Date.now(), read: false, reactions: {}, replyTo: null };
             push(ref(db, 'chats/' + key), msg);
             closeForwardModal();
             alert('Shared!');
@@ -1326,10 +1135,7 @@
         window.openImageViewer = function(src) {
             const viewer = document.createElement('div');
             viewer.className = 'fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4';
-            viewer.innerHTML = `
-                <button onclick="this.parentElement.remove()" class="absolute top-4 right-4 text-white bg-black/50 px-4 py-2 rounded-xl text-sm z-10">✕</button>
-                <img src="${src}" class="max-w-full max-h-[90vh] object-contain rounded-lg">
-            `;
+            viewer.innerHTML = `<button onclick="this.parentElement.remove()" class="absolute top-4 right-4 text-white bg-black/50 px-4 py-2 rounded-xl text-sm z-10">✕</button><img src="${src}" class="max-w-full max-h-[90vh] object-contain rounded-lg">`;
             document.body.appendChild(viewer);
         };
 
@@ -1342,30 +1148,17 @@
             $('view-profile-name').innerText = user.name;
             $('view-profile-uid').innerText = '@' + user.uid;
             $('view-profile-bio').innerText = user.bio || 'No bio';
-            
             const isFriend = state.contacts.find(c => c.uid === uid);
             const actions = $('view-profile-actions');
             if (isFriend) {
-                actions.innerHTML = `
-                    <button onclick="viewProfileSendMsg()" class="flex-1 bg-[#2b7a4b] text-white py-2 rounded-xl text-sm font-bold">Send Message</button>
-                    <button onclick="viewProfileAddFriend()" class="flex-1 bg-[#e5f0e5] text-[#2b7a4b] py-2 rounded-xl text-sm font-bold border border-[#b8d0b8]">Already Friend</button>
-                `;
+                actions.innerHTML = `<button onclick="viewProfileSendMsg()" class="flex-1 bg-[#2b7a4b] text-white py-2 rounded-xl text-sm font-bold">Send Message</button><button class="flex-1 bg-[#e5f0e5] text-[#2b7a4b] py-2 rounded-xl text-sm font-bold border border-[#b8d0b8]">Already Friend</button>`;
             } else {
-                actions.innerHTML = `
-                    <button onclick="viewProfileSendMsg()" class="flex-1 bg-[#2b7a4b] text-white py-2 rounded-xl text-sm font-bold">Send Message</button>
-                    <button onclick="viewProfileAddFriend()" class="flex-1 bg-[#e5f0e5] text-[#2b7a4b] py-2 rounded-xl text-sm font-bold border border-[#b8d0b8]">Add Friend</button>
-                `;
+                actions.innerHTML = `<button onclick="viewProfileSendMsg()" class="flex-1 bg-[#2b7a4b] text-white py-2 rounded-xl text-sm font-bold">Send Message</button><button onclick="viewProfileAddFriend()" class="flex-1 bg-[#e5f0e5] text-[#2b7a4b] py-2 rounded-xl text-sm font-bold border border-[#b8d0b8]">Add Friend</button>`;
             }
             $('profile-view-modal').classList.remove('hidden');
         };
 
-        window.viewProfileSendMsg = function() {
-            if (state.viewProfileUid) {
-                closeModal('profile-view-modal');
-                openChat(state.viewProfileUid);
-            }
-        };
-
+        window.viewProfileSendMsg = function() { if (state.viewProfileUid) { closeModal('profile-view-modal'); openChat(state.viewProfileUid); } };
         window.viewProfileAddFriend = function() {
             if (!state.viewProfileUid) return;
             const uid = state.viewProfileUid;
@@ -1373,24 +1166,15 @@
             if (!user) return alert('User not found');
             if (state.contacts.find(c => c.uid === uid)) return alert('Already friends');
             if (state.friendRequests.find(r => r.from === uid)) return alert('Request already sent');
-
-            set(ref(db, 'friendRequests/' + Date.now()), {
-                from: state.currentUser.uid,
-                to: uid,
-                status: 'pending',
-                timestamp: Date.now()
-            }).then(() => {
-                alert('Friend request sent!');
-                closeModal('profile-view-modal');
-            });
+            set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('profile-view-modal'); });
         };
 
         // ---------- CHAT ----------
         window.openChat = function(uid) {
+            if (state.blocked.includes(uid)) { alert('This user is blocked.'); return; }
             state.activeChat = uid;
             const contact = state.contacts.find(c => c.uid === uid) || state.allUsers.find(c => c.uid === uid);
             if (!contact) return alert('Contact not found');
-
             $('chat-window-name').innerText = contact.name;
             $('chat-window-uid').innerText = '@' + contact.uid;
             $('chat-window-avatar').src = contact.pfp || '';
@@ -1399,32 +1183,29 @@
             markChatAsRead(uid);
         };
 
-        window.closeChatWindow = function() {
-            state.activeChat = null;
-            $('chat-window-modal').classList.add('hidden');
-            $('msg-context-menu').classList.add('hidden');
-        };
+        window.closeChatWindow = function() { state.activeChat = null; $('chat-window-modal').classList.add('hidden'); $('msg-context-menu').classList.add('hidden'); };
 
-        function getChatKey(uid1, uid2) {
-            return uid1 < uid2 ? uid1 + '_text_' + uid2 : uid2 + '_text_' + uid1;
-        }
+        function getChatKey(uid1, uid2) { return uid1 < uid2 ? uid1 + '_text_' + uid2 : uid2 + '_text_' + uid1; }
 
         function renderChatMessages() {
             const container = $('chat-messages-container');
-            const typing = $('chat-typing-indicator');
             container.innerHTML = '';
             if (!state.activeChat) return;
-
             const key = getChatKey(state.currentUser.uid, state.activeChat);
             const msgs = state.messages[key] || [];
             for (let msg of msgs) {
                 const isMe = msg.sender === state.currentUser.uid;
                 const div = document.createElement('div');
                 div.className = `max-w-[80%] p-2.5 rounded-2xl text-sm ${isMe ? 'chat-bubble-self self-end' : 'chat-bubble-other self-start'} relative group`;
+                let reactionsHtml = '';
+                if (msg.reactions && Object.keys(msg.reactions).length > 0) {
+                    reactionsHtml = `<div class="flex gap-0.5 mt-1 flex-wrap">${Object.values(msg.reactions).map(r => `<span class="text-xs">${r}</span>`).join('')}</div>`;
+                }
                 div.innerHTML = `
                     <p class="break-words">${msg.text}</p>
                     <span class="text-[8px] opacity-60 block text-right mt-0.5">${new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
                     ${msg.read ? '<span class="text-[8px] text-blue-400 ml-1">✓✓</span>' : isMe ? '<span class="text-[8px] opacity-40 ml-1">✓</span>' : ''}
+                    ${reactionsHtml}
                 `;
                 div.oncontextmenu = (e) => {
                     e.preventDefault();
@@ -1443,16 +1224,8 @@
             const text = input.value.trim();
             if (!text || !state.activeChat) return;
             input.value = '';
-
             const key = getChatKey(state.currentUser.uid, state.activeChat);
-            const msg = {
-                sender: state.currentUser.uid,
-                text: text,
-                timestamp: Date.now(),
-                read: false,
-                reactions: {},
-                replyTo: null,
-            };
+            const msg = { sender: state.currentUser.uid, text, timestamp: Date.now(), read: false, reactions: {}, replyTo: null };
             push(ref(db, 'chats/' + key), msg);
             if (state.typingTimeout) clearTimeout(state.typingTimeout);
             update(ref(db, 'users/' + state.currentUser.uid), { typing: false });
@@ -1464,40 +1237,30 @@
             for (let msg of msgs) {
                 if (msg.sender === uid && !msg.read) {
                     const msgKey = Object.keys(state.chats[key]).find(k => state.chats[key][k].timestamp === msg.timestamp && state.chats[key][k].sender === uid);
-                    if (msgKey) {
-                        update(ref(db, 'chats/' + key + '/' + msgKey), { read: true });
-                    }
+                    if (msgKey) update(ref(db, 'chats/' + key + '/' + msgKey), { read: true });
                 }
             }
         };
 
-        // Typing
         let typingTimeout;
         $('chat-input-field')?.addEventListener('input', function() {
             if (!state.activeChat) return;
             if (typingTimeout) clearTimeout(typingTimeout);
             update(ref(db, 'users/' + state.currentUser.uid), { typing: true });
-            typingTimeout = setTimeout(() => {
-                update(ref(db, 'users/' + state.currentUser.uid), { typing: false });
-            }, 2000);
+            typingTimeout = setTimeout(() => update(ref(db, 'users/' + state.currentUser.uid), { typing: false }), 2000);
         });
 
         onValue(ref(db, 'users'), (snap) => {
             const users = snap.val() || {};
             if (state.activeChat) {
                 const other = users[state.activeChat];
-                if (other && other.typing) {
-                    $('chat-typing-indicator').classList.remove('hidden');
-                } else {
-                    $('chat-typing-indicator').classList.add('hidden');
-                }
+                if (other && other.typing) $('chat-typing-indicator').classList.remove('hidden');
+                else $('chat-typing-indicator').classList.add('hidden');
             }
         });
 
         // ---------- CONTEXT MENU ----------
-        window.closeContextMenu = function() {
-            $('msg-context-menu').classList.add('hidden');
-        };
+        window.closeContextMenu = function() { $('msg-context-menu').classList.add('hidden'); };
 
         window.reactToMessage = function(emoji) {
             if (!state.selectedMessage || !state.activeChat) return;
@@ -1512,22 +1275,8 @@
             closeContextMenu();
         };
 
-        window.copyMessage = function() {
-            if (state.selectedMessage) {
-                navigator.clipboard.writeText(state.selectedMessage.text);
-                alert('Copied!');
-            }
-            closeContextMenu();
-        };
-
-        window.replyToMessage = function() {
-            if (state.selectedMessage) {
-                $('chat-input-field').value = '> ' + state.selectedMessage.text + '\n';
-                $('chat-input-field').focus();
-            }
-            closeContextMenu();
-        };
-
+        window.copyMessage = function() { if (state.selectedMessage) { navigator.clipboard.writeText(state.selectedMessage.text); alert('Copied!'); } closeContextMenu(); };
+        window.replyToMessage = function() { if (state.selectedMessage) { $('chat-input-field').value = '> ' + state.selectedMessage.text + '\n'; $('chat-input-field').focus(); } closeContextMenu(); };
         window.forwardMessage = function() {
             if (!state.selectedMessage) return;
             const container = $('forward-contact-list');
@@ -1536,13 +1285,7 @@
                 if (contact.uid === state.currentUser.uid) continue;
                 const div = document.createElement('div');
                 div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#e5f0e5]';
-                div.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <img src="${contact.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''">
-                        <span class="text-sm font-medium">${contact.name}</span>
-                    </div>
-                    <button onclick="executeForward('${contact.uid}')" class="bg-[#2b7a4b] text-white px-3 py-1 rounded-full text-xs font-bold">Forward</button>
-                `;
+                div.innerHTML = `<div class="flex items-center space-x-3"><img src="${contact.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''"><span class="text-sm font-medium">${contact.name}</span></div><button onclick="executeForward('${contact.uid}')" class="bg-[#2b7a4b] text-white px-3 py-1 rounded-full text-xs font-bold">Forward</button>`;
                 container.appendChild(div);
             }
             $('forward-modal').classList.remove('hidden');
@@ -1552,14 +1295,7 @@
         window.executeForward = function(uid) {
             if (!state.selectedMessage) return;
             const key = getChatKey(state.currentUser.uid, uid);
-            const msg = {
-                sender: state.currentUser.uid,
-                text: '📤 Forwarded: ' + state.selectedMessage.text,
-                timestamp: Date.now(),
-                read: false,
-                reactions: {},
-                replyTo: null,
-            };
+            const msg = { sender: state.currentUser.uid, text: '📤 Forwarded: ' + state.selectedMessage.text, timestamp: Date.now(), read: false, reactions: {}, replyTo: null };
             push(ref(db, 'chats/' + key), msg);
             closeForwardModal();
             alert('Forwarded!');
@@ -1570,42 +1306,21 @@
             const key = getChatKey(state.currentUser.uid, state.activeChat);
             const msgs = state.chats[key] || {};
             const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === state.selectedMessage.timestamp && msgs[k].sender === state.selectedMessage.sender);
-            if (msgKey) {
-                if (confirm('Delete this message?')) {
-                    remove(ref(db, 'chats/' + key + '/' + msgKey));
-                }
-            }
+            if (msgKey) { if (confirm('Delete this message?')) remove(ref(db, 'chats/' + key + '/' + msgKey)); }
             closeContextMenu();
         };
 
-        window.closeForwardModal = function() {
-            $('forward-modal').classList.add('hidden');
-        };
+        window.closeForwardModal = function() { $('forward-modal').classList.add('hidden'); };
 
         // ---------- CONTACTS ----------
-        window.openAddFriend = function() {
-            $('add-friend-modal').classList.remove('hidden');
-            $('add-friend-preview').classList.add('hidden');
-            $('add-friend-uid-input').value = '';
-            closeMenu();
-        };
-
+        window.openAddFriend = function() { $('add-friend-modal').classList.remove('hidden'); $('add-friend-preview').classList.add('hidden'); $('add-friend-uid-input').value = ''; closeMenu(); };
         $('add-friend-uid-input')?.addEventListener('input', function() {
             const uid = this.value.trim();
             const preview = $('add-friend-preview');
             if (uid.length === 6) {
                 const user = state.allUsers.find(u => u.uid === uid);
-                if (user) {
-                    $('add-friend-preview-pfp').src = user.pfp || '';
-                    $('add-friend-preview-name').innerText = user.name;
-                    $('add-friend-preview-uid').innerText = '@' + user.uid;
-                    preview.classList.remove('hidden');
-                } else {
-                    preview.classList.add('hidden');
-                }
-            } else {
-                preview.classList.add('hidden');
-            }
+                if (user) { $('add-friend-preview-pfp').src = user.pfp || ''; $('add-friend-preview-name').innerText = user.name; $('add-friend-preview-uid').innerText = '@' + user.uid; preview.classList.remove('hidden'); } else preview.classList.add('hidden');
+            } else preview.classList.add('hidden');
         });
 
         window.sendFriendRequest = function() {
@@ -1615,16 +1330,7 @@
             if (!user) return alert('User not found');
             if (state.contacts.find(c => c.uid === uid)) return alert('Already friends');
             if (state.friendRequests.find(r => r.from === uid)) return alert('Request already sent');
-
-            set(ref(db, 'friendRequests/' + Date.now()), {
-                from: state.currentUser.uid,
-                to: uid,
-                status: 'pending',
-                timestamp: Date.now()
-            }).then(() => {
-                alert('Friend request sent!');
-                closeModal('add-friend-modal');
-            });
+            set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('add-friend-modal'); });
         };
 
         window.acceptFriendRequest = function(uid) {
@@ -1639,9 +1345,7 @@
             if (reqKey) updates['friendRequests/' + reqKey] = null;
             update(ref(db), updates).then(() => {
                 const name = prompt('Enter a name for this contact:', uid);
-                if (name) {
-                    update(ref(db, 'users/' + uid), { name: name });
-                }
+                if (name) update(ref(db, 'users/' + uid), { name });
                 alert('Friend added!');
             });
         };
@@ -1653,10 +1357,7 @@
             if (reqKey) remove(ref(db, 'friendRequests/' + reqKey));
         };
 
-        window.openIncomingRequests = function() {
-            $('incoming-requests-modal').classList.remove('hidden');
-            closeMenu();
-        };
+        window.openIncomingRequests = function() { $('incoming-requests-modal').classList.remove('hidden'); closeMenu(); };
 
         // ---------- GROUPS ----------
         window.openCreateGroup = function() {
@@ -1665,11 +1366,7 @@
             for (let contact of state.contacts) {
                 const div = document.createElement('div');
                 div.className = 'flex items-center space-x-2 p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
-                div.innerHTML = `
-                    <input type="checkbox" value="${contact.uid}" class="group-contact-check">
-                    <img src="${contact.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''">
-                    <span class="text-sm">${contact.name}</span>
-                `;
+                div.innerHTML = `<input type="checkbox" value="${contact.uid}" class="group-contact-check"><img src="${contact.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''"><span class="text-sm">${contact.name}</span>`;
                 container.appendChild(div);
             }
             $('create-group-modal').classList.remove('hidden');
@@ -1678,31 +1375,35 @@
 
         window.createGroup = function() {
             const name = $('group-name-input').value.trim();
+            const bio = $('group-bio-input').value.trim();
             if (!name) return alert('Please enter group name');
             const checkboxes = document.querySelectorAll('.group-contact-check:checked');
             const members = [state.currentUser.uid];
             checkboxes.forEach(cb => members.push(cb.value));
             if (members.length < 2) return alert('Select at least one member');
-
-            const groupId = 'group_' + Date.now();
-            const groupData = {
-                id: groupId,
-                name: name,
-                members: members,
-                admin: state.currentUser.uid,
-                created: Date.now()
+            const file = $('group-pfp-input').files[0];
+            const uploadPfp = async () => {
+                let pfpUrl = '';
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    try {
+                        const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API, { method: 'POST', body: formData });
+                        const data = await res.json();
+                        if (data.success) pfpUrl = data.data.url;
+                    } catch (e) { alert('Image upload failed'); return null; }
+                }
+                return pfpUrl;
             };
-            set(ref(db, 'groups/' + groupId), groupData).then(() => {
-                const key = 'group_' + groupId;
-                push(ref(db, 'chats/' + key), {
-                    sender: state.currentUser.uid,
-                    text: 'Group "' + name + '" created!',
-                    timestamp: Date.now(),
-                    read: false,
-                    reactions: {},
+            uploadPfp().then(pfpUrl => {
+                const groupId = 'group_' + Date.now();
+                const groupData = { id: groupId, name, bio, pfp: pfpUrl, members, admin: state.currentUser.uid, created: Date.now() };
+                set(ref(db, 'groups/' + groupId), groupData).then(() => {
+                    const key = 'group_' + groupId;
+                    push(ref(db, 'chats/' + key), { sender: state.currentUser.uid, text: 'Group "' + name + '" created!', timestamp: Date.now(), read: false, reactions: {} });
+                    alert('Group created!');
+                    closeModal('create-group-modal');
                 });
-                alert('Group created!');
-                closeModal('create-group-modal');
             });
         };
 
@@ -1714,6 +1415,7 @@
                 state.call = call;
                 const peerUid = call.peer.replace('stardust_', '');
                 const user = state.allUsers.find(u => u.uid === peerUid) || state.currentUser;
+                if (state.blocked.includes(peerUid)) { call.close(); return; }
                 showIncomingCall(user);
             });
         }
@@ -1721,11 +1423,10 @@
         window.initiateCall = function(type) {
             if (!state.activeChat) return alert('Open a chat first');
             const targetUid = state.activeChat;
+            if (state.blocked.includes(targetUid)) { alert('This user is blocked.'); return; }
             const targetPeerId = 'stardust_' + targetUid;
             if (!state.peerInstance) return alert('Peer not ready');
-            
             state.callIsVideo = type === 'video';
-
             navigator.mediaDevices.getUserMedia({ audio: true, video: type === 'video' })
                 .then(stream => {
                     state.callStream = stream;
@@ -1739,11 +1440,7 @@
                         document.getElementById('call-status-lbl').innerText = 'Connected';
                         startCallTimer();
                     });
-                    call.on('close', () => {
-                        terminateCall();
-                        // Return to chat
-                        closeChatWindow();
-                    });
+                    call.on('close', () => { terminateCall(); closeChatWindow(); });
                 }).catch(err => alert('Camera/Mic access denied: ' + err.message));
         };
 
@@ -1755,7 +1452,6 @@
                     state.callActive = true;
                     document.getElementById('call-local-video').srcObject = stream;
                     document.getElementById('call-local-video').style.display = 'block';
-                    document.getElementById('call-video-container').style.display = 'flex';
                     document.getElementById('incoming-call-actions').classList.add('hidden');
                     document.getElementById('call-bottom-nav').classList.remove('hidden');
                     state.call.answer(stream);
@@ -1764,17 +1460,11 @@
                         document.getElementById('call-status-lbl').innerText = 'Connected';
                         startCallTimer();
                     });
-                    state.call.on('close', () => {
-                        terminateCall();
-                        closeChatWindow();
-                    });
+                    state.call.on('close', () => { terminateCall(); closeChatWindow(); });
                 }).catch(err => alert('Failed to answer: ' + err.message));
         };
 
-        window.rejectIncomingCall = function() {
-            if (state.call) state.call.close();
-            terminateCall();
-        };
+        window.rejectIncomingCall = function() { if (state.call) state.call.close(); terminateCall(); };
 
         function showCallUI(uid) {
             const user = state.allUsers.find(u => u.uid === uid) || state.currentUser;
@@ -1786,11 +1476,9 @@
             document.getElementById('incoming-call-actions').classList.add('hidden');
             document.getElementById('call-bottom-nav').classList.remove('hidden');
             if (state.callIsVideo) {
-                document.getElementById('call-video-container').style.display = 'flex';
                 document.getElementById('call-local-video').style.display = 'block';
                 document.getElementById('call-local-video').srcObject = state.callStream;
             } else {
-                document.getElementById('call-video-container').style.display = 'none';
                 document.getElementById('call-local-video').style.display = 'none';
             }
         }
@@ -1803,23 +1491,20 @@
             document.getElementById('call-status-lbl').innerText = 'Incoming call...';
             document.getElementById('incoming-call-actions').classList.remove('hidden');
             document.getElementById('call-bottom-nav').classList.add('hidden');
-            document.getElementById('call-video-container').style.display = 'none';
-            state.callIsVideo = true; // default for incoming
+            state.callIsVideo = true;
         }
 
         window.terminateCall = function() {
             if (state.call) { state.call.close(); state.call = null; }
             if (state.callStream) { state.callStream.getTracks().forEach(t => t.stop()); state.callStream = null; }
-            state.callActive = false;
-            state.callIsFloating = false;
+            state.callActive = false; state.callIsFloating = false;
             document.getElementById('call-interface-overlay').classList.add('hidden');
             document.getElementById('floating-call-window').classList.add('hidden');
             document.getElementById('call-local-video').srcObject = null;
             document.getElementById('call-remote-video').srcObject = null;
             if (state.callDurationInterval) clearInterval(state.callDurationInterval);
-            state.callSeconds = 0;
+            state.callSeconds = 0; state.isMuted = false;
             document.getElementById('floating-call-duration').innerText = '00:00';
-            state.isMuted = false;
             document.getElementById('call-mute-btn').innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>`;
         };
 
@@ -1857,8 +1542,19 @@
             document.getElementById('floating-remote-video').srcObject = null;
             document.getElementById('call-interface-overlay').classList.remove('hidden');
             if (state.callIsVideo) {
-                document.getElementById('call-video-container').style.display = 'flex';
                 document.getElementById('call-local-video').style.display = 'block';
+            }
+        };
+
+        window.swapPipFullscreen = function() {
+            // Swap local and remote video feeds
+            const remoteVideo = document.getElementById('call-remote-video');
+            const localVideo = document.getElementById('call-local-video');
+            const remoteStream = remoteVideo.srcObject;
+            const localStream = localVideo.srcObject;
+            if (remoteStream && localStream) {
+                remoteVideo.srcObject = localStream;
+                localVideo.srcObject = remoteStream;
             }
         };
 
@@ -1866,9 +1562,7 @@
             if (!state.callStream) return;
             state.isMuted = !state.isMuted;
             const audioTrack = state.callStream.getAudioTracks()[0];
-            if (audioTrack) {
-                audioTrack.enabled = !state.isMuted;
-            }
+            if (audioTrack) audioTrack.enabled = !state.isMuted;
             const btn = document.getElementById('call-mute-btn');
             if (state.isMuted) {
                 btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" stroke="currentColor"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path></svg>`;
@@ -1877,19 +1571,10 @@
             }
         };
 
-        // Call reactions
-        window.toggleCallReactions = function() {
-            document.getElementById('call-reactions-popup').classList.toggle('hidden');
-        };
-
+        window.toggleCallReactions = function() { document.getElementById('call-reactions-popup').classList.toggle('hidden'); };
         window.sendCallReaction = function(emoji) {
             if (!state.callPeerId) return;
-            push(ref(db, 'callReactions'), {
-                from: state.currentUser.uid,
-                to: state.callPeerId,
-                emoji: emoji,
-                timestamp: Date.now()
-            });
+            push(ref(db, 'callReactions'), { from: state.currentUser.uid, to: state.callPeerId, emoji, timestamp: Date.now() });
             document.getElementById('call-reactions-popup').classList.add('hidden');
             showCallReaction(emoji);
         };
@@ -1908,28 +1593,17 @@
             const data = snap.val();
             if (data) {
                 const last = Object.values(data).pop();
-                if (last && last.to === state.currentUser.uid) {
-                    showCallReaction(last.emoji);
-                }
+                if (last && last.to === state.currentUser.uid) showCallReaction(last.emoji);
             }
         });
 
-        window.toggleCallChat = function() {
-            document.getElementById('call-chat-overlay').classList.toggle('hidden');
-        };
-
+        window.toggleCallChat = function() { document.getElementById('call-chat-overlay').classList.toggle('hidden'); };
         window.sendCallChatMessage = function() {
             const input = document.getElementById('call-chat-input');
             const text = input.value.trim();
             if (!text || !state.callPeerId) return;
             const key = getChatKey(state.currentUser.uid, state.callPeerId);
-            push(ref(db, 'chats/' + key), {
-                sender: state.currentUser.uid,
-                text: text,
-                timestamp: Date.now(),
-                read: false,
-                reactions: {}
-            });
+            push(ref(db, 'chats/' + key), { sender: state.currentUser.uid, text, timestamp: Date.now(), read: false, reactions: {} });
             input.value = '';
             renderCallChatMessages();
         };
@@ -1951,46 +1625,24 @@
         }
 
         // ---------- POSTS ----------
-        window.openCreatePost = function() {
-            $('create-post-modal').classList.remove('hidden');
-        };
+        window.openCreatePost = function() { $('create-post-modal').classList.remove('hidden'); };
 
         window.publishPost = async function() {
             const text = $('post-text-input').value.trim();
             const file = $('post-image-input').files[0];
             if (!text && !file) return alert('Write something or add an image');
-
             let imageUrl = '';
             if (file) {
                 const formData = new FormData();
                 formData.append('image', file);
                 try {
-                    const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API, {
-                        method: 'POST',
-                        body: formData
-                    });
+                    const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API, { method: 'POST', body: formData });
                     const data = await res.json();
-                    if (data.success) {
-                        imageUrl = data.data.url;
-                    } else {
-                        alert('Image upload failed');
-                        return;
-                    }
-                } catch (e) {
-                    alert('Upload error: ' + e.message);
-                    return;
-                }
+                    if (data.success) imageUrl = data.data.url;
+                    else { alert('Image upload failed'); return; }
+                } catch (e) { alert('Upload error: ' + e.message); return; }
             }
-
-            const post = {
-                id: 'post_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
-                author: state.currentUser.uid,
-                text: text || '',
-                image: imageUrl,
-                timestamp: Date.now(),
-                likes: {},
-                comments: {}
-            };
+            const post = { id: 'post_' + Date.now() + '_' + Math.floor(Math.random() * 1000), author: state.currentUser.uid, text: text || '', image: imageUrl, timestamp: Date.now(), likes: {}, comments: {} };
             push(ref(db, 'posts'), post);
             $('post-text-input').value = '';
             $('post-image-input').value = '';
@@ -2008,29 +1660,17 @@
             const name = $('edit-profile-name').value.trim();
             const bio = $('edit-profile-bio').value.trim();
             const file = $('edit-profile-pfp').files[0];
-
             let pfpUrl = state.currentUser.pfp || '';
             if (file) {
                 const formData = new FormData();
                 formData.append('image', file);
                 try {
-                    const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API, {
-                        method: 'POST',
-                        body: formData
-                    });
+                    const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API, { method: 'POST', body: formData });
                     const data = await res.json();
                     if (data.success) pfpUrl = data.data.url;
-                } catch (e) {
-                    alert('Image upload error');
-                    return;
-                }
+                } catch (e) { alert('Image upload error'); return; }
             }
-
-            await update(ref(db, 'users/' + state.currentUser.uid), {
-                name: name || state.currentUser.name,
-                bio: bio || state.currentUser.bio,
-                pfp: pfpUrl
-            });
+            await update(ref(db, 'users/' + state.currentUser.uid), { name: name || state.currentUser.name, bio: bio || state.currentUser.bio, pfp: pfpUrl });
             state.currentUser.name = name || state.currentUser.name;
             state.currentUser.bio = bio || state.currentUser.bio;
             state.currentUser.pfp = pfpUrl;
@@ -2039,18 +1679,13 @@
         };
 
         // ---------- SETTINGS ----------
-        window.openSettings = function() {
-            $('settings-modal').classList.remove('hidden');
-            closeMenu();
-        };
+        window.openSettings = function() { $('settings-modal').classList.remove('hidden'); closeMenu(); };
 
         window.openSavedPosts = function() {
             const container = $('saved-posts-list');
             container.innerHTML = '';
             const saved = state.posts.filter(p => state.savedPosts && state.savedPosts.includes(p.id));
-            if (saved.length === 0) {
-                $('no-saved-posts').classList.remove('hidden');
-            } else {
+            if (saved.length === 0) { $('no-saved-posts').classList.remove('hidden'); } else {
                 $('no-saved-posts').classList.add('hidden');
                 for (let post of saved) {
                     const div = document.createElement('div');
@@ -2066,19 +1701,14 @@
         window.openBlockedContacts = function() {
             const container = $('blocked-list');
             container.innerHTML = '';
-            if (state.blocked.length === 0) {
-                $('no-blocked').classList.remove('hidden');
-            } else {
+            if (state.blocked.length === 0) { $('no-blocked').classList.remove('hidden'); } else {
                 $('no-blocked').classList.add('hidden');
                 for (let uid of state.blocked) {
                     const user = state.allUsers.find(u => u.uid === uid);
                     if (!user) continue;
                     const div = document.createElement('div');
                     div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
-                    div.innerHTML = `
-                        <span>${user.name}</span>
-                        <button onclick="unblockUser('${uid}')" class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold">Unblock</button>
-                    `;
+                    div.innerHTML = `<span>${user.name}</span><button onclick="unblockUser('${uid}')" class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold">Unblock</button>`;
                     container.appendChild(div);
                 }
             }
@@ -2095,22 +1725,14 @@
         window.openCallHistory = function() {
             const container = $('call-history-list');
             container.innerHTML = '';
-            if (state.callHistory.length === 0) {
-                $('no-call-history').classList.remove('hidden');
-            } else {
+            if (state.callHistory.length === 0) { $('no-call-history').classList.remove('hidden'); } else {
                 $('no-call-history').classList.add('hidden');
                 for (let call of state.callHistory) {
                     const user = state.allUsers.find(u => u.uid === call.other) || state.contacts.find(c => c.uid === call.other);
                     if (!user) continue;
                     const div = document.createElement('div');
                     div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
-                    div.innerHTML = `
-                        <div class="flex items-center space-x-3">
-                            <img src="${user.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''">
-                            <span class="text-sm">${user.name}</span>
-                        </div>
-                        <span class="text-xs text-[#2b7a4b] opacity-60">${new Date(call.timestamp).toLocaleString()}</span>
-                    `;
+                    div.innerHTML = `<div class="flex items-center space-x-3"><img src="${user.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''"><span class="text-sm">${user.name}</span></div><span class="text-xs text-[#2b7a4b] opacity-60">${new Date(call.timestamp).toLocaleString()}</span>`;
                     container.appendChild(div);
                 }
             }
@@ -2118,69 +1740,23 @@
             closeModal('settings-modal');
         };
 
-        window.logout = function() {
-            if (confirm('Logout?')) {
-                signOut(auth);
-            }
-        };
-
-        // ---------- GAMES & SHORTS ----------
-        window.playGame = function(game) {
-            const games = {
-                'chess': 'https://lichess.org/',
-                'sudoku': 'https://sudoku.com/',
-                'solitaire': 'https://solitaire.com/',
-                'trivia': 'https://triviaplaza.com/'
-            };
-            if (games[game]) {
-                window.open(games[game], '_blank');
-            }
-        };
-
-        window.watchShort = function(url) {
-            $('shorts-iframe').src = url;
-            $('shorts-viewer').classList.remove('hidden');
-        };
+        window.logout = function() { if (confirm('Logout?')) signOut(auth); };
 
         // ---------- UI HELPERS ----------
         window.switchTab = function(tab) {
             ['chat', 'contacts', 'moments', 'profile'].forEach(t => {
                 const el = $(t + '-tab');
                 const nav = $('nav-' + t);
-                if (t === tab) {
-                    el.classList.remove('hidden');
-                    nav.classList.add('tab-active');
-                    nav.classList.remove('opacity-50');
-                } else {
-                    el.classList.add('hidden');
-                    nav.classList.remove('tab-active');
-                    nav.classList.add('opacity-50');
-                }
+                if (t === tab) { el.classList.remove('hidden'); nav.classList.add('tab-active'); nav.classList.remove('opacity-50'); } else { el.classList.add('hidden'); nav.classList.remove('tab-active'); nav.classList.add('opacity-50'); }
             });
             closeMenu();
         };
 
-        window.toggleTopMenu = function() {
-            $('top-menu-dropdown').classList.toggle('hidden');
-        };
-
-        window.toggleSearchBar = function() {
-            $('search-bar-container').classList.toggle('hidden');
-        };
-
-        window.closeMenu = function() {
-            $('top-menu-dropdown').classList.add('hidden');
-        };
-
-        window.closeModal = function(id) {
-            document.getElementById(id).classList.add('hidden');
-        };
-
-        window.openProfileFromChat = function() {
-            if (state.activeChat) {
-                openProfileView(state.activeChat);
-            }
-        };
+        window.toggleTopMenu = function() { $('top-menu-dropdown').classList.toggle('hidden'); };
+        window.toggleSearchBar = function() { $('search-bar-container').classList.toggle('hidden'); };
+        window.closeMenu = function() { $('top-menu-dropdown').classList.add('hidden'); };
+        window.closeModal = function(id) { document.getElementById(id).classList.add('hidden'); };
+        window.openProfileFromChat = function() { if (state.activeChat) openProfileView(state.activeChat); };
 
         window.handleGlobalSearch = function() {
             const query = $('global-search-input').value.trim().toLowerCase();
@@ -2193,40 +1769,24 @@
                 div.innerHTML = `
                     <div class="flex items-center space-x-3 w-full" onclick="openChat('${contact.uid}')">
                         <img src="${contact.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
-                        <div>
-                            <p class="font-bold text-sm text-[#1a2e1a]">${contact.name}</p>
-                            <p class="text-[10px] text-[#2b7a4b] font-mono">@${contact.uid}</p>
-                        </div>
+                        <div><p class="font-bold text-sm text-[#1a2e1a]">${contact.name}</p><p class="text-[10px] text-[#2b7a4b] font-mono">@${contact.uid}</p></div>
                     </div>
                     <button onclick="event.stopPropagation(); openChat('${contact.uid}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
                 `;
                 container.appendChild(div);
             }
-            if (filtered.length === 0) {
-                container.innerHTML = '<p class="text-center text-[#2b7a4b] opacity-50 text-sm py-4">No contacts found</p>';
-            }
+            if (filtered.length === 0) container.innerHTML = '<p class="text-center text-[#2b7a4b] opacity-50 text-sm py-4">No contacts found</p>';
         };
 
         // ---------- INIT ----------
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                loadingScreen.classList.remove('hidden');
-            } else {
-                loadingScreen.classList.add('hidden');
-            }
-        });
-
+        onAuthStateChanged(auth, (user) => { if (user) loadingScreen.classList.remove('hidden'); else loadingScreen.classList.add('hidden'); });
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden && auth.currentUser) {
                 loadingScreen.classList.remove('hidden');
-                setTimeout(() => {
-                    loadingScreen.classList.add('hidden');
-                }, 500);
+                setTimeout(() => loadingScreen.classList.add('hidden'), 500);
             }
         });
-
         console.log('Stardust X Messenger loaded.');
     </script>
-
 </body>
 </html>
