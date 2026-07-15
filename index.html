@@ -233,6 +233,13 @@
             border-color: #2b7a4b;
             box-shadow: 0 0 0 2px rgba(43, 122, 75, 0.2);
         }
+        
+        .game-card {
+            transition: transform 0.2s;
+        }
+        .game-card:active {
+            transform: scale(0.96);
+        }
     </style>
 </head>
 <body>
@@ -241,15 +248,15 @@
     <div id="loading-screen" class="hidden">
         <div class="loading-spinner"></div>
         <h1 class="text-2xl font-black tracking-widest text-[#2b7a4b]">STARDUST X</h1>
-        <p class="text-[#2b7a4b] text-xs mt-2 opacity-70">Establishing secure connection...</p>
+        <p class="text-[#2b7a4b] text-xs mt-2 opacity-70">Connecting to secure server...</p>
     </div>
 
     <!-- LOGIN SCREEN -->
     <div id="login-screen" class="fixed inset-0 flex flex-col items-center justify-center p-6 bg-[#e5f0e5] z-50">
-        <div class="text-center max-w-sm w-full bg-white p-8 rounded-3xl border border-[#b8d0b8] shadow-lg relative">
+        <div class="text-center max-w-sm w-full bg-white p-8 rounded-3xl border border-[#b8d0b8] shadow-lg">
             <h1 class="text-3xl font-black tracking-widest text-[#2b7a4b] mb-1">STARDUST X</h1>
             <p class="text-[#2b7a4b] text-xs opacity-70 mb-6">Secure Messenger</p>
-            <div class="space-y-4">
+            <div id="login-form" class="space-y-4">
                 <input type="email" id="login-email" placeholder="Email address" class="w-full px-4 py-3 bg-[#f0f7f0] border border-[#b8d0b8] rounded-xl text-sm focus:outline-none focus:border-[#2b7a4b] transition text-center">
                 <input type="password" id="login-password" placeholder="Password" class="w-full px-4 py-3 bg-[#f0f7f0] border border-[#b8d0b8] rounded-xl text-sm focus:outline-none focus:border-[#2b7a4b] transition text-center">
                 <button onclick="handleLogin()" class="w-full flex items-center justify-center space-x-2 bg-[#2b7a4b] hover:bg-[#1e5a35] text-white py-3 px-4 rounded-xl transition duration-200 font-semibold text-sm shadow-lg shadow-[#2b7a4b]/20">
@@ -343,8 +350,9 @@
                 <div id="no-moments-placeholder" class="text-center text-[#2b7a4b] opacity-60 text-sm py-10">No moments yet. Share something!</div>
             </section>
 
-            <!-- PROFILE TAB -->
+            <!-- PROFILE TAB - Now with Games & Shorts -->
             <section id="profile-tab" class="hidden space-y-4">
+                <!-- Profile Card -->
                 <div class="bg-white rounded-3xl border border-[#b8d0b8] p-5 shadow-sm">
                     <div class="flex flex-col items-center text-center">
                         <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-[#2b7a4b] mb-3 bg-[#e5f0e5]">
@@ -356,10 +364,62 @@
                         <button onclick="openEditProfile()" class="mt-3 bg-[#e5f0e5] text-[#2b7a4b] px-4 py-1.5 rounded-full text-xs font-bold border border-[#b8d0b8]">Edit Profile</button>
                     </div>
                 </div>
+
+                <!-- Games Section -->
                 <div>
-                    <h3 class="text-sm font-bold text-[#2b7a4b] mb-2">Friends</h3>
-                    <div id="profile-friends-list" class="space-y-1"></div>
-                    <div id="no-profile-friends" class="text-center text-[#2b7a4b] opacity-50 text-xs py-4">No friends yet.</div>
+                    <h3 class="text-sm font-bold text-[#2b7a4b] mb-2 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Quick Games
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div onclick="playGame('tictac')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
+                            <div class="text-3xl mb-1">❌⭕</div>
+                            <p class="text-xs font-bold text-[#1a2e1a]">Tic Tac Toe</p>
+                        </div>
+                        <div onclick="playGame('memory')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
+                            <div class="text-3xl mb-1">🧠</div>
+                            <p class="text-xs font-bold text-[#1a2e1a]">Memory Match</p>
+                        </div>
+                        <div onclick="playGame('snake')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
+                            <div class="text-3xl mb-1">🐍</div>
+                            <p class="text-xs font-bold text-[#1a2e1a]">Snake</p>
+                        </div>
+                        <div onclick="playGame('puzzle')" class="game-card bg-white rounded-2xl border border-[#b8d0b8] p-4 text-center cursor-pointer hover:shadow-md transition">
+                            <div class="text-3xl mb-1">🧩</div>
+                            <p class="text-xs font-bold text-[#1a2e1a]">Slide Puzzle</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shorts / Mini Cartoons -->
+                <div>
+                    <h3 class="text-sm font-bold text-[#2b7a4b] mb-2 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        Shorts
+                    </h3>
+                    <div class="space-y-2">
+                        <div onclick="watchShort('https://www.youtube.com/embed/dQw4w9WgXcQ')" class="bg-white rounded-2xl border border-[#b8d0b8] p-3 flex items-center gap-3 cursor-pointer hover:shadow-md transition">
+                            <div class="w-16 h-16 bg-[#e5f0e5] rounded-xl flex items-center justify-center text-2xl">🎬</div>
+                            <div>
+                                <p class="font-bold text-sm text-[#1a2e1a]">Funny Cat</p>
+                                <p class="text-xs text-[#2b7a4b] opacity-60">Watch now</p>
+                            </div>
+                        </div>
+                        <div onclick="watchShort('https://www.youtube.com/embed/9bZkp7q19f0')" class="bg-white rounded-2xl border border-[#b8d0b8] p-3 flex items-center gap-3 cursor-pointer hover:shadow-md transition">
+                            <div class="w-16 h-16 bg-[#e5f0e5] rounded-xl flex items-center justify-center text-2xl">🎵</div>
+                            <div>
+                                <p class="font-bold text-sm text-[#1a2e1a]">Music Video</p>
+                                <p class="text-xs text-[#2b7a4b] opacity-60">Watch now</p>
+                            </div>
+                        </div>
+                        <div onclick="watchShort('https://www.youtube.com/embed/OPf0YbXqDm0')" class="bg-white rounded-2xl border border-[#b8d0b8] p-3 flex items-center gap-3 cursor-pointer hover:shadow-md transition">
+                            <div class="w-16 h-16 bg-[#e5f0e5] rounded-xl flex items-center justify-center text-2xl">🤣</div>
+                            <div>
+                                <p class="font-bold text-sm text-[#1a2e1a]">Funny Moments</p>
+                                <p class="text-xs text-[#2b7a4b] opacity-60">Watch now</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
@@ -638,12 +698,13 @@
         </div>
     </div>
 
-    <!-- IMAGE VIEWER -->
-    <div id="image-viewer" class="hidden fixed inset-0 bg-black/95 z-[90] flex flex-col justify-center items-center p-4">
-        <button onclick="closeModal('image-viewer')" class="absolute top-4 right-4 text-white bg-black/50 px-4 py-2 rounded-xl text-sm">✕</button>
-        <img id="viewer-image" src="" class="max-w-full max-h-[80vh] object-contain rounded-lg">
+    <!-- SHORTS VIEWER MODAL -->
+    <div id="shorts-viewer" class="hidden fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-4">
+        <button onclick="closeModal('shorts-viewer')" class="absolute top-4 right-4 text-white bg-black/50 px-4 py-2 rounded-xl text-sm z-10">✕</button>
+        <div class="w-full max-w-md aspect-video bg-black rounded-3xl overflow-hidden">
+            <iframe id="shorts-iframe" src="" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+        </div>
     </div>
-
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -718,7 +779,7 @@
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
             } catch (e) {
-                alert(e.message);
+                alert('Login failed: ' + e.message);
                 $('btn-login-text').classList.remove('hidden');
                 $('btn-login-spinner').classList.add('hidden');
             }
@@ -744,8 +805,10 @@
                     online: true,
                 });
                 alert('Account created! Your UID: ' + uid);
+                $('btn-signup-text').classList.remove('hidden');
+                $('btn-signup-spinner').classList.add('hidden');
             } catch (e) {
-                alert(e.message);
+                alert('Signup failed: ' + e.message);
                 $('btn-signup-text').classList.remove('hidden');
                 $('btn-signup-spinner').classList.add('hidden');
             }
@@ -753,12 +816,10 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Show loading
                 loadingScreen.classList.remove('hidden');
                 loginScreen.classList.add('hidden');
                 appLayout.classList.add('hidden');
 
-                // Get user data
                 const snap = await get(ref(db, 'users'));
                 const users = snap.val() || {};
                 let found = null;
@@ -773,23 +834,17 @@
                     return;
                 }
                 state.currentUser = found;
-                // Update online
                 await update(ref(db, 'users/' + found.uid), { online: true, lastSeen: Date.now() });
 
-                // Load all data
                 await loadAllData();
                 renderAll();
-
-                // Initialize peer
                 initPeer();
 
-                // Hide loading, show app
                 setTimeout(() => {
                     loadingScreen.classList.add('hidden');
                     appLayout.classList.remove('hidden');
                 }, 300);
 
-                // Listen for changes
                 listenToRealtime();
 
                 $('btn-login-text').classList.remove('hidden');
@@ -810,7 +865,6 @@
             const users = snap.val() || {};
             state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid);
 
-            // Contacts: friendships
             const friendSnap = await get(ref(db, 'friendships'));
             const friendships = friendSnap.val() || {};
             state.contacts = [];
@@ -829,7 +883,6 @@
                 }
             }
 
-            // Friend requests
             const reqSnap = await get(ref(db, 'friendRequests'));
             const reqs = reqSnap.val() || {};
             state.friendRequests = [];
@@ -840,7 +893,6 @@
                 }
             }
 
-            // Chats
             const chatSnap = await get(ref(db, 'chats'));
             state.chats = chatSnap.val() || {};
             state.messages = {};
@@ -851,28 +903,23 @@
                 }
             }
 
-            // Posts
             const postSnap = await get(ref(db, 'posts'));
             state.posts = postSnap.val() ? Object.values(postSnap.val()).sort((a,b) => b.timestamp - a.timestamp) : [];
 
-            // Call history
             const callSnap = await get(ref(db, 'callHistory'));
             state.callHistory = callSnap.val() ? Object.values(callSnap.val()).filter(c => c.user === state.currentUser.uid) : [];
 
-            // Blocked
             const blockSnap = await get(ref(db, 'blocked/' + state.currentUser.uid));
             state.blocked = blockSnap.val() || [];
         }
 
         function listenToRealtime() {
-            // Users
             onValue(ref(db, 'users'), (snap) => {
                 const users = snap.val() || {};
                 state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid);
                 renderAll();
             });
 
-            // Friendships
             onValue(ref(db, 'friendships'), (snap) => {
                 const friendships = snap.val() || {};
                 state.contacts = [];
@@ -893,7 +940,6 @@
                 renderAll();
             });
 
-            // Friend requests
             onValue(ref(db, 'friendRequests'), (snap) => {
                 const reqs = snap.val() || {};
                 state.friendRequests = [];
@@ -906,7 +952,6 @@
                 renderAll();
             });
 
-            // Chats
             onValue(ref(db, 'chats'), (snap) => {
                 state.chats = snap.val() || {};
                 state.messages = {};
@@ -920,13 +965,11 @@
                 if (state.activeChat) renderChatMessages();
             });
 
-            // Posts
             onValue(ref(db, 'posts'), (snap) => {
                 state.posts = snap.val() ? Object.values(snap.val()).sort((a,b) => b.timestamp - a.timestamp) : [];
                 renderAll();
             });
 
-            // Call history
             onValue(ref(db, 'callHistory'), (snap) => {
                 state.callHistory = snap.val() ? Object.values(snap.val()).filter(c => c.user === state.currentUser.uid) : [];
             });
@@ -1049,27 +1092,6 @@
             $('profile-name-display').innerText = u.name || 'User';
             $('profile-uid-display').innerText = '@' + u.uid;
             $('profile-bio-display').innerText = u.bio || 'Hey there! I\'m using Stardust X.';
-
-            const friendsContainer = $('profile-friends-list');
-            const placeholder = $('no-profile-friends');
-            friendsContainer.innerHTML = '';
-            if (state.contacts.length === 0) {
-                placeholder.classList.remove('hidden');
-                return;
-            }
-            placeholder.classList.add('hidden');
-            for (let contact of state.contacts) {
-                const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-2 bg-white rounded-xl border border-[#b8d0b8]';
-                div.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <img src="${contact.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
-                        <span class="font-medium text-sm">${contact.name}</span>
-                    </div>
-                    <button onclick="openChat('${contact.uid}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Message</button>
-                `;
-                friendsContainer.appendChild(div);
-            }
         }
 
         function renderFriendRequests() {
@@ -1150,7 +1172,6 @@
             $('chat-window-avatar').src = contact.pfp || '';
             $('chat-window-modal').classList.remove('hidden');
             renderChatMessages();
-            // Mark messages as read
             markChatAsRead(uid);
         };
 
@@ -1186,7 +1207,6 @@
                     state.selectedMessage = msg;
                     const menu = $('msg-context-menu');
                     menu.classList.remove('hidden');
-                    // Position menu
                     menu.style.bottom = '80px';
                 };
                 container.appendChild(div);
@@ -1210,7 +1230,6 @@
                 replyTo: null,
             };
             push(ref(db, 'chats/' + key), msg);
-            // Update typing status
             if (state.typingTimeout) clearTimeout(state.typingTimeout);
             update(ref(db, 'users/' + state.currentUser.uid), { typing: false });
         };
@@ -1228,7 +1247,7 @@
             }
         };
 
-        // Typing indicator
+        // Typing
         let typingTimeout;
         $('chat-input-field')?.addEventListener('input', function() {
             if (!state.activeChat) return;
@@ -1239,7 +1258,6 @@
             }, 2000);
         });
 
-        // Listen for typing
         onValue(ref(db, 'users'), (snap) => {
             const users = snap.val() || {};
             if (state.activeChat) {
@@ -1264,8 +1282,7 @@
             const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === state.selectedMessage.timestamp && msgs[k].sender === state.selectedMessage.sender);
             if (msgKey) {
                 const reactions = msgs[msgKey].reactions || {};
-                const userReact = state.currentUser.uid;
-                reactions[userReact] = emoji;
+                reactions[state.currentUser.uid] = emoji;
                 update(ref(db, 'chats/' + key + '/' + msgKey), { reactions });
             }
             closeContextMenu();
@@ -1389,17 +1406,14 @@
         window.acceptFriendRequest = function(uid) {
             const req = state.friendRequests.find(r => r.from === uid);
             if (!req) return;
-            // Add friendship
             const key1 = 'bond_' + state.currentUser.uid + '_' + uid;
             const key2 = 'bond_' + uid + '_' + state.currentUser.uid;
             const updates = {};
             updates['friendships/' + key1] = 'confirmed';
             updates['friendships/' + key2] = 'confirmed';
-            // Remove request
             const reqKey = Object.keys(state.chats).find(k => state.chats[k]?.from === uid && state.chats[k]?.to === state.currentUser.uid);
             if (reqKey) updates['friendRequests/' + reqKey] = null;
             update(ref(db), updates).then(() => {
-                // Ask for name
                 const name = prompt('Enter a name for this contact:', uid);
                 if (name) {
                     update(ref(db, 'users/' + uid), { name: name });
@@ -1455,7 +1469,6 @@
                 created: Date.now()
             };
             set(ref(db, 'groups/' + groupId), groupData).then(() => {
-                // Create a chat key for group
                 const key = 'group_' + groupId;
                 push(ref(db, 'chats/' + key), {
                     sender: state.currentUser.uid,
@@ -1642,7 +1655,6 @@
                 timestamp: Date.now()
             });
             document.getElementById('call-reactions-popup').classList.add('hidden');
-            // Show local reaction
             showCallReaction(emoji);
         };
 
@@ -1656,7 +1668,6 @@
             setTimeout(() => el.remove(), 1200);
         }
 
-        // Listen for call reactions
         onValue(ref(db, 'callReactions'), (snap) => {
             const data = snap.val();
             if (data) {
@@ -1864,6 +1875,24 @@
             }
         };
 
+        // ---------- GAMES & SHORTS ----------
+        window.playGame = function(game) {
+            if (game === 'tictac') {
+                window.open('https://playtictac.com', '_blank');
+            } else if (game === 'memory') {
+                window.open('https://memory-match.com', '_blank');
+            } else if (game === 'snake') {
+                window.open('https://playsnake.com', '_blank');
+            } else if (game === 'puzzle') {
+                window.open('https://slidepuzzle.com', '_blank');
+            }
+        };
+
+        window.watchShort = function(url) {
+            $('shorts-iframe').src = url;
+            $('shorts-viewer').classList.remove('hidden');
+        };
+
         // ---------- UI HELPERS ----------
         window.switchTab = function(tab) {
             ['chat', 'contacts', 'moments', 'profile'].forEach(t => {
@@ -1879,7 +1908,6 @@
                     nav.classList.add('opacity-50');
                 }
             });
-            // Close menus
             closeMenu();
         };
 
@@ -1904,19 +1932,40 @@
             $('image-viewer').classList.remove('hidden');
         };
 
-        window.globalSearch = function() {
-            // Implement search
-        };
-
-        window.profileFromChat = function() {
+        window.openProfileFromChat = function() {
             if (state.activeChat) {
                 const user = state.contacts.find(c => c.uid === state.activeChat) || state.allUsers.find(u => u.uid === state.activeChat);
                 if (user) alert(`Name: ${user.name}\nUID: @${user.uid}\nBio: ${user.bio || 'No bio'}`);
             }
         };
 
+        window.handleGlobalSearch = function() {
+            const query = $('global-search-input').value.trim().toLowerCase();
+            // Simple filter for contacts
+            const container = $('contacts-list');
+            container.innerHTML = '';
+            const filtered = state.contacts.filter(c => c.name.toLowerCase().includes(query) || c.uid.includes(query));
+            for (let contact of filtered) {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition';
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3" onclick="openContactProfile('${contact.uid}')">
+                        <img src="${contact.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
+                        <div>
+                            <p class="font-bold text-sm text-[#1a2e1a]">${contact.name}</p>
+                            <p class="text-[10px] text-[#2b7a4b] font-mono">@${contact.uid}</p>
+                        </div>
+                    </div>
+                    <button onclick="openChat('${contact.uid}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
+                `;
+                container.appendChild(div);
+            }
+            if (filtered.length === 0) {
+                container.innerHTML = '<p class="text-center text-[#2b7a4b] opacity-50 text-sm py-4">No contacts found</p>';
+            }
+        };
+
         // ---------- INIT ----------
-        // Show loading if user already logged in
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 loadingScreen.classList.remove('hidden');
@@ -1925,10 +1974,8 @@
             }
         });
 
-        // Handle reconnect on tab visibility change
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden && auth.currentUser) {
-                // Show loading briefly
                 loadingScreen.classList.remove('hidden');
                 setTimeout(() => {
                     loadingScreen.classList.add('hidden');
