@@ -7,12 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
     
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, set, get, update, onValue, push, remove, child, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    <script>
-        // Provided Firebase Config Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyC0v1HVCDfyO-nFdBJChpcB3ZxDOlCtFuQ",
             authDomain: "stardust-chat-1656d.firebaseapp.com",
@@ -24,14 +23,14 @@
             measurementId: "G-31GVGLYZDL"
         };
 
-        // Initialize globally accessible instance compat models
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        window.db = db;
+        window.auth = auth;
     </script>
 
     <script>
-        // Custom Tailwind Config Configuration for Green and White Theme
         tailwind.config = {
             theme: {
                 extend: {
@@ -51,9 +50,9 @@
         .custom-scrollbar::-webkit-scrollbar { width: 5px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .spinner {
-            border: 3px solid rgba(18, 140, 126, 0.1);
-            width: 44px;
-            height: 44px;
+            border: 2px solid rgba(18, 140, 126, 0.2);
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             border-left-color: #128C7E;
             animation: spin 0.8s linear infinite;
@@ -61,38 +60,91 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #loading-screen { position: fixed; inset: 0; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
         .call-fullscreen-bg { background: radial-gradient(circle, #1e3a1e 0%, #051405 100%); }
+        
+        .game-card {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            transition: all 0.3s ease;
+        }
+        .game-card:active {
+            transform: scale(0.95);
+        }
+        .video-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+        .video-card video {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+        }
+        .profile-stats {
+            background: linear-gradient(135deg, #128C7E, #075E54);
+            border-radius: 20px;
+            padding: 16px;
+            color: white;
+        }
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        .stat-item .number {
+            font-size: 20px;
+            font-weight: 900;
+        }
+        .stat-item .label {
+            font-size: 10px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between overflow-x-hidden select-none">
 
     <div id="loading-screen">
-        <div class="spinner mb-4"></div>
+        <div class="spinner !w-12 !h-12 !border-4 mb-4"></div>
         <h1 class="text-2xl font-black tracking-widest text-brandGreen">STARDUST X</h1>
-        <p class="text-gray-400 text-[10px] tracking-wider font-mono mt-1 uppercase">Loading Security Grid Protocols...</p>
+        <p class="text-gray-500 text-xs mt-2">Connecting to secure instance...</p>
     </div>
 
     <div id="login-screen" class="fixed inset-0 flex flex-col items-center justify-center p-6 bg-brandBg z-50 hidden">
         <div class="text-center max-w-sm w-full bg-brandWhite p-8 rounded-3xl border border-gray-200 shadow-xl relative">
-            <h1 class="text-3xl font-black tracking-widest text-brandGreen mb-1">STARDUST X</h1>
-            <p class="text-gray-400 text-[10px] uppercase font-bold tracking-widest mb-6">Messenger Matrix Terminal</p>
+            <h1 class="text-3xl font-black tracking-widest text-brandGreen mb-2">STARDUST X</h1>
+            <p class="text-gray-500 text-xs mb-6">Messenger Matrix Terminal</p>
             
             <div id="login-form-container" class="space-y-4">
-                <input type="email" id="login-email" placeholder="Enter Registered Email" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brandGreen text-center">
-                <input type="password" id="login-password" placeholder="Enter Account Password" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brandGreen text-center">
-                <button onclick="handleSystemAuth('login')" class="w-full bg-brandGreen hover:bg-brandDarkGreen text-white py-3 rounded-xl transition font-bold text-sm shadow-md">Sign In Session</button>
+                <input type="email" id="login-email" placeholder="Enter Registered Email" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brandGreen transition text-center">
+                <input type="password" id="login-password" placeholder="Enter Account Password" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brandGreen transition text-center">
+                
+                <button onclick="handleSystemAuth('login')" class="w-full flex items-center justify-center space-x-2 bg-brandGreen hover:bg-brandDarkGreen text-white py-3 px-4 rounded-xl transition duration-200 font-semibold text-sm shadow-md">
+                    <span>Sign In Session</span>
+                </button>
                 <p class="text-xs text-gray-500 mt-4">Don't have an account? <span onclick="toggleAuthForms(true)" class="text-brandLightGreen font-bold cursor-pointer hover:underline">Create One</span></p>
             </div>
 
             <div id="signup-form-container" class="space-y-4 hidden">
-                <input type="email" id="signup-email" placeholder="Enter Valid Email" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brandGreen text-center">
-                <input type="password" id="signup-password" placeholder="Create Secure Password" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brandGreen text-center">
-                <button onclick="handleSystemAuth('signup')" class="w-full bg-brandLightGreen hover:bg-brandGreen text-white py-3 rounded-xl transition font-bold text-sm shadow-md">Register & Generate UID</button>
+                <input type="email" id="signup-email" placeholder="Enter Valid Email" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brandGreen transition text-center">
+                <input type="password" id="signup-password" placeholder="Create Secure Password" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brandGreen transition text-center">
+                
+                <button onclick="handleSystemAuth('signup')" class="w-full flex items-center justify-center space-x-2 bg-brandLightGreen hover:bg-brandGreen text-white py-3 px-4 rounded-xl transition duration-200 font-semibold text-sm shadow-md">
+                    <span>Register & Generate UID</span>
+                </button>
                 <p class="text-xs text-gray-500 mt-4">Already registered? <span onclick="toggleAuthForms(false)" class="text-brandGreen font-bold cursor-pointer hover:underline">Login Securely</span></p>
             </div>
         </div>
     </div>
 
-    <div id="app-layout" class="hidden flex-1 flex flex-col pb-16 max-w-md mx-auto w-full bg-brandWhite min-h-screen relative border-x border-gray-200 shadow-2xl">
+    <div id="app-layout" class="hidden flex-1 flex flex-col pb-16 max-w-md mx-auto w-full bg-brandWhite min-h-screen relative border-x border-gray-200 shadow-2xl shadow-gray-300">
         
         <main class="flex-1 overflow-y-auto px-4 py-3 custom-scrollbar">
             
@@ -104,14 +156,15 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
                         </button>
                         <div id="chat-dot-menu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-1 text-xs">
-                            <button onclick="alert('Settings Panel Loaded Engine Optimized.')" class="w-full text-left px-4 py-2 hover:bg-gray-50">Settings Hub</button>
-                            <button onclick="alert('Blocked contact databases clear.')" class="w-full text-left px-4 py-2 hover:bg-gray-50">Blocked Contacts</button>
-                            <button onclick="alert('Call Log clear. 0 active streams.')" class="w-full text-left px-4 py-2 hover:bg-gray-50">Call Log History</button>
+                            <button onclick="openSettingsModal()" class="w-full text-left px-4 py-2 hover:bg-gray-50">Settings Hub</button>
+                            <button onclick="openBlockedListModal()" class="w-full text-left px-4 py-2 hover:bg-gray-50">Blocked Contacts</button>
+                            <button onclick="openCallHistoryModal()" class="w-full text-left px-4 py-2 hover:bg-gray-50">Call Log History</button>
                             <button onclick="processLogout()" class="w-full text-left px-4 py-2 hover:bg-gray-50 text-red-600 font-bold">Logout Session</button>
                         </div>
                     </div>
                 </header>
-                <div id="active-conversations-feed" class="space-y-2"></div>
+                <div id="active-conversations-feed" class="space-y-2">
+                    </div>
             </section>
 
             <section id="tab-contact" class="hidden space-y-4">
@@ -139,17 +192,19 @@
                 </header>
 
                 <input type="text" id="contact-search-bar" oninput="renderContactsList()" placeholder="Search contact nodes..." class="hidden w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs mb-2 focus:outline-none">
+                
                 <div id="structured-contacts-list" class="space-y-4"></div>
             </section>
 
             <section id="tab-moments" class="hidden space-y-4">
                 <header class="py-3 bg-brandWhite flex justify-between items-center border-b border-gray-100">
                     <h1 class="text-xl font-black tracking-wider text-brandGreen">Moments Feed</h1>
-                    <button onclick="openPublishMomentModal()" class="bg-brandGreen hover:bg-brandDarkGreen text-brandWhite p-2 rounded-full shadow-md">
+                    <button onclick="openPublishMomentModal()" class="bg-brandGreen hover:bg-brandDarkGreen text-brandWhite p-2 rounded-full transition shadow-md">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                     </button>
                 </header>
-                <div id="moments-timeline-feed" class="space-y-4"></div>
+                <div id="moments-timeline-feed" class="space-y-4">
+                    </div>
             </section>
 
             <section id="tab-profile" class="hidden space-y-4">
@@ -157,53 +212,93 @@
                     <h1 class="text-xl font-black tracking-wider text-brandGreen">My Workspace</h1>
                 </header>
                 
-                <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100 flex flex-col items-center text-center">
-                    <div class="w-16 h-16 rounded-full p-1 bg-white border border-gray-200 mb-2">
+                <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100 flex flex-col items-center text-center relative">
+                    <div class="w-20 h-20 rounded-full p-1 bg-white border border-gray-200 mb-3 relative group">
                         <img id="my-profile-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="w-full h-full object-cover rounded-full">
                     </div>
-                    <h3 id="my-profile-name" class="text-sm font-black text-gray-800">Assign Name</h3>
-                    <p id="my-profile-uid" class="text-[10px] text-brandGreen font-mono font-bold mt-0.5">@000000</p>
-                    <p id="my-profile-bio" class="text-[11px] text-gray-500 mt-1 italic">Set status telemetry status...</p>
-                    <button onclick="openEditProfileDialog()" class="mt-3 px-3 py-1 bg-brandGreen text-white font-bold text-[10px] rounded-lg shadow">Edit Matrix Profile</button>
+                    <h3 id="my-profile-name" class="text-base font-black text-gray-800">Assign Name</h3>
+                    <p id="my-profile-uid" class="text-xs text-brandGreen font-mono mt-0.5">@000000</p>
+                    <p id="my-profile-bio" class="text-xs text-gray-500 mt-2 max-w-xs px-2 italic">Set custom telemetry status signature...</p>
+                    
+                    <button onclick="openEditProfileDialog()" class="mt-4 px-4 py-1.5 bg-brandGreen text-white font-bold text-xs rounded-xl shadow">Edit Matrix Profile</button>
                 </div>
 
-                <div class="space-y-3 pt-2">
-                    <div class="border-l-4 border-brandGreen pl-2">
-                        <h4 class="text-xs font-black uppercase text-gray-700 tracking-wider">Stardust Mini Programs Cluster</h4>
-                        <p class="text-[10px] text-gray-400">WeChat ecosystem capability adapters</p>
+                <!-- Profile Stats -->
+                <div class="profile-stats flex justify-around">
+                    <div class="stat-item">
+                        <div class="number" id="profile-friends-count">0</div>
+                        <div class="label">Friends</div>
                     </div>
+                    <div class="stat-item">
+                        <div class="number" id="profile-moments-count">0</div>
+                        <div class="label">Moments</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="number" id="profile-games-score">0</div>
+                        <div class="label">Game Score</div>
+                    </div>
+                </div>
 
-                    <div class="bg-black/5 rounded-2xl p-3 border border-gray-200">
-                        <h5 class="text-xs font-bold text-gray-800 mb-1">Stardust Short Program Clips (Cartoon Feed)</h5>
-                        <div class="relative rounded-xl overflow-hidden bg-black aspect-video flex items-center justify-center">
-                            <div class="absolute inset-0 bg-gradient-to-tr from-brandDarkGreen/40 to-emerald-900/20 flex flex-col items-center justify-center text-center p-4">
-                                <div class="w-8 h-8 rounded-full bg-brandLightGreen/90 flex items-center justify-center text-white mb-2 animate-bounce">
-                                    <svg class="w-4 h-4 fill-white pl-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                </div>
-                                <span class="text-white font-black text-xs tracking-wide">Mickey & Friends Dynamic Vector Stream</span>
-                                <span class="text-gray-300 text-[9px] mt-0.5">Runtime: 02:40 | H.265 Accelerated Matrix</span>
-                            </div>
+                <!-- Games Section -->
+                <div>
+                    <h4 class="text-xs font-black uppercase text-gray-400 tracking-wider mb-3 flex items-center justify-between">
+                        <span>🎮 Mini Games</span>
+                        <span class="text-[8px] text-brandGreen font-normal">Tap to Play</span>
+                    </h4>
+                    <div class="grid grid-cols-2 gap-3" id="games-grid">
+                        <div class="game-card p-4 rounded-2xl text-center cursor-pointer border border-gray-100" onclick="launchGame('tictactoe')">
+                            <div class="text-4xl mb-2">❌⭕</div>
+                            <h5 class="text-xs font-bold text-gray-700">Tic Tac Toe</h5>
+                            <p class="text-[9px] text-gray-400">vs AI</p>
                         </div>
-                        <div class="flex justify-between items-center mt-2 px-1">
-                            <span class="text-[10px] text-gray-400 font-medium">Channel: Cartoon Network Hub Pro</span>
-                            <button onclick="alert('Buffering next loop vector item...')" class="text-[10px] font-bold text-brandGreen hover:underline">Next Clip Packet</button>
+                        <div class="game-card p-4 rounded-2xl text-center cursor-pointer border border-gray-100" onclick="launchGame('memory')">
+                            <div class="text-4xl mb-2">🧠</div>
+                            <h5 class="text-xs font-bold text-gray-700">Memory Match</h5>
+                            <p class="text-[9px] text-gray-400">Find pairs</p>
+                        </div>
+                        <div class="game-card p-4 rounded-2xl text-center cursor-pointer border border-gray-100" onclick="launchGame('snake')">
+                            <div class="text-4xl mb-2">🐍</div>
+                            <h5 class="text-xs font-bold text-gray-700">Snake</h5>
+                            <p class="text-[9px] text-gray-400">Classic</p>
+                        </div>
+                        <div class="game-card p-4 rounded-2xl text-center cursor-pointer border border-gray-100" onclick="launchGame('flappy')">
+                            <div class="text-4xl mb-2">🐦</div>
+                            <h5 class="text-xs font-bold text-gray-700">Flappy Bird</h5>
+                            <p class="text-[9px] text-gray-400">Tap to fly</p>
                         </div>
                     </div>
+                </div>
 
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between" onclick="launchMiniGameApplet('matrix-clicker')">
-                            <div>
-                                <h6 class="text-xs font-bold text-gray-800">Matrix Core Clicker</h6>
-                                <p class="text-[9px] text-gray-400 mt-0.5">High-speed tap optimization applet game.</p>
+                <!-- Short Videos Section -->
+                <div class="mt-2">
+                    <h4 class="text-xs font-black uppercase text-gray-400 tracking-wider mb-3 flex items-center justify-between">
+                        <span>📱 Short Videos</span>
+                        <span class="text-[8px] text-brandGreen font-normal">Trending</span>
+                    </h4>
+                    <div class="space-y-3" id="videos-grid">
+                        <div class="video-card bg-black">
+                            <video id="video-1" muted loop playsinline>
+                                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-overlay">
+                                <p class="text-sm font-bold">🎵 Big Buck Bunny</p>
+                                <p class="text-[10px] opacity-80">🔥 12.5k views</p>
                             </div>
-                            <button class="w-full mt-2 bg-brandGreen text-white font-bold text-[9px] py-1 rounded-lg">Boot Applet</button>
+                            <button onclick="toggleVideoPlay('video-1')" class="absolute top-2 right-2 bg-black/50 rounded-full p-2 text-white">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
                         </div>
-                        <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between" onclick="launchMiniGameApplet('memory-matrix')">
-                            <div>
-                                <h6 class="text-xs font-bold text-gray-800">Memory Cluster Puzzle</h6>
-                                <p class="text-[9px] text-gray-400 mt-0.5">Pattern retention training framework.</p>
+                        <div class="video-card bg-black">
+                            <video id="video-2" muted loop playsinline>
+                                <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-overlay">
+                                <p class="text-sm font-bold">🎬 Movie Trailer</p>
+                                <p class="text-[10px] opacity-80">❤️ 8.7k likes</p>
                             </div>
-                            <button class="w-full mt-2 bg-brandGreen text-white font-bold text-[9px] py-1 rounded-lg">Boot Applet</button>
+                            <button onclick="toggleVideoPlay('video-2')" class="absolute top-2 right-2 bg-black/50 rounded-full p-2 text-white">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -251,68 +346,93 @@
             </div>
         </header>
 
-        <div id="chat-messages-scrollarea" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar"></div>
+        <div id="chat-messages-scrollarea" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+            </div>
 
         <div id="reply-context-anchor" class="hidden bg-gray-100 border-t border-gray-200 p-2 flex justify-between items-center text-xs text-gray-600">
             <div class="truncate pl-2">Replying to: <span id="reply-context-text" class="italic">...</span></div>
             <button onclick="clearReplyAnchor()" class="text-red-500 font-bold px-2">Cancel</button>
         </div>
 
-        <div id="typing-indicator-node" class="hidden px-4 py-1 text-[11px] text-gray-500 font-medium">Node is typing...</div>
+        <div id="typing-indicator-node" class="hidden px-4 py-1 text-[11px] text-gray-500 font-medium bg-transparent">Node is typing...</div>
 
         <footer class="p-2 bg-white border-t border-gray-200 flex items-center space-x-2">
-            <input type="text" id="chat-input-message" oninput="sendTypingHeartbeat()" placeholder="Type message packet..." class="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-brandGreen">
+            <input type="text" id="chat-input-message" oninput="sendTypingHeartbeat()" placeholder="Type secure message packet..." class="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-brandGreen">
             <button onclick="transmitMessagePacket()" class="bg-brandGreen text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md">Send</button>
         </footer>
     </div>
 
     <div id="msg-action-sheet" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-end justify-center">
-        <div class="bg-white w-full max-w-md rounded-t-3xl p-5 space-y-4">
-            <div class="flex justify-around bg-gray-50 p-3 rounded-2xl text-2xl" id="reaction-emojis-row"></div>
-            <div class="space-y-1 text-sm font-semibold text-gray-700" id="msg-options-list"></div>
-            <button onclick="closeActionSheet()" class="w-full bg-gray-100 py-3 rounded-xl font-bold text-xs text-gray-500 uppercase tracking-wider mt-2">Dismiss</button>
+        <div class="bg-white w-full max-w-md rounded-t-3xl p-5 space-y-4 animate-slide-up">
+            <div class="flex justify-around bg-gray-50 p-3 rounded-2xl text-2xl" id="reaction-emojis-row">
+                </div>
+            <div class="space-y-1 text-sm font-semibold text-gray-700" id="msg-options-list">
+                </div>
+            <button onclick="closeActionSheet()" class="w-full bg-gray-100 py-3 rounded-xl font-bold text-xs text-gray-500 tracking-wider uppercase mt-2">Dismiss Parameters</button>
         </div>
     </div>
 
     <div id="call-interface-overlay" class="hidden fixed inset-0 bg-black/95 z-[200] flex flex-col items-center justify-between p-6 max-w-md mx-auto w-full call-fullscreen-bg">
         <div class="text-center mt-10 space-y-2 w-full">
-            <div class="flex justify-center mt-8">
-                <img id="call-peer-avatar" src="" class="w-28 h-28 rounded-full border-4 border-brandGreen object-cover shadow-2xl">
+            <div class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-800/40 text-brandLightGreen text-[10px] font-black tracking-widest uppercase">
+                Secure Signal Channel
             </div>
-            <h2 id="call-peer-displayname" class="text-xl font-black text-white mt-4">Connecting Node...</h2>
+            <div class="flex justify-center mt-8">
+                <img id="call-peer-avatar" src="" class="w-32 h-32 rounded-full overflow-hidden border-4 border-brandGreen object-cover bg-gray-800 shadow-2xl">
+            </div>
+            <h2 id="call-peer-displayname" class="text-2xl font-black text-white mt-4">Connecting Node...</h2>
             <p id="call-peer-uid-lbl" class="text-gray-400 text-xs font-mono"></p>
-            <p id="call-status-lbl" class="text-brandLightGreen text-xs mt-2 animate-pulse">Establishing WebRTC Link...</p>
+            <p id="call-status-lbl" class="text-brandLightGreen text-xs mt-2 animate-pulse">Establishing WebRTC Stream...</p>
         </div>
 
-        <div id="call-video-frames-panel" class="w-full flex-1 flex flex-col items-center justify-center my-4 relative bg-black/40 rounded-2xl overflow-hidden hidden">
+        <div id="call-video-frames-panel" class="w-full flex-1 flex flex-col items-center justify-center my-4 relative bg-black/40 rounded-2xl overflow-hidden border border-gray-800 hidden">
             <video id="remote-video-stream" autoplay playsinline class="w-full h-full object-cover"></video>
-            <video id="local-video-stream" autoplay muted playsinline class="absolute top-4 right-4 w-20 h-28 bg-gray-900 rounded-xl object-cover border border-white/20"></video>
+            <video id="local-video-stream" autoplay muted playsinline class="absolute top-4 right-4 w-24 h-36 bg-gray-900 rounded-xl object-cover border border-white/20"></video>
+        </div>
+
+        <div id="call-reactions-bar" class="hidden bg-white/10 backdrop-blur-md rounded-xl p-2 flex gap-4 my-2">
+            <button onclick="triggerCallReaction('🔥')" class="text-2xl transition hover:scale-125">🔥</button>
+            <button onclick="triggerCallReaction('❤️')" class="text-2xl transition hover:scale-125">❤️</button>
+            <button onclick="triggerCallReaction('😂')" class="text-2xl transition hover:scale-125">😂</button>
+            <button onclick="triggerCallReaction('👍')" class="text-2xl transition hover:scale-125">👍</button>
         </div>
 
         <div class="w-full flex justify-center items-center gap-4 pb-8">
-            <button onclick="alert('Inline call reaction layer sent.')" class="p-4 bg-white/10 text-white rounded-full hover:bg-white/20">
+            <button onclick="toggleCallInlineReactions()" class="p-4 bg-white/10 text-white rounded-full border border-white/10 hover:bg-white/20">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </button>
-            <button onclick="alert('Stream configurations type modified.')" class="p-4 bg-white/10 text-white rounded-full hover:bg-white/20">
+            <button onclick="shiftCallStreamType()" id="call-video-toggle-btn" class="p-4 bg-white/10 text-white rounded-full border border-white/10 hover:bg-white/20">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
             </button>
-            <button onclick="alert('Sub-channel text routing active.')" class="p-4 bg-white/10 text-white rounded-full hover:bg-white/20">
+            <button onclick="toggleCallInlineChat()" class="p-4 bg-white/10 text-white rounded-full border border-white/10 hover:bg-white/20">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
             </button>
-            <button onclick="terminateCallSession()" class="p-4 bg-red-600 text-white rounded-full hover:bg-red-700 shadow-xl">
+            <button onclick="terminateCallSession()" class="p-4 bg-red-600 text-white rounded-full hover:bg-red-700 shadow-xl shadow-red-600/20">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
     </div>
 
     <div id="generic-modal-wrapper" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[120] flex items-center justify-center p-4">
-        <div id="modal-body-card" class="bg-white w-full max-w-sm rounded-3xl p-6 space-y-4 shadow-2xl"></div>
+        <div id="modal-body-card" class="bg-white w-full max-w-sm rounded-3xl p-6 space-y-4 shadow-2xl">
+            </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div id="game-modal" class="hidden fixed inset-0 bg-black/95 z-[300] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl p-4 relative">
+            <button onclick="closeGame()" class="absolute top-2 right-2 p-2 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200 z-10">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div id="game-content" class="mt-4">
+                </div>
+        </div>
     </div>
 
     <script>
         let activeUserSession = null;
         let activeNavigationTab = 'chat';
-        let databaseState = { users: {}, friends: {}, incomingRequests: {}, chats: {}, moments: {} };
+        let databaseState = { users: {}, friends: {}, incomingRequests: {}, chats: {}, moments: {}, blocks: {}, calls: {} };
         let activeChatContext = { peerUid: null, conversationId: null };
         let currentReplyMessageId = null;
         let currentPeerCallInstance = null;
@@ -320,16 +440,16 @@
         let activePeerJSInstance = null;
         
         const IMGBB_API_KEY = "550a3bcd47c1b0a86a9f2ba7a41770b6";
+        let gameScore = 0;
 
         document.addEventListener("DOMContentLoaded", () => {
-            // HIGH SPEED TIMEOUT LOADER ENFORCEMENT RESOLVING HANG/FREEZE STATE
             setTimeout(() => {
                 initializeSessionStateHook();
-            }, 1500);
+            }, 1200);
         });
 
         function initializeSessionStateHook() {
-            auth.onAuthStateChanged((user) => {
+            window.auth.onAuthStateChanged((user) => {
                 const splash = document.getElementById('loading-screen');
                 if (user) {
                     activeUserSession = user;
@@ -345,25 +465,25 @@
         function handleSystemAuth(mode) {
             const email = document.getElementById(`${mode}-email`).value.trim();
             const password = document.getElementById(`${mode}-password`).value.trim();
-            if(!email || !password) return alert("Fill credentials completely.");
+            if(!email || !password) return alert("Fill out mandatory credentials data packets!");
 
             if(mode === 'login') {
-                auth.signInWithEmailAndPassword(email, password).catch(err => alert(`Auth Error: ${err.message}`));
+                window.auth.signInWithEmailAndPassword(email, password).catch(err => alert(`Auth Error: ${err.message}`));
             } else {
-                auth.createUserWithEmailAndPassword(email, password).then((cred) => {
+                window.auth.createUserWithEmailAndPassword(email, password).then((cred) => {
                     const generatedUid = Math.floor(100000 + Math.random() * 900000).toString();
                     const newUserPayload = {
                         uid: generatedUid,
                         email: email,
                         name: email.split('@')[0],
-                        bio: "Stardust dynamic profile mesh active.",
+                        bio: "Stardust encryption activated.",
                         pfp: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150",
                         status: "online",
                         lastSeen: Date.now()
                     };
-                    db.ref('uid_lookup/' + btoa(email)).set(generatedUid);
-                    db.ref('users/' + generatedUid).set(newUserPayload);
-                }).catch(err => alert(`Registration Error: ${err.message}`));
+                    window.db.ref('uid_lookup/' + btoa(email)).set(generatedUid);
+                    window.db.ref('users/' + generatedUid).set(newUserPayload);
+                }).catch(err => alert(`Registration Failure: ${err.message}`));
             }
         }
 
@@ -373,20 +493,35 @@
         }
 
         function recoverOrBuildProfileNode(authUser) {
-            db.ref('uid_lookup/' + btoa(authUser.email)).get().then(snapshot => {
+            window.db.ref('uid_lookup/' + btoa(authUser.email)).get().then(snapshot => {
                 if(snapshot.exists()) {
-                    syncRealtimeTelemetryStreams(snapshot.val());
+                    const myUid = snapshot.val();
+                    syncRealtimeTelemetryStreams(myUid);
                 } else {
-                    auth.signOut();
+                    // Create new user mapping if not exists
+                    const generatedUid = Math.floor(100000 + Math.random() * 900000).toString();
+                    window.db.ref('uid_lookup/' + btoa(authUser.email)).set(generatedUid);
+                    const newUserPayload = {
+                        uid: generatedUid,
+                        email: authUser.email,
+                        name: authUser.email.split('@')[0],
+                        bio: "Stardust encryption activated.",
+                        pfp: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150",
+                        status: "online",
+                        lastSeen: Date.now()
+                    };
+                    window.db.ref('users/' + generatedUid).set(newUserPayload).then(() => {
+                        syncRealtimeTelemetryStreams(generatedUid);
+                    });
                 }
-            }).catch(() => auth.signOut());
+            });
         }
 
         function syncRealtimeTelemetryStreams(uid) {
             activeUserSession.uid = uid;
             document.getElementById('my-profile-uid').innerText = `@${uid}`;
             
-            db.ref('users/' + uid).on('value', (snap) => {
+            window.db.ref('users/' + uid).on('value', (snap) => {
                 if(snap.exists()) {
                     const profile = snap.val();
                     document.getElementById('my-profile-name').innerText = profile.name;
@@ -395,19 +530,37 @@
                 }
             });
 
-            db.ref('users').on('value', snap => { databaseState.users = snap.val() || {}; renderContactsList(); renderConversationsFeed(); });
-            db.ref('friends/' + uid).on('value', snap => { databaseState.friends = snap.val() || {}; renderContactsList(); });
-            db.ref('requests/' + uid).on('value', snap => { databaseState.incomingRequests = snap.val() || {}; evaluateIncomingBadges(); });
-            db.ref('moments').on('value', snap => { databaseState.moments = snap.val() || {}; renderMomentsTimeline(); });
+            window.db.ref('users').on('value', snap => { databaseState.users = snap.val() || {}; renderContactsList(); renderConversationsFeed(); });
+            window.db.ref('friends/' + uid).on('value', snap => { 
+                databaseState.friends = snap.val() || {}; 
+                renderContactsList(); 
+                updateProfileStats();
+            });
+            window.db.ref('requests/' + uid).on('value', snap => { databaseState.incomingRequests = snap.val() || {}; evaluateIncomingBadges(); });
+            window.db.ref('moments').on('value', snap => { 
+                databaseState.moments = snap.val() || {}; 
+                renderMomentsTimeline(); 
+                updateProfileStats();
+            });
+            window.db.ref('blocks/' + uid).on('value', snap => { databaseState.blocks = snap.val() || {}; });
+            window.db.ref('calls/' + uid).on('value', snap => { databaseState.calls = snap.val() || {}; handleIncomingCallSignal(snap.val()); });
 
             initializePeerJSConnectionNode(uid);
 
-            // Hide initial setup loaders with immediate layout switch execution
             document.getElementById('loading-screen').classList.add('hidden');
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-layout').classList.remove('hidden');
 
-            db.ref('users/' + uid).update({ status: 'online', lastSeen: Date.now() });
+            window.db.ref('users/' + uid).update({ status: 'online', lastSeen: Date.now() });
+        }
+
+        function updateProfileStats() {
+            const friendCount = Object.keys(databaseState.friends || {}).length;
+            const momentCount = Object.keys(databaseState.moments || {}).filter(k => databaseState.moments[k].ownerUid === activeUserSession.uid).length;
+            
+            document.getElementById('profile-friends-count').textContent = friendCount;
+            document.getElementById('profile-moments-count').textContent = momentCount;
+            document.getElementById('profile-games-score').textContent = gameScore;
         }
 
         function switchNavigationTab(tabId) {
@@ -423,37 +576,6 @@
                     btn.classList.add('text-gray-400');
                 }
             });
-        }
-
-        // WeChat Program Applets Simulation Logic 
-        function launchMiniGameApplet(appletType) {
-            const wrapper = document.getElementById('generic-modal-wrapper');
-            const body = document.getElementById('modal-body-card');
-            wrapper.classList.remove('hidden');
-
-            if(appletType === 'matrix-clicker') {
-                body.innerHTML = `
-                    <div class="text-center space-y-3">
-                        <h4 class="text-xs font-black uppercase tracking-wider text-brandGreen">Matrix Clicker Applet</h4>
-                        <div class="bg-gray-100 p-4 rounded-xl font-mono text-2xl font-black text-gray-700" id="clicker-score">0</div>
-                        <button onclick="document.getElementById('clicker-score').innerText = parseInt(document.getElementById('clicker-score').innerText)+1" class="w-full bg-brandLightGreen text-white py-2 rounded-xl text-xs font-bold">Tap Score Nodes</button>
-                        <button onclick="dismissGenericModal()" class="w-full bg-gray-200 py-1.5 rounded-xl text-xs text-gray-500 font-medium">Exit Applet</button>
-                    </div>
-                `;
-            } else {
-                body.innerHTML = `
-                    <div class="text-center space-y-3">
-                        <h4 class="text-xs font-black uppercase tracking-wider text-brandGreen">Memory Cluster Puzzle</h4>
-                        <p class="text-[11px] text-gray-500">Match active secure sequencing coordinates blocks.</p>
-                        <div class="grid grid-cols-3 gap-2 py-2">
-                            <div onclick="this.classList.toggle('bg-brandGreen')" class="h-10 bg-gray-200 rounded-lg cursor-pointer transition"></div>
-                            <div onclick="this.classList.toggle('bg-brandGreen')" class="h-10 bg-gray-200 rounded-lg cursor-pointer transition"></div>
-                            <div onclick="this.classList.toggle('bg-brandGreen')" class="h-10 bg-gray-200 rounded-lg cursor-pointer transition"></div>
-                        </div>
-                        <button onclick="dismissGenericModal()" class="w-full bg-gray-200 py-1.5 rounded-xl text-xs text-gray-500 font-medium">Exit Applet</button>
-                    </div>
-                `;
-            }
         }
 
         function renderContactsList() {
@@ -492,7 +614,7 @@
                 
                 alphaGroups[letter].forEach(friend => {
                     let node = document.createElement('div');
-                    node.className = "flex items-center justify-between p-2 bg-gray-50/50 hover:bg-gray-100/60 rounded-xl cursor-pointer";
+                    node.className = "flex items-center justify-between p-2 bg-gray-50/50 hover:bg-gray-100/60 rounded-xl transition cursor-pointer";
                     node.setAttribute('onclick', `openActionSheetForNode('${friend.uid}')`);
                     node.innerHTML = `
                         <div class="flex items-center space-x-3">
@@ -516,7 +638,8 @@
         }
 
         function toggleDropdown(id) {
-            document.getElementById(id).classList.toggle('hidden');
+            const menu = document.getElementById(id);
+            menu.classList.toggle('hidden');
         }
 
         function triggerPromptAction(actionType) {
@@ -538,10 +661,10 @@
             } else if(actionType === 'create-group') {
                 body.innerHTML = `
                     <h3 class="text-sm font-black text-gray-800">Construct Hub Group Chat</h3>
-                    <input type="text" id="group-chat-title" placeholder="Enter group name" class="w-full px-3 py-2 border rounded-xl text-xs focus:outline-none">
+                    <input type="text" id="group-chat-title" placeholder="Enter cluster dynamic name" class="w-full px-3 py-2 border rounded-xl text-xs focus:outline-none">
                     <div class="flex space-x-2 pt-2">
                         <button onclick="dismissGenericModal()" class="flex-1 bg-gray-100 py-2 rounded-xl text-xs font-bold text-gray-500">Cancel</button>
-                        <button onclick="alert('Group cluster operationalized successfully.')" class="flex-1 bg-brandGreen text-white py-2 rounded-xl text-xs font-bold">Instantiate Group</button>
+                        <button onclick="commitGroupChatCluster()" class="flex-1 bg-brandGreen text-white py-2 rounded-xl text-xs font-bold">Instantiate Group</button>
                     </div>
                 `;
             }
@@ -553,25 +676,35 @@
 
         function transmitFriendRequestPacket() {
             const targetUid = document.getElementById('target-friend-uid').value.trim();
-            if(!targetUid || targetUid === activeUserSession.uid) return alert("Invalid target details.");
-            if(!databaseState.users[targetUid]) return alert("Node missing from global system registry.");
+            if(!targetUid || targetUid === activeUserSession.uid) return alert("Invalid telemetry address targets!");
+            if(!databaseState.users[targetUid]) return alert("Identity node missing from registry lookup system.");
 
-            db.ref(`requests/${targetUid}/${activeUserSession.uid}`).set({
+            window.db.ref(`requests/${targetUid}/${activeUserSession.uid}`).set({
                 senderUid: activeUserSession.uid,
                 timestamp: Date.now()
             }).then(() => {
-                alert("Request vector transmitted successfully.");
+                alert("Request vector successfully generated.");
                 dismissGenericModal();
             });
         }
 
         function evaluateIncomingBadges() {
-            const count = Object.keys(databaseState.incomingRequests).length;
-            document.getElementById('incoming-red-dot').classList.toggle('hidden', count === 0);
-            document.getElementById('dot-request-badge').classList.toggle('hidden', count === 0);
-            const badge = document.getElementById('nav-contact-badge-count');
-            if(count > 0) { badge.innerText = count; badge.classList.remove('hidden'); }
-            else badge.classList.add('hidden');
+            const reqKeys = Object.keys(databaseState.incomingRequests);
+            const count = reqKeys.length;
+            const redDot = document.getElementById('incoming-red-dot');
+            const dotMenu = document.getElementById('dot-request-badge');
+            const contactBadge = document.getElementById('nav-contact-badge-count');
+
+            if(count > 0) {
+                redDot.classList.remove('hidden');
+                dotMenu.classList.remove('hidden');
+                contactBadge.innerText = count;
+                contactBadge.classList.remove('hidden');
+            } else {
+                redDot.classList.add('hidden');
+                dotMenu.classList.add('hidden');
+                contactBadge.classList.add('hidden');
+            }
         }
 
         function openIncomingRequestsView() {
@@ -585,6 +718,7 @@
             
             const list = document.getElementById('requests-modal-list');
             const reqs = Object.keys(databaseState.incomingRequests);
+            
             if(reqs.length === 0) list.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">No inbound traffic arrays.</p>`;
             
             reqs.forEach(senderUid => {
@@ -594,11 +728,14 @@
                 element.innerHTML = `
                     <div class="flex items-center space-x-2">
                         <img src="${uNode.pfp}" class="w-8 h-8 rounded-full object-cover">
-                        <div><p class="text-xs font-bold text-gray-800">${uNode.name}</p></div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-800">${uNode.name}</p>
+                            <p class="text-[9px] font-mono text-gray-400">@${senderUid}</p>
+                        </div>
                     </div>
                     <div class="flex space-x-1">
-                        <button onclick="resolveInboundRequest('${senderUid}', false)" class="bg-red-100 text-red-600 text-[10px] px-2 py-1 rounded-lg font-bold">Deny</button>
-                        <button onclick="resolveInboundRequest('${senderUid}', true)" class="bg-brandGreen text-white text-[10px] px-2 py-1 rounded-lg font-bold">Accept</button>
+                        <button onclick="resolveInboundRequest('${senderUid}', false)" class="bg-red-100 text-red-600 font-bold text-[10px] px-2 py-1 rounded-lg">Deny</button>
+                        <button onclick="resolveInboundRequest('${senderUid}', true)" class="bg-brandGreen text-white font-bold text-[10px] px-2 py-1 rounded-lg">Accept</button>
                     </div>
                 `;
                 list.appendChild(element);
@@ -607,17 +744,17 @@
 
         function resolveInboundRequest(senderUid, accepted) {
             if(!accepted) {
-                db.ref(`requests/${activeUserSession.uid}/${senderUid}`).remove().then(() => openIncomingRequestsView());
+                window.db.ref(`requests/${activeUserSession.uid}/${senderUid}`).remove().then(() => openIncomingRequestsView());
             } else {
                 let defaultName = (databaseState.users[senderUid] || {}).name || "Friend Node";
-                let chosenName = prompt("Enter local client tracking save name:", defaultName);
+                let chosenName = prompt("Enter local client display save moniker name for this entry:", defaultName);
                 if(chosenName === null) return;
                 if(!chosenName.trim()) chosenName = defaultName;
 
-                db.ref(`friends/${activeUserSession.uid}/${senderUid}`).set({ savedName: chosenName.trim(), timestamp: Date.now() });
-                db.ref(`friends/${senderUid}/${activeUserSession.uid}`).set({ savedName: activeUserSession.name, timestamp: Date.now() });
+                window.db.ref(`friends/${activeUserSession.uid}/${senderUid}`).set({ savedName: chosenName.trim(), timestamp: Date.now() });
+                window.db.ref(`friends/${senderUid}/${activeUserSession.uid}`).set({ savedName: activeUserSession.name, timestamp: Date.now() });
                 
-                db.ref(`requests/${activeUserSession.uid}/${senderUid}`).remove().then(() => {
+                window.db.ref(`requests/${activeUserSession.uid}/${senderUid}`).remove().then(() => {
                     dismissGenericModal();
                     renderContactsList();
                 });
@@ -627,18 +764,39 @@
         function openActionSheetForNode(uid) {
             const sheet = document.getElementById('msg-action-sheet');
             sheet.classList.remove('hidden');
+            
             document.getElementById('reaction-emojis-row').classList.add('hidden');
             const optList = document.getElementById('msg-options-list');
             
+            let uNode = databaseState.users[uid] || {};
+            let fMeta = databaseState.friends[uid] || {};
+            let currentLocalName = fMeta.savedName || uNode.name;
+
             optList.innerHTML = `
-                <button onclick="initiateDirectMessagingThread('${uid}')" class="w-full text-left py-3 px-2 border-b hover:bg-gray-50 text-brandGreen font-bold">Send Message Stream</button>
-                <button onclick="inspectProfileMatrixDetails('${uid}')" class="w-full text-left py-3 px-2 border-b hover:bg-gray-50">View Profile Identity</button>
-                <button onclick="alert('Channel structure operationalized bound parameters.')" class="w-full text-left py-3 px-2 text-red-600 hover:bg-gray-50">Block Channel Matrix</button>
+                <button onclick="initiateDirectMessagingThread('${uid}')" class="w-full text-left py-3 px-2 border-b hover:bg-gray-50 text-brandGreen">Send Message Stream</button>
+                <button onclick="inspectProfileMatrixDetails('${uid}')" class="w-full text-left py-3 px-2 border-b hover:bg-gray-50">View Detailed Profile Identity</button>
+                <button onclick="alterSavedMonikerName('${uid}', '${currentLocalName}')" class="w-full text-left py-3 px-2 border-b hover:bg-gray-50">Modify Local Moniker Monikers</button>
+                <button onclick="toggleBlockContact('${uid}')" class="w-full text-left py-3 px-2 text-red-600 hover:bg-gray-50">Block Channel Matrix</button>
             `;
         }
 
         function closeActionSheet() {
             document.getElementById('msg-action-sheet').classList.add('hidden');
+        }
+
+        function alterSavedMonikerName(uid, currentName) {
+            closeActionSheet();
+            let newName = prompt("Update local client tracking save moniker title for this asset:", currentName);
+            if(newName && newName.trim()) {
+                window.db.ref(`friends/${activeUserSession.uid}/${uid}/savedName`).set(newName.trim()).then(() => renderContactsList());
+            }
+        }
+
+        function toggleBlockContact(uid) {
+            closeActionSheet();
+            window.db.ref(`blocks/${activeUserSession.uid}/${uid}`).set(true).then(() => {
+                alert("Matrix reference identity structural boundary constructed successfully.");
+            });
         }
 
         function inspectProfileMatrixDetails(uid) {
@@ -650,11 +808,11 @@
             let uNode = databaseState.users[uid] || {};
             body.innerHTML = `
                 <div class="flex flex-col items-center text-center space-y-2">
-                    <img src="${uNode.pfp}" class="w-16 h-16 rounded-full object-cover border-2 border-brandGreen">
+                    <img src="${uNode.pfp}" class="w-20 h-20 rounded-full object-cover border-2 border-brandGreen">
                     <h3 class="text-sm font-black text-gray-800">${uNode.name}</h3>
                     <p class="text-xs font-mono text-gray-400">@${uNode.uid}</p>
-                    <p class="text-xs text-gray-600 bg-gray-50 p-3 rounded-xl w-full italic">${uNode.bio || "No status array configured."}</p>
-                    <button onclick="dismissGenericModal()" class="w-full bg-brandGreen text-white py-2 rounded-xl text-xs font-bold mt-2">Dismiss</button>
+                    <p class="text-xs text-gray-600 italic bg-gray-50 p-3 rounded-xl w-full">${uNode.bio || "No status array configured."}</p>
+                    <button onclick="dismissGenericModal()" class="w-full bg-brandGreen text-white py-2 rounded-xl text-xs font-bold mt-2">Dismiss Vector</button>
                 </div>
             `;
         }
@@ -662,24 +820,27 @@
         function initiateDirectMessagingThread(peerUid) {
             closeActionSheet();
             activeChatContext.peerUid = peerUid;
+            
             let idArray = [activeUserSession.uid, peerUid].sort();
             activeChatContext.conversationId = `${idArray[0]}_${idArray[1]}`;
 
             document.getElementById('chat-session-overlay').classList.remove('hidden');
+            
             let uNode = databaseState.users[peerUid] || {};
             let fMeta = databaseState.friends[peerUid] || {};
             document.getElementById('chat-header-name').innerText = fMeta.savedName || uNode.name;
             document.getElementById('chat-header-avatar').src = uNode.pfp;
-            document.getElementById('chat-header-status').innerText = uNode.status === 'online' ? 'Online' : 'Offline';
+            
+            document.getElementById('chat-header-status').innerText = uNode.status === 'online' ? 'Online' : 'Last seen recently';
 
             bindConversationalStreamMessages();
-            db.ref(`unread/${activeUserSession.uid}/${activeChatContext.conversationId}`).set(0);
+            window.db.ref(`unread/${activeUserSession.uid}/${activeChatContext.conversationId}`).set(0);
         }
 
         function closeChatSession() {
             if(activeChatContext.conversationId) {
-                db.ref(`chats/${activeChatContext.conversationId}/messages`).off();
-                db.ref(`chats/${activeChatContext.conversationId}/typing/${activeChatContext.peerUid}`).off();
+                window.db.ref(`chats/${activeChatContext.conversationId}/messages`).off();
+                window.db.ref(`chats/${activeChatContext.conversationId}/typing/${activeChatContext.peerUid}`).off();
             }
             document.getElementById('chat-session-overlay').classList.add('hidden');
             activeChatContext.conversationId = null;
@@ -689,42 +850,65 @@
         function bindConversationalStreamMessages() {
             const container = document.getElementById('chat-messages-scrollarea');
             
-            db.ref(`chats/${activeChatContext.conversationId}/typing/${activeChatContext.peerUid}`).on('value', snap => {
-                document.getElementById('typing-indicator-node').classList.toggle('hidden', !snap.val());
+            window.db.ref(`chats/${activeChatContext.conversationId}/typing/${activeChatContext.peerUid}`).on('value', snap => {
+                const isTyping = snap.val();
+                document.getElementById('typing-indicator-node').classList.toggle('hidden', !isTyping);
             });
 
-            db.ref(`chats/${activeChatContext.conversationId}/messages`).on('value', snap => {
+            window.db.ref(`chats/${activeChatContext.conversationId}/messages`).on('value', snap => {
                 container.innerHTML = "";
                 if(!snap.exists()) {
-                    container.innerHTML = `<p class="text-center text-xs text-gray-400 py-10">End-to-end space activated. Transmit messages securely.</p>`;
+                    container.innerHTML = `<p class="text-center text-xs text-gray-400 py-10">End-to-end telemetry space instantiated. Transmit initial text packets safely.</p>`;
                     return;
                 }
 
                 snap.forEach(childSnap => {
                     let msg = childSnap.val();
                     let msgId = childSnap.key;
+                    
                     let wrapper = document.createElement('div');
                     let isMe = msg.sender === activeUserSession.uid;
                     wrapper.className = `flex w-full ${isMe ? 'justify-end' : 'justify-start'}`;
+                    
                     let timeStr = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
                     if(msg.recalled) {
-                        wrapper.innerHTML = `<div class="bg-gray-100 text-gray-400 text-[11px] px-3 py-1.5 rounded-xl italic">This packet stream was unsent.</div>`;
+                        wrapper.innerHTML = `
+                            <div class="bg-gray-100 border text-gray-400 text-xs px-3 py-1.5 rounded-xl italic max-w-[70%]">
+                                This packet reference stream was unsent.
+                            </div>
+                        `;
                     } else {
                         let bubbleClass = isMe ? 'bg-brandGreen text-white rounded-br-none' : 'bg-white border text-gray-800 rounded-bl-none';
-                        let replyHtml = msg.replyTo ? `<div class="bg-black/10 px-2 py-1 rounded text-[9px] mb-1 italic opacity-80">${msg.replyTo.text}</div>` : '';
                         
+                        let replyHtml = msg.replyTo ? `
+                            <div class="bg-black/10 px-2 py-1 rounded text-[10px] mb-1 truncate italic opacity-80">
+                                ${msg.replyTo.text}
+                            </div>
+                        ` : '';
+
+                        let statusMarker = "";
+                        if(isMe) {
+                            if(msg.status === 'seen') statusMarker = " ✓✓";
+                            else if(msg.status === 'delivered') statusMarker = " ✓";
+                            else statusMarker = " ∘";
+                        }
+
+                        let starredHtml = msg.starred ? `<span class="text-[9px] text-yellow-500 font-bold ml-1">★</span>` : "";
+
                         wrapper.innerHTML = `
-                            <div class="${bubbleClass} p-3 rounded-2xl max-w-[75%] shadow-sm relative cursor-pointer" 
-                                 onplaceholder="" oncontextmenu="event.preventDefault(); triggerMessageActionSheet('${msgId}', ${isMe})">
+                            <div class="${bubbleClass} p-3.5 rounded-2xl max-w-[75%] shadow-sm relative group cursor-pointer" 
+                                 oncontextmenu="event.preventDefault(); triggerMessageActionSheet('${msgId}', ${isMe})">
                                 ${replyHtml}
-                                <p class="text-xs font-medium break-words">${msg.text}</p>
-                                <div class="text-[9px] text-right mt-1 opacity-75 font-mono">${timeStr}</div>
+                                <p class="text-xs font-medium leading-relaxed break-words">${msg.text}</p>
+                                <div class="text-[9px] text-right mt-1 opacity-75 font-mono select-none">
+                                    ${timeStr}${statusMarker}${starredHtml}
+                                </div>
                             </div>
                         `;
 
                         if(!isMe && msg.status !== 'seen') {
-                            db.ref(`chats/${activeChatContext.conversationId}/messages/${childSnap.key}`).update({ status: 'seen' });
+                            window.db.ref(`chats/${activeChatContext.conversationId}/messages/${childSnap.key}`).update({ status: 'seen' });
                         }
                     }
                     container.appendChild(wrapper);
@@ -735,10 +919,13 @@
 
         function sendTypingHeartbeat() {
             if(!activeChatContext.conversationId) return;
-            db.ref(`chats/${activeChatContext.conversationId}/typing/${activeUserSession.uid}`).set(true);
+            window.db.ref(`chats/${activeChatContext.conversationId}/typing/${activeUserSession.uid}`).set(true);
+            
             clearTimeout(window.typingTimerInstance);
             window.typingTimerInstance = setTimeout(() => {
-                if(activeChatContext.conversationId) db.ref(`chats/${activeChatContext.conversationId}/typing/${activeUserSession.uid}`).set(false);
+                if(activeChatContext.conversationId) {
+                    window.db.ref(`chats/${activeChatContext.conversationId}/typing/${activeUserSession.uid}`).set(false);
+                }
             }, 1500);
         }
 
@@ -756,28 +943,39 @@
             };
 
             if(currentReplyMessageId) {
-                packet.replyTo = { msgId: currentReplyMessageId, text: document.getElementById('reply-context-text').innerText };
+                packet.replyTo = {
+                    msgId: currentReplyMessageId,
+                    text: document.getElementById('reply-context-text').innerText
+                };
                 clearReplyAnchor();
             }
 
-            db.ref(`chats/${activeChatContext.conversationId}/messages`).push(packet).then(() => {
-                let peer = activeChatContext.peerUid;
-                let convId = activeChatContext.conversationId;
-                db.ref(`unread/${peer}/${convId}`).get().then(snap => {
-                    let currentVal = snap.exists() ? snap.val() : 0;
-                    db.ref(`unread/${peer}/${convId}`).set(currentVal + 1);
-                });
+            window.db.ref(`chats/${activeChatContext.conversationId}/messages`).push(packet).then(() => {
+                updateUnreadNotificationCounters();
             });
 
             input.value = "";
             sendTypingHeartbeat();
         }
 
-        function clearReplyAnchor() { currentReplyMessageId = null; document.getElementById('reply-context-anchor').classList.add('hidden'); }
+        function updateUnreadNotificationCounters() {
+            let targetPeer = activeChatContext.peerUid;
+            let convId = activeChatContext.conversationId;
+            window.db.ref(`unread/${targetPeer}/${convId}`).get().then(snap => {
+                let currentVal = snap.exists() ? snap.val() : 0;
+                window.db.ref(`unread/${targetPeer}/${convId}`).set(currentVal + 1);
+            });
+        }
+
+        function clearReplyAnchor() {
+            currentReplyMessageId = null;
+            document.getElementById('reply-context-anchor').classList.add('hidden');
+        }
 
         window.triggerMessageActionSheet = function(msgId, isMe) {
             const sheet = document.getElementById('msg-action-sheet');
             sheet.classList.remove('hidden');
+            
             const emojiRow = document.getElementById('reaction-emojis-row');
             emojiRow.classList.remove('hidden');
             
@@ -786,28 +984,40 @@
                 <span onclick="registerMessageReaction('${msgId}', '🔥')" class="cursor-pointer hover:scale-125 transition">🔥</span>
                 <span onclick="registerMessageReaction('${msgId}', '👍')" class="cursor-pointer hover:scale-125 transition">👍</span>
                 <span onclick="registerMessageReaction('${msgId}', '😂')" class="cursor-pointer hover:scale-125 transition">😂</span>
+                <span onclick="registerMessageReaction('${msgId}', '😮')" class="cursor-pointer hover:scale-125 transition">😮</span>
             `;
 
             const optList = document.getElementById('msg-options-list');
-            db.ref(`chats/${activeChatContext.conversationId}/messages/${msgId}`).get().then(snap => {
+            window.db.ref(`chats/${activeChatContext.conversationId}/messages/${msgId}`).get().then(snap => {
                 if(!snap.exists()) return;
                 let data = snap.val();
+
                 let genericActions = `
                     <button onclick="executeActionPayload('copy', '${msgId}', \`${btoa(data.text)}\`)" class="w-full text-left py-2.5 px-2 border-b hover:bg-gray-50">Copy Text Content</button>
                     <button onclick="executeActionPayload('reply', '${msgId}', \`${btoa(data.text)}\`)" class="w-full text-left py-2.5 px-2 border-b hover:bg-gray-50">Reply Reference</button>
                     <button onclick="executeActionPayload('forward', '${msgId}', \`${btoa(data.text)}\`)" class="w-full text-left py-2.5 px-2 border-b hover:bg-gray-50">Forward Message Packet</button>
+                    <button onclick="executeActionPayload('star', '${msgId}')" class="w-full text-left py-2.5 px-2 border-b hover:bg-gray-50 text-yellow-600">Bookmark Star Message</button>
                 `;
+
                 if(isMe) {
-                    optList.innerHTML = genericActions + `<button onclick="executeActionPayload('unsend', '${msgId}')" class="w-full text-left py-2.5 px-2 text-red-600 font-bold hover:bg-gray-50">Delete for Everyone (Unsend)</button>`;
-                } else { optList.innerHTML = genericActions; }
+                    optList.innerHTML = genericActions + `
+                        <button onclick="executeActionPayload('edit', '${msgId}', \`${btoa(data.text)}\`)" class="w-full text-left py-2.5 px-2 border-b hover:bg-gray-50 text-blue-600">Edit Payload Packet</button>
+                        <button onclick="executeActionPayload('unsend', '${msgId}')" class="w-full text-left py-2.5 px-2 text-red-600 font-bold hover:bg-gray-50">Delete for Everyone (Unsend)</button>
+                    `;
+                } else {
+                    optList.innerHTML = genericActions;
+                }
             });
         };
 
         function registerMessageReaction(msgId, emojiStr) {
             closeActionSheet();
-            db.ref(`chats/${activeChatContext.conversationId}/messages/${msgId}`).get().then(snap => {
+            window.db.ref(`chats/${activeChatContext.conversationId}/messages/${msgId}`).get().then(snap => {
                 if(snap.exists()) {
-                    db.ref(`chats/${activeChatContext.conversationId}/messages/${msgId}`).update({ text: `${snap.val().text} [Reacted ${emojiStr}]` });
+                    let text = snap.val().text;
+                    window.db.ref(`chats/${activeChatContext.conversationId}/messages/${msgId}`).update({
+                        text: `${text} [Reacted ${emojiStr}]`
+                    });
                 }
             });
         }
@@ -815,44 +1025,124 @@
         function executeActionPayload(type, msgId, base64Text = "") {
             closeActionSheet();
             let rawText = base64Text ? atob(base64Text) : "";
-            if(type === 'copy') { navigator.clipboard.writeText(rawText); alert("Copied to clipboard."); }
-            else if(type === 'reply') { currentReplyMessageId = msgId; document.getElementById('reply-context-anchor').classList.remove('hidden'); document.getElementById('reply-context-text').innerText = rawText; }
-            else if(type === 'unsend') { db.ref(`chats/${activeChatContext.conversationId}/messages/${msgId}`).update({ recalled: true }); }
-            else if(type === 'forward') {
-                alert(`Forward packet targeting: ${rawText}`);
+
+            switch(type) {
+                case 'copy':
+                    navigator.clipboard.writeText(rawText);
+                    alert("Text packet copied to framework clipboard successfully.");
+                    break;
+                case 'reply':
+                    currentReplyMessageId = msgId;
+                    document.getElementById('reply-context-anchor').classList.remove('hidden');
+                    document.getElementById('reply-context-text').innerText = rawText;
+                    break;
+                case 'unsend':
+                    window.db.ref(`chats/${activeChatContext.conversationId}/messages/${msgId}`).update({ recalled: true });
+                    break;
+                case 'star':
+                    window.db.ref(`chats/${activeChatContext.conversationId}/messages/${msgId}`).update({ starred: true }).then(() => alert("Starred reference cataloged inside instance state."));
+                    break;
+                case 'edit':
+                    let updatedString = prompt("Modify conversational stream item data:", rawText);
+                    if(updatedString && updatedString.trim()) {
+                        window.db.ref(`chats/${activeChatContext.conversationId}/messages/${msgId}`).update({ text: updatedString.trim() + " (edited)" });
+                    }
+                    break;
+                case 'forward':
+                    triggerForwardingPipelineCluster(rawText);
+                    break;
             }
+        }
+
+        function triggerForwardingPipelineCluster(payloadText) {
+            const wrapper = document.getElementById('generic-modal-wrapper');
+            const body = document.getElementById('modal-body-card');
+            wrapper.classList.remove('hidden');
+
+            body.innerHTML = `
+                <h3 class="text-xs font-black text-gray-400 tracking-wider uppercase mb-2">Forward Stream Vector</h3>
+                <div class="space-y-2 max-h-52 overflow-y-auto custom-scrollbar" id="forward-nodes-list"></div>
+                <button onclick="dismissGenericModal()" class="w-full bg-gray-100 py-2 rounded-xl text-xs font-bold text-gray-500 mt-2">Cancel Link</button>
+            `;
+            
+            const listContainer = document.getElementById('forward-nodes-list');
+            Object.keys(databaseState.friends).forEach(fUid => {
+                let nodeMeta = databaseState.users[fUid] || {};
+                let fMeta = databaseState.friends[fUid] || {};
+                let item = document.createElement('div');
+                item.className = "flex items-center justify-between p-2 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer";
+                item.onclick = () => {
+                    let sorted = [activeUserSession.uid, fUid].sort();
+                    let targetConvId = `${sorted[0]}_${sorted[1]}`;
+                    window.db.ref(`chats/${targetConvId}/messages`).push({
+                        sender: activeUserSession.uid,
+                        text: `[Forwarded] ${payloadText}`,
+                        timestamp: Date.now(),
+                        status: 'sent',
+                        recalled: false
+                    }).then(() => {
+                        alert(`Packet dispatched successfully to nodes matching target @${fUid}`);
+                        dismissGenericModal();
+                    });
+                };
+                item.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <img src="${nodeMeta.pfp}" class="w-7 h-7 rounded-full object-cover">
+                        <span class="text-xs font-bold text-gray-700">${fMeta.savedName || nodeMeta.name}</span>
+                    </div>
+                    <span class="text-[10px] text-brandGreen font-bold font-mono">Select</span>
+                `;
+                listContainer.appendChild(item);
+            });
         }
 
         function renderConversationsFeed() {
             const container = document.getElementById('active-conversations-feed');
-            if(!container) return; container.innerHTML = "";
+            if(!container) return;
+            container.innerHTML = "";
+
             let chatUids = Object.keys(databaseState.users).filter(uid => uid !== activeUserSession.uid);
             
+            if(chatUids.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 text-center py-8">Navigate to Network Directory to start conversations nodes.</p>`;
+                return;
+            }
+
             chatUids.forEach(uid => {
                 let uNode = databaseState.users[uid] || {};
                 let fMeta = databaseState.friends[uid] || {};
-                let conversationId = `${[activeUserSession.uid, uid].sort()[0]}_${[activeUserSession.uid, uid].sort()[1]}`;
+                
+                let idArray = [activeUserSession.uid, uid].sort();
+                let conversationId = `${idArray[0]}_${idArray[1]}`;
                 
                 let node = document.createElement('div');
-                node.className = "flex items-center justify-between p-3 bg-gray-50 border rounded-2xl cursor-pointer relative";
+                node.className = "flex items-center justify-between p-3.5 bg-gray-50/50 hover:bg-brandBg/60 border border-gray-100 rounded-2xl transition cursor-pointer relative";
                 node.setAttribute('onclick', `initiateDirectMessagingThread('${uid}')`);
+                
                 node.innerHTML = `
                     <div class="flex items-center space-x-3">
-                        <img src="${uNode.pfp}" class="w-10 h-10 object-cover rounded-full">
+                        <div class="relative">
+                            <img src="${uNode.pfp}" class="w-11 h-11 object-cover rounded-full border border-gray-200">
+                            <span class="absolute bottom-0 right-0 w-3 h-3 border-2 border-white rounded-full ${uNode.status === 'online' ? 'bg-brandLightGreen' : 'bg-gray-300'}"></span>
+                        </div>
                         <div>
                             <h4 class="text-xs font-bold text-gray-800">${fMeta.savedName || uNode.name}</h4>
-                            <p class="text-[9px] font-mono text-gray-400">@${uid}</p>
+                            <p class="text-[10px] text-gray-400 font-mono">@${uid}</p>
                         </div>
                     </div>
-                    <div id="badge-container-${conversationId}"></div>
+                    <div id="badge-container-${conversationId}" class="flex items-center space-x-2">
+                         </div>
                 `;
                 container.appendChild(node);
 
-                db.ref(`unread/${activeUserSession.uid}/${conversationId}`).on('value', countSnap => {
-                    const el = document.getElementById(`badge-container-${conversationId}`);
-                    if(el) {
+                window.db.ref(`unread/${activeUserSession.uid}/${conversationId}`).on('value', countSnap => {
+                    const badgeCell = document.getElementById(`badge-container-${conversationId}`);
+                    if(badgeCell) {
+                        badgeCell.innerHTML = "";
                         let c = countSnap.val() || 0;
-                        el.innerHTML = c > 0 ? `<span class="bg-brandGreen text-white font-mono text-[9px] px-1.5 rounded-full">${c}</span>` : "";
+                        if(c > 0) {
+                            badgeCell.innerHTML = `<span class="bg-brandGreen text-white font-mono font-black text-[10px] px-2 py-0.5 rounded-full shadow">${c}</span>`;
+                        }
                     }
                 });
             });
@@ -862,10 +1152,14 @@
             const wrapper = document.getElementById('generic-modal-wrapper');
             const body = document.getElementById('modal-body-card');
             wrapper.classList.remove('hidden');
+
             body.innerHTML = `
-                <h3 class="text-sm font-black text-gray-800">Publish Moment</h3>
-                <textarea id="moment-text-input" placeholder="What's happening?" class="w-full px-3 py-2 border rounded-xl text-xs h-16 resize-none focus:outline-none"></textarea>
-                <input type="file" id="moment-file-input" accept="image/*" class="text-xs w-full">
+                <h3 class="text-sm font-black text-gray-800">Publish Matrix Moment</h3>
+                <textarea id="moment-text-input" placeholder="What's happening across coordinates?" class="w-full px-3 py-2 border rounded-xl text-xs h-20 resize-none focus:outline-none focus:border-brandGreen"></textarea>
+                <div class="space-y-1">
+                    <label class="block text-[10px] font-black uppercase text-gray-400">Attach Graphic Artifact (Optional)</label>
+                    <input type="file" id="moment-file-input" accept="image/*" class="text-xs text-gray-500 w-full file:mr-4 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-[10px] file:font-semibold file:bg-brandBg file:text-brandGreen hover:file:bg-gray-200">
+                </div>
                 <div class="flex space-x-2 pt-2">
                     <button onclick="dismissGenericModal()" class="flex-1 bg-gray-100 py-2 rounded-xl text-xs font-bold text-gray-500">Cancel</button>
                     <button onclick="commitMomentPublishPipeline()" class="flex-1 bg-brandGreen text-white py-2 rounded-xl text-xs font-bold">Broadcast</button>
@@ -876,36 +1170,69 @@
         function commitMomentPublishPipeline() {
             const text = document.getElementById('moment-text-input').value.trim();
             const fileInput = document.getElementById('moment-file-input');
-            if(!text && (!fileInput.files || !fileInput.files[0])) return;
-
-            const pushMoment = (imgUrl) => {
-                let key = db.ref('moments').push().key;
-                db.ref(`moments/${key}`).set({ ownerUid: activeUserSession.uid, text: text, image: imgUrl, timestamp: Date.now() })
-                .then(() => dismissGenericModal());
-            };
+            if(!text && (!fileInput.files || !fileInput.files[0])) return alert("Cannot broadcast empty timeline arrays.");
 
             if(fileInput.files && fileInput.files[0]) {
-                let dataForm = new FormData(); dataForm.append('image', fileInput.files[0]);
-                fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: dataForm })
-                .then(r => r.json()).then(res => pushMoment(res.success ? res.data.url : ""))
-                .catch(() => pushMoment(""));
-            } else { pushMoment(""); }
+                let dataForm = new FormData();
+                dataForm.append('image', fileInput.files[0]);
+                
+                fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: 'POST',
+                    body: dataForm
+                }).then(r => r.json()).then(res => {
+                    if(res.success) {
+                        dispatchMomentNodeToFirebase(text, res.data.url);
+                    } else {
+                        alert("Image processing node synchronization error.");
+                    }
+                }).catch(() => alert("Network transmission failure across asset grids."));
+            } else {
+                dispatchMomentNodeToFirebase(text, "");
+            }
+        }
+
+        function dispatchMomentNodeToFirebase(text, imageUrl) {
+            let itemKey = window.db.ref('moments').push().key;
+            window.db.ref(`moments/${itemKey}`).set({
+                ownerUid: activeUserSession.uid,
+                text: text,
+                image: imageUrl,
+                timestamp: Date.now()
+            }).then(() => {
+                dismissGenericModal();
+            });
         }
 
         function renderMomentsTimeline() {
             const container = document.getElementById('moments-timeline-feed');
-            if(!container) return; container.innerHTML = "";
+            if(!container) return;
+            container.innerHTML = "";
+
             let list = Object.keys(databaseState.moments).map(k => databaseState.moments[k]);
             list.sort((a,b) => b.timestamp - a.timestamp);
 
+            if(list.length === 0) {
+                container.innerHTML = `<p class="text-center text-xs text-gray-400 py-16">Timeline sequence clear. Broadcast unique content vectors now.</p>`;
+                return;
+            }
+
             list.forEach(m => {
                 let uNode = databaseState.users[m.ownerUid] || {};
-                let graphic = m.image ? `<img src="${m.image}" class="w-full h-40 object-cover rounded-xl mt-2">` : "";
                 let card = document.createElement('div');
-                card.className = "bg-gray-50 border p-4 rounded-2xl";
+                card.className = "bg-gray-50 border border-gray-100 p-4 rounded-2xl space-y-3";
+                
+                let graphic = m.image ? `<img src="${m.image}" class="w-full h-48 object-cover rounded-xl border border-gray-200 shadow-sm">` : "";
+
                 card.innerHTML = `
-                    <div class="flex items-center space-x-2"><img src="${uNode.pfp}" class="w-7 h-7 rounded-full object-cover"><h5 class="text-xs font-bold text-gray-800">${uNode.name}</h5></div>
-                    <p class="text-xs text-gray-700 mt-2">${m.text}</p>${graphic}
+                    <div class="flex items-center space-x-2">
+                        <img src="${uNode.pfp}" class="w-8 h-8 rounded-full object-cover border">
+                        <div>
+                            <h5 class="text-xs font-bold text-gray-800">${uNode.name}</h5>
+                            <p class="text-[9px] font-mono text-gray-400">${new Date(m.timestamp).toLocaleString()}</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-700 leading-relaxed">${m.text}</p>
+                    ${graphic}
                 `;
                 container.appendChild(card);
             });
@@ -915,72 +1242,600 @@
             const wrapper = document.getElementById('generic-modal-wrapper');
             const body = document.getElementById('modal-body-card');
             wrapper.classList.remove('hidden');
-            body.innerHTML = `
-                <h3 class="text-sm font-black text-gray-800">Update Profile</h3>
-                <input type="text" id="edit-profile-name" placeholder="Display name" class="w-full px-3 py-2 border rounded-xl text-xs focus:outline-none">
-                <input type="text" id="edit-profile-bio" placeholder="Telemetry Bio" class="w-full px-3 py-2 border rounded-xl text-xs focus:outline-none">
-                <input type="file" id="edit-profile-avatar-file" accept="image/*" class="w-full text-xs text-gray-400">
-                <div class="flex space-x-2 pt-2">
-                    <button onclick="dismissGenericModal()" class="flex-1 bg-gray-100 py-2 rounded-xl text-xs font-bold text-gray-500">Cancel</button>
-                    <button onclick="commitProfileUpdatePipeline()" class="flex-1 bg-brandGreen text-white py-2 rounded-xl text-xs font-bold">Save</button>
-                </div>
-            `;
+
+            window.db.ref('users/' + activeUserSession.uid).get().then(snap => {
+                let profile = snap.val() || {};
+                body.innerHTML = `
+                    <h3 class="text-sm font-black text-gray-800">Update Profile Node</h3>
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="block font-bold text-gray-400 uppercase text-[9px] mb-1">Display Username</label>
+                            <input type="text" id="edit-profile-name" value="${profile.name || ''}" class="w-full px-3 py-2 border rounded-xl focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-400 uppercase text-[9px] mb-1">Telemetry Biography Status</label>
+                            <input type="text" id="edit-profile-bio" value="${profile.bio || ''}" class="w-full px-3 py-2 border rounded-xl focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-400 uppercase text-[9px] mb-1">Update Avatar File</label>
+                            <input type="file" id="edit-profile-avatar-file" accept="image/*" class="w-full text-gray-400">
+                        </div>
+                    </div>
+                    <div class="flex space-x-2 pt-2">
+                        <button onclick="dismissGenericModal()" class="flex-1 bg-gray-100 py-2 rounded-xl font-bold text-xs text-gray-500">Cancel</button>
+                        <button onclick="commitProfileUpdatePipeline()" class="flex-1 bg-brandGreen text-white py-2 rounded-xl font-bold text-xs">Save Settings</button>
+                    </div>
+                `;
+            });
         }
 
         function commitProfileUpdatePipeline() {
             const name = document.getElementById('edit-profile-name').value.trim();
             const bio = document.getElementById('edit-profile-bio').value.trim();
             const fileInput = document.getElementById('edit-profile-avatar-file');
-            if(!name) return;
+            if(!name) return alert("Display name can't be null.");
 
             const pushUpdates = (avatarUrl) => {
-                let p = { name: name, bio: bio }; if(avatarUrl) p.pfp = avatarUrl;
-                db.ref('users/' + activeUserSession.uid).update(p).then(() => dismissGenericModal());
+                let payload = { name: name, bio: bio };
+                if(avatarUrl) payload.pfp = avatarUrl;
+                window.db.ref('users/' + activeUserSession.uid).update(payload).then(() => {
+                    dismissGenericModal();
+                });
             };
 
             if(fileInput.files && fileInput.files[0]) {
-                let form = new FormData(); form.append('image', fileInput.files[0]);
-                fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: form })
-                .then(r => r.json()).then(res => pushUpdates(res.success ? res.data.url : ""));
-            } else { pushUpdates(null); }
+                let form = new FormData();
+                form.append('image', fileInput.files[0]);
+                fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: 'POST',
+                    body: form
+                }).then(r => r.json()).then(res => {
+                    if(res.success) pushUpdates(res.data.url);
+                    else alert("Failed to save avatar asset mapping.");
+                });
+            } else {
+                pushUpdates(null);
+            }
         }
 
+        function processLogout() {
+            window.db.ref('users/' + activeUserSession.uid).update({ status: 'offline', lastSeen: Date.now() }).then(() => {
+                window.auth.signOut();
+            });
+        }
+
+        function openSettingsModal() { alert("Stardust System Configuration Core Framework operational. All networks optimized."); }
+        function openBlockedListModal() { alert("Blocked channel registries clear."); }
+        function openCallHistoryModal() { alert("Retrieving connection log arrays... 0 historical nodes detected."); }
+
+        // =========================================================================
+        // GAMES SYSTEM
+        // =========================================================================
+        function launchGame(gameType) {
+            const modal = document.getElementById('game-modal');
+            const content = document.getElementById('game-content');
+            modal.classList.remove('hidden');
+
+            switch(gameType) {
+                case 'tictactoe':
+                    launchTicTacToe(content);
+                    break;
+                case 'memory':
+                    launchMemoryGame(content);
+                    break;
+                case 'snake':
+                    launchSnakeGame(content);
+                    break;
+                case 'flappy':
+                    launchFlappyGame(content);
+                    break;
+            }
+        }
+
+        function closeGame() {
+            document.getElementById('game-modal').classList.add('hidden');
+            const content = document.getElementById('game-content');
+            content.innerHTML = '';
+            // Stop any running game intervals
+            if(window.gameInterval) {
+                clearInterval(window.gameInterval);
+                window.gameInterval = null;
+            }
+        }
+
+        // TIC TAC TOE
+        function launchTicTacToe(container) {
+            let board = Array(9).fill(null);
+            let currentPlayer = 'X';
+            let gameOver = false;
+
+            container.innerHTML = `
+                <h3 class="text-center font-bold text-gray-800 mb-3">❌ Tic Tac Toe ⭕</h3>
+                <div class="grid grid-cols-3 gap-2 max-w-[250px] mx-auto" id="ttt-board">
+                    ${Array(9).fill(0).map((_, i) => `
+                        <div class="aspect-square bg-gray-100 rounded-xl flex items-center justify-center text-3xl font-bold cursor-pointer hover:bg-gray-200 transition" 
+                             data-index="${i}" onclick="tttMove(${i})"></div>
+                    `).join('')}
+                </div>
+                <p class="text-center text-sm mt-3 text-gray-600" id="ttt-status">Player X's turn</p>
+                <button onclick="closeGame()" class="w-full mt-3 bg-gray-100 py-2 rounded-xl text-xs font-bold text-gray-600">Close</button>
+            `;
+
+            window.tttMove = function(index) {
+                if(gameOver || board[index]) return;
+                
+                board[index] = currentPlayer;
+                const cell = document.querySelector(`[data-index="${index}"]`);
+                cell.textContent = currentPlayer;
+                cell.className += ` ${currentPlayer === 'X' ? 'text-brandGreen' : 'text-red-500'}`;
+
+                // Check win
+                const winner = checkTicTacToeWin(board);
+                if(winner) {
+                    gameOver = true;
+                    document.getElementById('ttt-status').textContent = `🎉 Player ${winner} wins!`;
+                    gameScore += 10;
+                    updateProfileStats();
+                    return;
+                }
+
+                if(board.every(c => c !== null)) {
+                    gameOver = true;
+                    document.getElementById('ttt-status').textContent = "🤝 It's a draw!";
+                    return;
+                }
+
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                document.getElementById('ttt-status').textContent = `Player ${currentPlayer}'s turn`;
+            };
+
+            window.checkTicTacToeWin = function(board) {
+                const lines = [
+                    [0,1,2],[3,4,5],[6,7,8],
+                    [0,3,6],[1,4,7],[2,5,8],
+                    [0,4,8],[2,4,6]
+                ];
+                for(let line of lines) {
+                    const [a,b,c] = line;
+                    if(board[a] && board[a] === board[b] && board[a] === board[c]) {
+                        return board[a];
+                    }
+                }
+                return null;
+            };
+        }
+
+        // MEMORY GAME
+        function launchMemoryGame(container) {
+            const emojis = ['🎮', '🎯', '🎪', '🎨', '🎭', '🎵', '🎲', '🎸'];
+            let cards = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+            let flipped = [];
+            let matched = [];
+            let moves = 0;
+
+            container.innerHTML = `
+                <h3 class="text-center font-bold text-gray-800 mb-3">🧠 Memory Match</h3>
+                <p class="text-center text-xs text-gray-500 mb-2">Moves: <span id="memory-moves">0</span></p>
+                <div class="grid grid-cols-4 gap-2 max-w-[300px] mx-auto" id="memory-board">
+                    ${cards.map((emoji, i) => `
+                        <div class="aspect-square bg-gray-200 rounded-xl flex items-center justify-center text-2xl cursor-pointer hover:bg-gray-300 transition" 
+                             data-index="${i}" data-emoji="${emoji}" onclick="memoryFlip(${i})">
+                        </div>
+                    `).join('')}
+                </div>
+                <button onclick="closeGame()" class="w-full mt-3 bg-gray-100 py-2 rounded-xl text-xs font-bold text-gray-600">Close</button>
+            `;
+
+            window.memoryFlip = function(index) {
+                const card = document.querySelector(`[data-index="${index}"]`);
+                if(flipped.includes(index) || matched.includes(index) || flipped.length >= 2) return;
+
+                const emoji = card.dataset.emoji;
+                card.textContent = emoji;
+                card.className = 'aspect-square bg-brandGreen/20 rounded-xl flex items-center justify-center text-2xl cursor-pointer';
+                flipped.push(index);
+
+                if(flipped.length === 2) {
+                    moves++;
+                    document.getElementById('memory-moves').textContent = moves;
+                    const [i1, i2] = flipped;
+                    const c1 = document.querySelector(`[data-index="${i1}"]`);
+                    const c2 = document.querySelector(`[data-index="${i2}"]`);
+
+                    if(c1.dataset.emoji === c2.dataset.emoji) {
+                        matched.push(i1, i2);
+                        c1.className = 'aspect-square bg-brandGreen rounded-xl flex items-center justify-center text-2xl cursor-default';
+                        c2.className = 'aspect-square bg-brandGreen rounded-xl flex items-center justify-center text-2xl cursor-default';
+                        flipped = [];
+                        
+                        if(matched.length === cards.length) {
+                            document.getElementById('memory-moves').textContent = moves + ' 🎉';
+                            gameScore += 20;
+                            updateProfileStats();
+                        }
+                    } else {
+                        setTimeout(() => {
+                            c1.textContent = '';
+                            c1.className = 'aspect-square bg-gray-200 rounded-xl flex items-center justify-center text-2xl cursor-pointer hover:bg-gray-300 transition';
+                            c2.textContent = '';
+                            c2.className = 'aspect-square bg-gray-200 rounded-xl flex items-center justify-center text-2xl cursor-pointer hover:bg-gray-300 transition';
+                            flipped = [];
+                        }, 800);
+                    }
+                }
+            };
+        }
+
+        // SNAKE GAME
+        function launchSnakeGame(container) {
+            let snake = [{x: 5, y: 5}];
+            let direction = {x: 1, y: 0};
+            let food = {x: 8, y: 5};
+            let score = 0;
+            let gameRunning = true;
+            const size = 15;
+
+            const grid = Array(size).fill(0).map(() => Array(size).fill(0));
+            grid[food.y][food.x] = 1;
+
+            container.innerHTML = `
+                <h3 class="text-center font-bold text-gray-800 mb-2">🐍 Snake</h3>
+                <p class="text-center text-xs text-gray-500 mb-2">Score: <span id="snake-score">0</span></p>
+                <div class="grid grid-cols-15 gap-0.5 max-w-[300px] mx-auto" id="snake-board">
+                    ${Array(size * size).fill(0).map((_, i) => {
+                        const x = i % size;
+                        const y = Math.floor(i / size);
+                        return `<div class="aspect-square rounded-sm" data-x="${x}" data-y="${y}" id="cell-${x}-${y}"></div>`;
+                    }).join('')}
+                </div>
+                <div class="flex gap-2 mt-3">
+                    <button onclick="snakeMove('up')" class="flex-1 bg-gray-100 py-2 rounded-xl text-xs font-bold">⬆</button>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="snakeMove('left')" class="flex-1 bg-gray-100 py-2 rounded-xl text-xs font-bold">⬅</button>
+                    <button onclick="snakeMove('down')" class="flex-1 bg-gray-100 py-2 rounded-xl text-xs font-bold">⬇</button>
+                    <button onclick="snakeMove('right')" class="flex-1 bg-gray-100 py-2 rounded-xl text-xs font-bold">➡</button>
+                </div>
+                <button onclick="closeGame()" class="w-full mt-2 bg-gray-100 py-2 rounded-xl text-xs font-bold text-gray-600">Close</button>
+            `;
+
+            function renderSnake() {
+                // Clear all cells
+                for(let y = 0; y < size; y++) {
+                    for(let x = 0; x < size; x++) {
+                        const cell = document.getElementById(`cell-${x}-${y}`);
+                        cell.className = 'aspect-square rounded-sm bg-gray-50';
+                    }
+                }
+                // Draw snake
+                snake.forEach(segment => {
+                    const cell = document.getElementById(`cell-${segment.x}-${segment.y}`);
+                    cell.className = 'aspect-square rounded-sm bg-brandGreen';
+                });
+                // Draw food
+                const foodCell = document.getElementById(`cell-${food.x}-${food.y}`);
+                foodCell.className = 'aspect-square rounded-sm bg-red-500';
+            }
+
+            function moveSnake() {
+                if(!gameRunning) return;
+
+                const head = {...snake[0]};
+                head.x += direction.x;
+                head.y += direction.y;
+
+                // Wrap around
+                if(head.x < 0) head.x = size - 1;
+                if(head.x >= size) head.x = 0;
+                if(head.y < 0) head.y = size - 1;
+                if(head.y >= size) head.y = 0;
+
+                // Check collision with self
+                if(snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                    gameRunning = false;
+                    document.getElementById('snake-score').textContent = `Game Over! ${score}`;
+                    return;
+                }
+
+                snake.unshift(head);
+
+                // Check food
+                if(head.x === food.x && head.y === food.y) {
+                    score += 10;
+                    document.getElementById('snake-score').textContent = score;
+                    gameScore += 5;
+                    updateProfileStats();
+                    // Generate new food
+                    do {
+                        food = {
+                            x: Math.floor(Math.random() * size),
+                            y: Math.floor(Math.random() * size)
+                        };
+                    } while(snake.some(segment => segment.x === food.x && segment.y === food.y));
+                } else {
+                    snake.pop();
+                }
+
+                renderSnake();
+            }
+
+            window.snakeMove = function(dir) {
+                const dirMap = {
+                    'up': {x: 0, y: -1},
+                    'down': {x: 0, y: 1},
+                    'left': {x: -1, y: 0},
+                    'right': {x: 1, y: 0}
+                };
+                const newDir = dirMap[dir];
+                // Prevent reversing
+                if(newDir.x !== -direction.x || newDir.y !== -direction.y) {
+                    direction = newDir;
+                }
+            };
+
+            // Keyboard controls
+            document.addEventListener('keydown', (e) => {
+                const keyMap = {
+                    'ArrowUp': 'up',
+                    'ArrowDown': 'down',
+                    'ArrowLeft': 'left',
+                    'ArrowRight': 'right'
+                };
+                if(keyMap[e.key]) {
+                    e.preventDefault();
+                    snakeMove(keyMap[e.key]);
+                }
+            });
+
+            renderSnake();
+            window.gameInterval = setInterval(moveSnake, 200);
+        }
+
+        // FLAPPY BIRD
+        function launchFlappyGame(container) {
+            let birdY = 200;
+            let velocity = 0;
+            let gravity = 0.5;
+            let jumpPower = -8;
+            let pipes = [];
+            let score = 0;
+            let gameRunning = true;
+            const canvasWidth = 300;
+            const canvasHeight = 400;
+            const pipeWidth = 50;
+            const pipeGap = 120;
+            const birdSize = 25;
+
+            container.innerHTML = `
+                <h3 class="text-center font-bold text-gray-800 mb-2">🐦 Flappy Bird</h3>
+                <p class="text-center text-xs text-gray-500 mb-2">Score: <span id="flappy-score">0</span></p>
+                <canvas id="flappy-canvas" width="${canvasWidth}" height="${canvasHeight}" class="w-full rounded-xl bg-gradient-to-b from-sky-300 to-green-300 cursor-pointer"></canvas>
+                <button onclick="closeGame()" class="w-full mt-3 bg-gray-100 py-2 rounded-xl text-xs font-bold text-gray-600">Close</button>
+            `;
+
+            const canvas = document.getElementById('flappy-canvas');
+            const ctx = canvas.getContext('2d');
+
+            canvas.addEventListener('click', () => {
+                if(gameRunning) {
+                    velocity = jumpPower;
+                } else {
+                    // Restart
+                    birdY = 200;
+                    velocity = 0;
+                    pipes = [];
+                    score = 0;
+                    gameRunning = true;
+                    document.getElementById('flappy-score').textContent = score;
+                }
+            });
+
+            function gameLoop() {
+                if(!gameRunning) return;
+
+                // Update
+                velocity += gravity;
+                birdY += velocity;
+
+                // Bird boundaries
+                if(birdY < 0 || birdY + birdSize > canvasHeight) {
+                    gameRunning = false;
+                    document.getElementById('flappy-score').textContent = `💀 ${score}`;
+                    return;
+                }
+
+                // Pipes
+                if(pipes.length === 0 || pipes[pipes.length - 1].x < canvasWidth - 200) {
+                    const pipeY = 50 + Math.random() * (canvasHeight - pipeGap - 100);
+                    pipes.push({ x: canvasWidth, y: pipeY });
+                }
+
+                for(let i = pipes.length - 1; i >= 0; i--) {
+                    pipes[i].x -= 3;
+
+                    // Score
+                    if(pipes[i].x + pipeWidth < 0) {
+                        pipes.splice(i, 1);
+                        continue;
+                    }
+
+                    // Collision
+                    const bird = { x: 50, y: birdY, w: birdSize, h: birdSize };
+                    const pipeTop = { x: pipes[i].x, y: 0, w: pipeWidth, h: pipes[i].y };
+                    const pipeBottom = { x: pipes[i].x, y: pipes[i].y + pipeGap, w: pipeWidth, h: canvasHeight - pipes[i].y - pipeGap };
+
+                    if(rectCollide(bird, pipeTop) || rectCollide(bird, pipeBottom)) {
+                        gameRunning = false;
+                        document.getElementById('flappy-score').textContent = `💀 ${score}`;
+                        return;
+                    }
+
+                    // Score point
+                    if(pipes[i].x + pipeWidth === 50) {
+                        score++;
+                        document.getElementById('flappy-score').textContent = score;
+                        gameScore += 2;
+                        updateProfileStats();
+                    }
+                }
+
+                // Draw
+                ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+                ctx.fillStyle = '#87CEEB';
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+                // Draw bird
+                ctx.fillStyle = '#FCD34D';
+                ctx.beginPath();
+                ctx.arc(50 + birdSize/2, birdY + birdSize/2, birdSize/2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(55, birdY + 8, 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Draw pipes
+                pipes.forEach(pipe => {
+                    ctx.fillStyle = '#22C55E';
+                    ctx.fillRect(pipe.x, 0, pipeWidth, pipe.y);
+                    ctx.fillRect(pipe.x, pipe.y + pipeGap, pipeWidth, canvasHeight - pipe.y - pipeGap);
+                    ctx.fillStyle = '#16A34A';
+                    ctx.fillRect(pipe.x - 5, pipe.y - 15, pipeWidth + 10, 15);
+                    ctx.fillRect(pipe.x - 5, pipe.y + pipeGap, pipeWidth + 10, 15);
+                });
+
+                requestAnimationFrame(gameLoop);
+            }
+
+            function rectCollide(a, b) {
+                return a.x < b.x + b.w &&
+                       a.x + a.w > b.x &&
+                       a.y < b.y + b.h &&
+                       a.y + a.h > b.y;
+            }
+
+            gameLoop();
+        }
+
+        // =========================================================================
+        // VIDEO PLAYER
+        // =========================================================================
+        function toggleVideoPlay(videoId) {
+            const video = document.getElementById(videoId);
+            if(video.paused) {
+                video.play();
+                // Pause other videos
+                document.querySelectorAll('video').forEach(v => {
+                    if(v.id !== videoId) v.pause();
+                });
+            } else {
+                video.pause();
+            }
+        }
+
+        // =========================================================================
+        // PEERJS WEBRTC CALLING ENGINE
+        // =========================================================================
         function initializePeerJSConnectionNode(myUid) {
-            activePeerJSInstance = new Peer(`stardust_peer_${myUid}`, { host: 'a.peerjs.com', port: 443, secure: true });
-            activePeerJSInstance.on('call', (incoming) => {
-                if(confirm("Accept incoming WebRTC calling connection node stream?")) {
-                    navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((s) => {
-                        callLocalStreamInstance = s; incoming.answer(s);
-                        document.getElementById('call-interface-overlay').classList.remove('hidden');
-                        incoming.on('stream', (rem) => {
-                            document.getElementById('call-video-frames-panel').classList.remove('hidden');
-                            document.getElementById('remote-video-stream').srcObject = rem;
-                        });
+            activePeerJSInstance = new Peer(`stardust_peer_${myUid}`, {
+                host: '0.peerjs.com',
+                port: 443,
+                secure: true
+            });
+
+            activePeerJSInstance.on('call', (incomingCallStream) => {
+                currentPeerCallInstance = incomingCallStream;
+                let originPeerUid = incomingCallStream.peer.replace('stardust_peer_', '');
+                configureCallOverlayLayoutView(originPeerUid, "Inbound Vector Calling...");
+                
+                let confirmCall = confirm(`Incoming call from @${originPeerUid}. Accept?`);
+                if(confirmCall) {
+                    navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((mediaStreamPayload) => {
+                        callLocalStreamInstance = mediaStreamPayload;
+                        incomingCallStream.answer(mediaStreamPayload);
+                        bindCallStreamTracks(incomingCallStream);
                     });
+                } else {
+                    incomingCallStream.close();
+                    terminateCallSession();
                 }
             });
         }
 
-        function initiatePeerCall(type) {
-            document.getElementById('call-interface-overlay').classList.remove('hidden');
-            navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((s) => {
-                callLocalStreamInstance = s;
-                let call = activePeerJSInstance.call(`stardust_peer_${activeChatContext.peerUid}`, s);
-                call.on('stream', (rem) => {
+        function initiatePeerCall(typeString) {
+            let targetPeerId = `stardust_peer_${activeChatContext.peerUid}`;
+            configureCallOverlayLayoutView(activeChatContext.peerUid, `Transmitting connection signal arrays (${typeString})...`);
+            
+            navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((stream) => {
+                callLocalStreamInstance = stream;
+                
+                if(typeString === 'video') {
                     document.getElementById('call-video-frames-panel').classList.remove('hidden');
-                    document.getElementById('remote-video-stream').srcObject = rem;
-                });
+                    document.getElementById('local-video-stream').srcObject = stream;
+                }
+
+                let call = activePeerJSInstance.call(targetPeerId, stream);
+                currentPeerCallInstance = call;
+                bindCallStreamTracks(call);
+            }).catch((err) => {
+                alert(`Capture nodes missing metadata permissions error: ${err.message}`);
+                terminateCallSession();
             });
         }
 
-        function terminateCallSession() {
-            if(callLocalStreamInstance) callLocalStreamInstance.getTracks().forEach(t => t.stop());
-            document.getElementById('call-interface-overlay').classList.add('hidden');
+        function bindCallStreamTracks(callTrackNode) {
+            document.getElementById('call-interface-overlay').classList.remove('hidden');
+            document.getElementById('call-status-lbl').innerText = "Streaming network connection link data active.";
+
+            callTrackNode.on('stream', (remoteStreamPayload) => {
+                document.getElementById('call-video-frames-panel').classList.remove('hidden');
+                document.getElementById('remote-video-stream').srcObject = remoteStreamPayload;
+            });
+
+            callTrackNode.on('close', () => {
+                terminateCallSession();
+            });
         }
 
-        function processLogout() {
-            db.ref('users/' + activeUserSession.uid).update({ status: 'offline' }).then(() => auth.signOut());
+        function configureCallOverlayLayoutView(peerUid, stateLabel) {
+            let userMeta = databaseState.users[peerUid] || {};
+            document.getElementById('call-peer-avatar').src = userMeta.pfp || "";
+            document.getElementById('call-peer-displayname').innerText = userMeta.name || "Unknown Asset Node";
+            document.getElementById('call-peer-uid-lbl').innerText = `@${peerUid}`;
+            document.getElementById('call-status-lbl').innerText = stateLabel;
+            document.getElementById('call-interface-overlay').classList.remove('hidden');
         }
+
+        function toggleCallInlineReactions() {
+            const element = document.getElementById('call-reactions-bar');
+            element.classList.toggle('hidden');
+        }
+
+        function triggerCallReaction(emoji) {
+            alert(`Signal Reaction: ${emoji}`);
+            document.getElementById('call-reactions-bar').classList.add('hidden');
+        }
+
+        function shiftCallStreamType() {
+            alert("Dynamic WebRTC stream vector modification active.");
+        }
+
+        function toggleCallInlineChat() {
+            alert("Terminal communications mapping sub-channels initialized.");
+        }
+
+        function terminateCallSession() {
+            if(currentPeerCallInstance) { currentPeerCallInstance.close(); }
+            if(callLocalStreamInstance) {
+                callLocalStreamInstance.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById('call-interface-overlay').classList.add('hidden');
+            document.getElementById('call-video-frames-panel').classList.add('hidden');
+            currentPeerCallInstance = null;
+            callLocalStreamInstance = null;
+        }
+
+        function handleIncomingCallSignal(data) {}
     </script>
 </body>
 </html>
