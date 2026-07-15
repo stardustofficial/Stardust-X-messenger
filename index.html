@@ -38,11 +38,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        .theme-white-green {
-            background: #e5f0e5;
-            border-color: #2b7a4b;
-        }
-
         .spinner {
             border: 2px solid rgba(255,255,255,0.1);
             width: 20px;
@@ -190,33 +185,9 @@
             border-radius: 18px 18px 18px 4px;
         }
 
-        .contact-list-item:active { background: #c8e6c9; }
-
         .tab-active {
             color: #2b7a4b;
             border-bottom: 2px solid #2b7a4b;
-        }
-
-        .reaction-picker {
-            background: #d1e0d1;
-            border: 1px solid #2b7a4b;
-            border-radius: 30px;
-            padding: 6px 10px;
-            display: flex;
-            gap: 6px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-
-        .message-context-menu {
-            background: #d1e0d1;
-            border: 1px solid #2b7a4b;
-            border-radius: 16px;
-            padding: 8px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-        }
-
-        .tab-indicator {
-            transition: all 0.2s ease;
         }
 
         .input-field {
@@ -239,6 +210,18 @@
         }
         .game-card:active {
             transform: scale(0.96);
+        }
+        
+        .moment-card {
+            transition: all 0.2s;
+        }
+        .moment-card:active {
+            transform: scale(0.99);
+        }
+        
+        .profile-modal-overlay {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
         }
     </style>
 </head>
@@ -350,7 +333,7 @@
                 <div id="no-moments-placeholder" class="text-center text-[#2b7a4b] opacity-60 text-sm py-10">No moments yet. Share something!</div>
             </section>
 
-            <!-- PROFILE TAB - Now with Games & Shorts -->
+            <!-- PROFILE TAB - Games & Cartoons -->
             <section id="profile-tab" class="hidden space-y-4">
                 <!-- Profile Card -->
                 <div class="bg-white rounded-3xl border border-[#b8d0b8] p-5 shadow-sm">
@@ -391,31 +374,31 @@
                     </div>
                 </div>
 
-                <!-- Shorts / Mini Cartoons -->
+                <!-- Cartoons / Animated Shorts -->
                 <div>
                     <h3 class="text-sm font-bold text-[#2b7a4b] mb-2 flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                        Shorts
+                        Cartoons
                     </h3>
                     <div class="space-y-2">
-                        <div onclick="watchShort('https://www.youtube.com/embed/dQw4w9WgXcQ')" class="bg-white rounded-2xl border border-[#b8d0b8] p-3 flex items-center gap-3 cursor-pointer hover:shadow-md transition">
-                            <div class="w-16 h-16 bg-[#e5f0e5] rounded-xl flex items-center justify-center text-2xl">🎬</div>
+                        <div onclick="watchShort('https://www.youtube.com/embed/4jM_6r8kH_U')" class="bg-white rounded-2xl border border-[#b8d0b8] p-3 flex items-center gap-3 cursor-pointer hover:shadow-md transition">
+                            <div class="w-16 h-16 bg-[#e5f0e5] rounded-xl flex items-center justify-center text-2xl">🐱</div>
                             <div>
-                                <p class="font-bold text-sm text-[#1a2e1a]">Funny Cat</p>
+                                <p class="font-bold text-sm text-[#1a2e1a]">Tom & Jerry</p>
                                 <p class="text-xs text-[#2b7a4b] opacity-60">Watch now</p>
                             </div>
                         </div>
-                        <div onclick="watchShort('https://www.youtube.com/embed/9bZkp7q19f0')" class="bg-white rounded-2xl border border-[#b8d0b8] p-3 flex items-center gap-3 cursor-pointer hover:shadow-md transition">
-                            <div class="w-16 h-16 bg-[#e5f0e5] rounded-xl flex items-center justify-center text-2xl">🎵</div>
+                        <div onclick="watchShort('https://www.youtube.com/embed/2s6e_aHrzRw')" class="bg-white rounded-2xl border border-[#b8d0b8] p-3 flex items-center gap-3 cursor-pointer hover:shadow-md transition">
+                            <div class="w-16 h-16 bg-[#e5f0e5] rounded-xl flex items-center justify-center text-2xl">🦸</div>
                             <div>
-                                <p class="font-bold text-sm text-[#1a2e1a]">Music Video</p>
+                                <p class="font-bold text-sm text-[#1a2e1a]">Superhero Cartoon</p>
                                 <p class="text-xs text-[#2b7a4b] opacity-60">Watch now</p>
                             </div>
                         </div>
-                        <div onclick="watchShort('https://www.youtube.com/embed/OPf0YbXqDm0')" class="bg-white rounded-2xl border border-[#b8d0b8] p-3 flex items-center gap-3 cursor-pointer hover:shadow-md transition">
-                            <div class="w-16 h-16 bg-[#e5f0e5] rounded-xl flex items-center justify-center text-2xl">🤣</div>
+                        <div onclick="watchShort('https://www.youtube.com/embed/8Tpo0d0p-Cw')" class="bg-white rounded-2xl border border-[#b8d0b8] p-3 flex items-center gap-3 cursor-pointer hover:shadow-md transition">
+                            <div class="w-16 h-16 bg-[#e5f0e5] rounded-xl flex items-center justify-center text-2xl">🤖</div>
                             <div>
-                                <p class="font-bold text-sm text-[#1a2e1a]">Funny Moments</p>
+                                <p class="font-bold text-sm text-[#1a2e1a]">Robot Cartoon</p>
                                 <p class="text-xs text-[#2b7a4b] opacity-60">Watch now</p>
                             </div>
                         </div>
@@ -667,10 +650,23 @@
                 <button onclick="closeModal('settings-modal')" class="text-[#2b7a4b]">✕</button>
             </div>
             <div class="mt-3 space-y-2 overflow-y-auto">
+                <button onclick="openSavedPosts()" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2">Saved Moments</button>
                 <button onclick="openBlockedContacts()" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2">Blocked Contacts</button>
                 <button onclick="openCallHistory()" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2">Call History</button>
                 <button onclick="logout()" class="w-full text-left px-3 py-2.5 bg-red-50 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2">Logout</button>
             </div>
+        </div>
+    </div>
+
+    <!-- SAVED POSTS MODAL -->
+    <div id="saved-posts-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white w-full max-w-sm rounded-3xl border border-[#b8d0b8] p-4 max-h-[70vh]">
+            <div class="flex justify-between items-center pb-3 border-b border-[#b8d0b8]">
+                <span class="text-sm font-bold text-[#2b7a4b]">Saved Moments</span>
+                <button onclick="closeModal('saved-posts-modal')" class="text-[#2b7a4b]">✕</button>
+            </div>
+            <div id="saved-posts-list" class="mt-3 overflow-y-auto space-y-2 max-h-60"></div>
+            <div id="no-saved-posts" class="text-center text-[#2b7a4b] opacity-50 text-sm py-6">No saved moments</div>
         </div>
     </div>
 
@@ -703,6 +699,27 @@
         <button onclick="closeModal('shorts-viewer')" class="absolute top-4 right-4 text-white bg-black/50 px-4 py-2 rounded-xl text-sm z-10">✕</button>
         <div class="w-full max-w-md aspect-video bg-black rounded-3xl overflow-hidden">
             <iframe id="shorts-iframe" src="" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- PROFILE VIEW MODAL -->
+    <div id="profile-view-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 profile-modal-overlay">
+        <div class="bg-white w-full max-w-sm rounded-3xl border border-[#b8d0b8] p-5 max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-end">
+                <button onclick="closeModal('profile-view-modal')" class="text-[#2b7a4b] bg-[#e5f0e5] p-2 rounded-full">✕</button>
+            </div>
+            <div class="flex flex-col items-center text-center">
+                <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-[#2b7a4b] mb-3 bg-[#e5f0e5]">
+                    <img id="view-profile-pfp" src="" class="w-full h-full object-cover">
+                </div>
+                <h2 id="view-profile-name" class="text-xl font-bold text-[#1a2e1a]">User</h2>
+                <p id="view-profile-uid" class="text-xs text-[#2b7a4b] font-mono">@123456</p>
+                <p id="view-profile-bio" class="text-sm text-[#2b7a4b] opacity-70 mt-2">Bio</p>
+                <div id="view-profile-actions" class="flex gap-3 mt-4 w-full">
+                    <button onclick="viewProfileSendMsg()" class="flex-1 bg-[#2b7a4b] text-white py-2 rounded-xl text-sm font-bold">Send Message</button>
+                    <button onclick="viewProfileAddFriend()" class="flex-1 bg-[#e5f0e5] text-[#2b7a4b] py-2 rounded-xl text-sm font-bold border border-[#b8d0b8]">Add Friend</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -739,6 +756,7 @@
             friendRequests: [],
             callHistory: [],
             blocked: [],
+            savedPosts: [],
             activeChat: null,
             selectedMessage: null,
             typingTimeout: null,
@@ -752,6 +770,7 @@
             callPeerId: null,
             callIsVideo: false,
             callIsFloating: false,
+            viewProfileUid: null,
         };
 
         // DOM refs
@@ -805,6 +824,8 @@
                     online: true,
                 });
                 alert('Account created! Your UID: ' + uid);
+                // Auto login after signup
+                await signInWithEmailAndPassword(auth, email, pass);
                 $('btn-signup-text').classList.remove('hidden');
                 $('btn-signup-spinner').classList.add('hidden');
             } catch (e) {
@@ -911,6 +932,9 @@
 
             const blockSnap = await get(ref(db, 'blocked/' + state.currentUser.uid));
             state.blocked = blockSnap.val() || [];
+
+            const savedSnap = await get(ref(db, 'saved/' + state.currentUser.uid));
+            state.savedPosts = savedSnap.val() || [];
         }
 
         function listenToRealtime() {
@@ -972,6 +996,10 @@
 
             onValue(ref(db, 'callHistory'), (snap) => {
                 state.callHistory = snap.val() ? Object.values(snap.val()).filter(c => c.user === state.currentUser.uid) : [];
+            });
+
+            onValue(ref(db, 'saved/' + state.currentUser.uid), (snap) => {
+                state.savedPosts = snap.val() || [];
             });
         }
 
@@ -1042,7 +1070,7 @@
                 const div = document.createElement('div');
                 div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition contact-list-item';
                 div.innerHTML = `
-                    <div class="flex items-center space-x-3" onclick="openContactProfile('${contact.uid}')">
+                    <div class="flex items-center space-x-3" onclick="openProfileView('${contact.uid}')">
                         <img src="${contact.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
                         <div>
                             <p class="font-bold text-sm text-[#1a2e1a]">${contact.name}</p>
@@ -1070,16 +1098,44 @@
 
             for (let post of state.posts) {
                 const author = state.allUsers.find(u => u.uid === post.author) || state.currentUser;
+                const isSaved = state.savedPosts.includes(post.id);
+                const likesCount = post.likes ? Object.keys(post.likes).length : 0;
+                const commentsCount = post.comments ? Object.keys(post.comments).length : 0;
+                const isLiked = post.likes && post.likes[state.currentUser.uid] === true;
+                
                 const div = document.createElement('div');
-                div.className = 'bg-white rounded-2xl border border-[#b8d0b8] p-4 shadow-sm';
+                div.className = 'bg-white rounded-2xl border border-[#b8d0b8] p-4 shadow-sm moment-card';
                 div.innerHTML = `
-                    <div class="flex items-center space-x-2 mb-2">
-                        <img src="${author.pfp || ''}" class="w-6 h-6 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
-                        <span class="font-bold text-sm text-[#1a2e1a]">${author.name}</span>
-                        <span class="text-[10px] text-[#2b7a4b] opacity-50">${new Date(post.timestamp).toLocaleString()}</span>
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2 cursor-pointer" onclick="openProfileView('${post.author}')">
+                            <img src="${author.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
+                            <div>
+                                <span class="font-bold text-sm text-[#1a2e1a]">${author.name}</span>
+                                <span class="text-[10px] text-[#2b7a4b] opacity-50 block">@${author.uid}</span>
+                            </div>
+                        </div>
+                        <span class="text-[9px] text-[#2b7a4b] opacity-50">${new Date(post.timestamp).toLocaleString()}</span>
                     </div>
                     <p class="text-sm text-[#1a2e1a] whitespace-pre-wrap">${post.text}</p>
                     ${post.image ? `<img src="${post.image}" class="mt-2 rounded-xl max-h-60 w-full object-cover cursor-pointer" onclick="openImageViewer('${post.image}')">` : ''}
+                    
+                    <div class="flex items-center justify-between mt-3 pt-2 border-t border-[#e5f0e5]">
+                        <button onclick="likePost('${post.id}')" class="flex items-center gap-1 text-xs ${isLiked ? 'text-[#2b7a4b] font-bold' : 'text-[#2b7a4b] opacity-60'}">
+                            <svg class="w-4 h-4" fill="${isLiked ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            <span>${likesCount}</span>
+                        </button>
+                        <button onclick="openCommentModal('${post.id}')" class="flex items-center gap-1 text-xs text-[#2b7a4b] opacity-60">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                            <span>${commentsCount}</span>
+                        </button>
+                        <button onclick="sharePost('${post.id}')" class="flex items-center gap-1 text-xs text-[#2b7a4b] opacity-60">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                        </button>
+                        <button onclick="savePost('${post.id}')" class="flex items-center gap-1 text-xs ${isSaved ? 'text-[#2b7a4b] font-bold' : 'text-[#2b7a4b] opacity-60'}">
+                            <svg class="w-4 h-4" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                        </button>
+                    </div>
+                    ${post.comments ? `<div class="mt-2 space-y-1 max-h-20 overflow-y-auto custom-scrollbar">${Object.values(post.comments).slice(-2).map(c => `<div class="text-xs bg-[#f0f7f0] p-1.5 rounded-lg"><span class="font-bold">${c.authorName}:</span> ${c.text}</div>`).join('')}</div>` : ''}
                 `;
                 container.appendChild(div);
             }
@@ -1107,7 +1163,7 @@
                 const div = document.createElement('div');
                 div.className = 'flex items-center justify-between p-3 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
                 div.innerHTML = `
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-3" onclick="openProfileView('${req.from}')">
                         <img src="${req.fromUser.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
                         <div>
                             <p class="font-bold text-sm">${req.fromUser.name}</p>
@@ -1160,6 +1216,167 @@
                 badge.classList.add('hidden');
             }
         }
+
+        // ---------- POST INTERACTIONS ----------
+        window.likePost = function(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post) return;
+            const postKey = Object.keys(state.chats).find(k => state.chats[k]?.id === postId);
+            const likes = post.likes || {};
+            if (likes[state.currentUser.uid]) {
+                delete likes[state.currentUser.uid];
+            } else {
+                likes[state.currentUser.uid] = true;
+            }
+            // Find the post in DB
+            const dbRef = ref(db, 'posts');
+            onValue(dbRef, (snap) => {
+                const data = snap.val();
+                if (data) {
+                    const key = Object.keys(data).find(k => data[k].id === postId);
+                    if (key) {
+                        update(ref(db, 'posts/' + key), { likes: likes });
+                    }
+                }
+            }, { onlyOnce: true });
+        };
+
+        window.savePost = function(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post) return;
+            let saved = state.savedPosts || [];
+            if (saved.includes(postId)) {
+                saved = saved.filter(id => id !== postId);
+            } else {
+                saved.push(postId);
+            }
+            set(ref(db, 'saved/' + state.currentUser.uid), saved);
+            state.savedPosts = saved;
+            renderAll();
+        };
+
+        window.sharePost = function(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post) return;
+            const container = $('forward-contact-list');
+            container.innerHTML = '';
+            for (let contact of state.contacts) {
+                if (contact.uid === state.currentUser.uid) continue;
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#e5f0e5]';
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <img src="${contact.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''">
+                        <span class="text-sm font-medium">${contact.name}</span>
+                    </div>
+                    <button onclick="executeSharePost('${contact.uid}','${postId}')" class="bg-[#2b7a4b] text-white px-3 py-1 rounded-full text-xs font-bold">Share</button>
+                `;
+                container.appendChild(div);
+            }
+            $('forward-modal').classList.remove('hidden');
+        };
+
+        window.executeSharePost = function(uid, postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post) return;
+            const key = getChatKey(state.currentUser.uid, uid);
+            const msg = {
+                sender: state.currentUser.uid,
+                text: '📤 Shared Moment: ' + post.text + (post.image ? ' [Image]' : ''),
+                timestamp: Date.now(),
+                read: false,
+                reactions: {},
+                replyTo: null,
+            };
+            push(ref(db, 'chats/' + key), msg);
+            closeForwardModal();
+            alert('Shared!');
+        };
+
+        window.openCommentModal = function(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post) return;
+            const comment = prompt('Write a comment:');
+            if (comment && comment.trim()) {
+                const dbRef = ref(db, 'posts');
+                onValue(dbRef, (snap) => {
+                    const data = snap.val();
+                    if (data) {
+                        const key = Object.keys(data).find(k => data[k].id === postId);
+                        if (key) {
+                            push(ref(db, 'posts/' + key + '/comments'), {
+                                authorUID: state.currentUser.uid,
+                                authorName: state.currentUser.name,
+                                text: comment.trim(),
+                                timestamp: Date.now()
+                            });
+                        }
+                    }
+                }, { onlyOnce: true });
+            }
+        };
+
+        window.openImageViewer = function(src) {
+            const viewer = document.createElement('div');
+            viewer.className = 'fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4';
+            viewer.innerHTML = `
+                <button onclick="this.parentElement.remove()" class="absolute top-4 right-4 text-white bg-black/50 px-4 py-2 rounded-xl text-sm z-10">✕</button>
+                <img src="${src}" class="max-w-full max-h-[90vh] object-contain rounded-lg">
+            `;
+            document.body.appendChild(viewer);
+        };
+
+        // ---------- PROFILE VIEW ----------
+        window.openProfileView = function(uid) {
+            const user = state.allUsers.find(u => u.uid === uid) || state.contacts.find(c => c.uid === uid);
+            if (!user) return;
+            state.viewProfileUid = uid;
+            $('view-profile-pfp').src = user.pfp || '';
+            $('view-profile-name').innerText = user.name;
+            $('view-profile-uid').innerText = '@' + user.uid;
+            $('view-profile-bio').innerText = user.bio || 'No bio';
+            
+            const isFriend = state.contacts.find(c => c.uid === uid);
+            const actions = $('view-profile-actions');
+            if (isFriend) {
+                actions.innerHTML = `
+                    <button onclick="viewProfileSendMsg()" class="flex-1 bg-[#2b7a4b] text-white py-2 rounded-xl text-sm font-bold">Send Message</button>
+                    <button onclick="viewProfileAddFriend()" class="flex-1 bg-[#e5f0e5] text-[#2b7a4b] py-2 rounded-xl text-sm font-bold border border-[#b8d0b8]">Already Friend</button>
+                `;
+            } else {
+                actions.innerHTML = `
+                    <button onclick="viewProfileSendMsg()" class="flex-1 bg-[#2b7a4b] text-white py-2 rounded-xl text-sm font-bold">Send Message</button>
+                    <button onclick="viewProfileAddFriend()" class="flex-1 bg-[#e5f0e5] text-[#2b7a4b] py-2 rounded-xl text-sm font-bold border border-[#b8d0b8]">Add Friend</button>
+                `;
+            }
+            $('profile-view-modal').classList.remove('hidden');
+        };
+
+        window.viewProfileSendMsg = function() {
+            if (state.viewProfileUid) {
+                closeModal('profile-view-modal');
+                openChat(state.viewProfileUid);
+            }
+        };
+
+        window.viewProfileAddFriend = function() {
+            if (!state.viewProfileUid) return;
+            const uid = state.viewProfileUid;
+            const user = state.allUsers.find(u => u.uid === uid);
+            if (!user) return alert('User not found');
+            if (state.contacts.find(c => c.uid === uid)) return alert('Already friends');
+            if (state.friendRequests.find(r => r.from === uid)) return alert('Request already sent');
+
+            set(ref(db, 'friendRequests/' + Date.now()), {
+                from: state.currentUser.uid,
+                to: uid,
+                status: 'pending',
+                timestamp: Date.now()
+            }).then(() => {
+                alert('Friend request sent!');
+                closeModal('profile-view-modal');
+            });
+        };
 
         // ---------- CHAT ----------
         window.openChat = function(uid) {
@@ -1641,7 +1858,6 @@
             }
         };
 
-        // Call reactions
         window.toggleCallReactions = function() {
             document.getElementById('call-reactions-popup').classList.toggle('hidden');
         };
@@ -1678,7 +1894,6 @@
             }
         });
 
-        // Call chat
         window.toggleCallChat = function() {
             document.getElementById('call-chat-overlay').classList.toggle('hidden');
         };
@@ -1748,6 +1963,7 @@
             }
 
             const post = {
+                id: 'post_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
                 author: state.currentUser.uid,
                 text: text || '',
                 image: imageUrl,
@@ -1802,16 +2018,29 @@
             renderAll();
         };
 
-        window.openContactProfile = function(uid) {
-            const user = state.allUsers.find(u => u.uid === uid) || state.contacts.find(c => c.uid === uid);
-            if (!user) return;
-            alert(`Name: ${user.name}\nUID: @${user.uid}\nBio: ${user.bio || 'No bio'}`);
-        };
-
         // ---------- SETTINGS ----------
         window.openSettings = function() {
             $('settings-modal').classList.remove('hidden');
             closeMenu();
+        };
+
+        window.openSavedPosts = function() {
+            const container = $('saved-posts-list');
+            container.innerHTML = '';
+            const saved = state.posts.filter(p => state.savedPosts.includes(p.id));
+            if (saved.length === 0) {
+                $('no-saved-posts').classList.remove('hidden');
+            } else {
+                $('no-saved-posts').classList.add('hidden');
+                for (let post of saved) {
+                    const div = document.createElement('div');
+                    div.className = 'bg-[#f0f7f0] p-3 rounded-xl border border-[#b8d0b8] text-sm';
+                    div.innerHTML = `<p>${post.text}</p><span class="text-[10px] text-[#2b7a4b] opacity-50">${new Date(post.timestamp).toLocaleString()}</span>`;
+                    container.appendChild(div);
+                }
+            }
+            $('saved-posts-modal').classList.remove('hidden');
+            closeModal('settings-modal');
         };
 
         window.openBlockedContacts = function() {
@@ -1927,21 +2156,14 @@
             document.getElementById(id).classList.add('hidden');
         };
 
-        window.openImageViewer = function(src) {
-            $('viewer-image').src = src;
-            $('image-viewer').classList.remove('hidden');
-        };
-
         window.openProfileFromChat = function() {
             if (state.activeChat) {
-                const user = state.contacts.find(c => c.uid === state.activeChat) || state.allUsers.find(u => u.uid === state.activeChat);
-                if (user) alert(`Name: ${user.name}\nUID: @${user.uid}\nBio: ${user.bio || 'No bio'}`);
+                openProfileView(state.activeChat);
             }
         };
 
         window.handleGlobalSearch = function() {
             const query = $('global-search-input').value.trim().toLowerCase();
-            // Simple filter for contacts
             const container = $('contacts-list');
             container.innerHTML = '';
             const filtered = state.contacts.filter(c => c.name.toLowerCase().includes(query) || c.uid.includes(query));
@@ -1949,7 +2171,7 @@
                 const div = document.createElement('div');
                 div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition';
                 div.innerHTML = `
-                    <div class="flex items-center space-x-3" onclick="openContactProfile('${contact.uid}')">
+                    <div class="flex items-center space-x-3" onclick="openProfileView('${contact.uid}')">
                         <img src="${contact.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
                         <div>
                             <p class="font-bold text-sm text-[#1a2e1a]">${contact.name}</p>
