@@ -164,29 +164,63 @@
 
         .app-header {
             padding: 16px 20px;
-            background: white;
-            border-bottom: 1px solid #e8f0fe;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0a0a1a 100%);
+            border-bottom: 1px solid #2a2a4a;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            min-height: 60px;
+            min-height: 64px;
             flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
         }
-        .app-header .title { font-size: 18px; font-weight: 600; color: #1a1a2e; letter-spacing: 0.5px; }
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(0,184,148,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .app-header .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 0 20px rgba(0,184,148,0.3);
+            position: relative;
+            z-index: 1;
+        }
         .app-header .title span { color: #00b894; }
-        .app-header .header-actions { display: flex; gap: 12px; align-items: center; }
+        .app-header .title .sub {
+            font-size: 10px;
+            font-weight: 300;
+            color: #8395a7;
+            letter-spacing: 3px;
+            display: block;
+            margin-top: -2px;
+        }
+        .app-header .header-actions {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
         .app-header .header-actions svg {
             width: 24px;
             height: 24px;
             fill: none;
-            stroke: #4a4a5a;
+            stroke: #a0aec0;
             stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
             cursor: pointer;
-            transition: stroke 0.3s;
+            transition: all 0.3s;
         }
-        .app-header .header-actions svg:hover { stroke: #00b894; }
+        .app-header .header-actions svg:hover { stroke: #00b894; transform: scale(1.05); }
         .header-badge { position: relative; }
         .header-badge .badge-count {
             position: absolute;
@@ -203,16 +237,23 @@
             justify-content: center;
             align-items: center;
         }
-        .header-actions .search-icon { stroke: #4a4a5a; }
+        .app-header .menu-dot {
+            width: 4px;
+            height: 4px;
+            background: #00b894;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 4px;
+        }
 
         .app-content { flex: 1; overflow-y: auto; padding: 0; }
 
         .bottom-nav {
             display: flex;
-            background: white;
-            border-top: 1px solid #e8f0fe;
+            background: #0a0a1a;
+            border-top: 1px solid #1a1a3e;
             flex-shrink: 0;
-            padding: 8px 0 env(safe-area-inset-bottom, 8px) 0;
+            padding: 6px 0 env(safe-area-inset-bottom, 6px) 0;
         }
         .bottom-nav .nav-item {
             flex: 1;
@@ -225,23 +266,30 @@
             transition: all 0.3s;
             position: relative;
             gap: 2px;
+            border-radius: 8px;
+            margin: 0 4px;
         }
         .bottom-nav .nav-item svg {
             width: 26px;
             height: 26px;
             fill: none;
-            stroke: #a0aec0;
+            stroke: #4a4a6a;
             stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
-            transition: stroke 0.3s;
+            transition: all 0.3s;
         }
-        .bottom-nav .nav-item.active svg { stroke: #00b894; }
-        .bottom-nav .nav-item .nav-label { font-size: 10px; color: #a0aec0; transition: color 0.3s; }
+        .bottom-nav .nav-item.active svg { stroke: #00b894; filter: drop-shadow(0 0 8px rgba(0,184,148,0.3)); }
+        .bottom-nav .nav-item .nav-label {
+            font-size: 10px;
+            color: #4a4a6a;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
         .bottom-nav .nav-item.active .nav-label { color: #00b894; }
         .bottom-nav .nav-item .nav-badge {
             position: absolute;
-            top: 2px;
+            top: 0px;
             right: 50%;
             transform: translateX(calc(50% + 18px));
             background: #e74c6f;
@@ -257,7 +305,7 @@
             padding: 0 5px;
         }
         .nav-badge.hidden { display: none; }
-        .request-dot { display: none; width: 8px; height: 8px; background: #e74c6f; border-radius: 50%; position: absolute; top: 4px; right: 4px; }
+        .request-dot { display: none; width: 8px; height: 8px; background: #e74c6f; border-radius: 50%; position: absolute; top: 2px; right: 4px; }
         .request-dot.active { display: block; }
 
         .chat-list { padding: 8px 0; }
@@ -456,17 +504,35 @@
         }
         .profile-edit-btn:hover { background: #e8f0fe; }
         .profile-edit-btn svg { width: 20px; height: 20px; stroke: #00b894; stroke-width: 2; fill: none; }
-        .profile-friends { text-align: left; margin-top: 20px; border-top: 1px solid #e8f0fe; padding-top: 16px; }
-        .profile-friends .friends-title { font-size: 16px; font-weight: 600; color: #1a1a2e; margin-bottom: 12px; }
-        .profile-friends .friend-chip {
-            display: inline-block;
-            background: #e8f0fe;
-            padding: 6px 14px;
-            border-radius: 20px;
-            margin: 4px 6px 4px 0;
-            font-size: 13px;
-            color: #1a1a2e;
+        .profile-games {
+            text-align: left;
+            margin-top: 20px;
+            border-top: 1px solid #e8f0fe;
+            padding-top: 16px;
         }
+        .profile-games .games-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .game-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #e8f0fe;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .game-card:hover { background: #f0fdfa; border-color: #00b894; }
+        .game-card .game-name { font-weight: 600; color: #1a1a2e; }
+        .game-card .game-desc { font-size: 13px; color: #8395a7; margin-top: 4px; }
+        .game-card .game-play { font-size: 12px; color: #00b894; margin-top: 8px; }
+
         .profile-actions { display: flex; gap: 12px; justify-content: center; margin-top: 16px; }
         .profile-actions button {
             padding: 8px 24px;
@@ -904,6 +970,7 @@
             .chat-message { max-width: 90%; }
             .modal-content { padding: 20px 16px; }
             .profile-avatar { width: 60px; height: 60px; font-size: 24px; }
+            .app-header .title { font-size: 17px; }
         }
 
         .image-viewer {
@@ -954,7 +1021,10 @@
 
     <div id="app">
         <div class="app-header" id="appHeader">
-            <div class="title" id="headerTitle">Stardust <span>X</span></div>
+            <div class="title" id="headerTitle">
+                Stardust <span>X</span>
+                <span class="sub">✦ messenger</span>
+            </div>
             <div class="header-actions" id="headerActions">
                 <svg viewBox="0 0 24 24" class="search-icon" id="headerSearchBtn" style="display:none;">
                     <circle cx="11" cy="11" r="8"/>
@@ -980,6 +1050,11 @@
                         <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                     </svg>
                     <input type="text" id="contactSearch" placeholder="Search contacts..." />
+                    <svg viewBox="0 0 24 24" id="contactsMenuBtn" style="width:24px;height:24px;stroke:#4a4a5a;stroke-width:2;fill:none;cursor:pointer;">
+                        <circle cx="12" cy="5" r="2"/>
+                        <circle cx="12" cy="12" r="2"/>
+                        <circle cx="12" cy="19" r="2"/>
+                    </svg>
                 </div>
                 <div id="contactsList"></div>
             </div>
@@ -1016,9 +1091,26 @@
                 <div class="profile-actions">
                     <button class="logout-btn" id="logoutBtn">Logout</button>
                 </div>
-                <div class="profile-friends">
-                    <div class="friends-title">Friends</div>
-                    <div id="profileFriendsList"></div>
+                <div class="profile-games">
+                    <div class="games-title">
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="#00b894" stroke-width="2" fill="none"><polygon points="6 3 18 3 22 7 22 17 18 21 6 21 2 17 2 7 6 3"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="12" y1="9" x2="12" y2="15"/></svg>
+                        Mini Games & Short Programs
+                    </div>
+                    <div class="game-card" data-game="tictac">
+                        <div class="game-name">Tic Tac Toe</div>
+                        <div class="game-desc">Play with a friend or AI</div>
+                        <div class="game-play">▶ Tap to play</div>
+                    </div>
+                    <div class="game-card" data-game="timer">
+                        <div class="game-name">Pomodoro Timer</div>
+                        <div class="game-desc">Focus with 25/5 min sessions</div>
+                        <div class="game-play">▶ Tap to start</div>
+                    </div>
+                    <div class="game-card" data-game="quote">
+                        <div class="game-name">Daily Quote</div>
+                        <div class="game-desc">Get inspired with random quotes</div>
+                        <div class="game-play">▶ Tap to see</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1214,6 +1306,7 @@
         const contactsView = $('contactsView');
         const contactsList = $('contactsList');
         const contactSearch = $('contactSearch');
+        const contactsMenuBtn = $('contactsMenuBtn');
         const momentsView = $('momentsView');
         const momentsList = $('momentsList');
         const createMomentBtn = $('createMomentBtn');
@@ -1225,7 +1318,6 @@
         const profileAvatar = $('profileAvatar');
         const profilePhotoInput = $('profilePhotoInput');
         const profileEditBtn = $('profileEditBtn');
-        const profileFriendsList = $('profileFriendsList');
         const logoutBtn = $('logoutBtn');
         const bottomNav = $('bottomNav');
         const chatBadge = $('chatBadge');
@@ -1420,7 +1512,6 @@
                 setupRealtimeListeners();
                 switchTab('chats');
                 setTimeout(() => loadingScreen.classList.add('hidden'), 500);
-                // Update last seen
                 await updateDoc(doc(db, 'users', state.currentUID), { lastSeen: serverTimestamp() });
             } else {
                 loginScreen.classList.remove('hidden');
@@ -1481,7 +1572,6 @@
             } else {
                 profileAvatar.innerHTML = `<span id="profileInitials">${getInitials(name)}</span><div class="overlay">Change Photo</div>`;
             }
-            renderProfileFriends();
         }
 
         // Profile edit
@@ -1526,27 +1616,6 @@
             }
         });
 
-        async function renderProfileFriends() {
-            const friends = state.userProfile.friends || [];
-            if (friends.length === 0) {
-                profileFriendsList.innerHTML = '<span style="color:#8395a7;font-size:13px;">No friends yet</span>';
-                return;
-            }
-            let html = '';
-            for (const uid of friends) {
-                try {
-                    const docRef = doc(db, 'users', uid);
-                    const docSnap = await getDoc(docRef);
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        const name = data.name || 'User';
-                        html += `<span class="friend-chip">${name}</span>`;
-                    }
-                } catch (err) { console.error('Error loading friend:', err); }
-            }
-            profileFriendsList.innerHTML = html || '<span style="color:#8395a7;font-size:13px;">No friends yet</span>';
-        }
-
         // Navigation
         const tabs = ['chats', 'contacts', 'moments', 'profile'];
         bottomNav.querySelectorAll('.nav-item').forEach((item) => {
@@ -1564,12 +1633,12 @@
             profileView.classList.toggle('hidden', tab !== 'profile');
 
             const titles = {
-                chats: 'Stardust <span>X</span>',
-                contacts: 'Contacts',
-                moments: 'Moments',
-                profile: 'Profile'
+                chats: 'Stardust <span>X</span><span class="sub">✦ messenger</span>',
+                contacts: 'Contacts<span class="sub">✦ connect</span>',
+                moments: 'Moments<span class="sub">✦ share</span>',
+                profile: 'Profile<span class="sub">✦ you</span>'
             };
-            document.querySelector('.app-header .title').innerHTML = titles[tab] || 'Stardust <span>X</span>';
+            document.querySelector('.app-header .title').innerHTML = titles[tab] || 'Stardust <span>X</span><span class="sub">✦ messenger</span>';
 
             if (tab === 'chats') {
                 headerSearchBtn.style.display = 'none';
@@ -1577,16 +1646,16 @@
                 headerBadgeContainer.style.display = 'none';
             } else if (tab === 'contacts') {
                 headerSearchBtn.style.display = 'block';
-                headerMenuBtn.style.display = 'block';
+                headerMenuBtn.style.display = 'none';
                 headerBadgeContainer.style.display = 'block';
             } else if (tab === 'moments') {
                 headerSearchBtn.style.display = 'none';
-                headerMenuBtn.style.display = 'block';
-                headerBadgeContainer.style.display = 'block';
+                headerMenuBtn.style.display = 'none';
+                headerBadgeContainer.style.display = 'none';
             } else {
                 headerSearchBtn.style.display = 'none';
-                headerMenuBtn.style.display = 'block';
-                headerBadgeContainer.style.display = 'block';
+                headerMenuBtn.style.display = 'none';
+                headerBadgeContainer.style.display = 'none';
             }
 
             if (tab === 'contacts') renderContacts();
@@ -1594,11 +1663,9 @@
             if (tab === 'profile') updateProfileUI();
         }
 
-        // Header menu
-        headerMenuBtn.addEventListener('click', () => {
-            const tab = state.currentTab;
-            if (tab === 'contacts') showContactMenu();
-            else if (tab === 'moments') showMomentsMenu();
+        // Contacts Menu (3-dot in contacts search bar)
+        contactsMenuBtn.addEventListener('click', () => {
+            showContactMenu();
         });
 
         function showContactMenu() {
@@ -1620,21 +1687,6 @@
                     if (action === 'requests') showIncomingRequests();
                     if (action === 'creategroup') showCreateGroupModal();
                     if (action === 'archived') showArchivedChats();
-                });
-            });
-        }
-
-        function showMomentsMenu() {
-            const html = `
-                <div style="display:flex;flex-direction:column;gap:8px;">
-                    <button class="moments-menu-btn" data-action="create" style="background:#f8f9fa;border:none;color:#1a1a2e;padding:12px;border-radius:8px;cursor:pointer;text-align:left;font-size:14px;">✏️ Create Post</button>
-                </div>
-            `;
-            showModal('Moments Menu', html, 'Close', null);
-            document.querySelectorAll('.moments-menu-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    hideModal();
-                    if (btn.dataset.action === 'create') showCreateMomentModal();
                 });
             });
         }
@@ -1790,7 +1842,6 @@
                     hideModal();
                 });
                 renderContacts();
-                renderProfileFriends();
                 updateBadges();
             } catch (err) { showToast('Error accepting request'); }
         }
@@ -1926,7 +1977,6 @@
                     state.userProfile.friends = (state.userProfile.friends || []).filter(f => f !== uid);
                     state.blockedUsers = state.userProfile.blocked || [];
                     renderContacts();
-                    renderProfileFriends();
                     showToast('User blocked');
                 } catch (err) { showToast('Error blocking user'); }
             }
@@ -1939,7 +1989,6 @@
                     await updateDoc(doc(db, 'users', uid), { friends: arrayRemove(state.currentUID) });
                     state.userProfile.friends = (state.userProfile.friends || []).filter(f => f !== uid);
                     renderContacts();
-                    renderProfileFriends();
                     showToast('Contact removed');
                 } catch (err) { showToast('Error removing contact'); }
             }
@@ -1995,7 +2044,6 @@
             chatWindow.classList.add('active');
             await loadChatMessages(uid);
             await markMessagesRead(uid);
-            // Load draft
             const chatId = [state.currentUID, uid].sort().join('_');
             if (state.drafts[chatId]) {
                 chatInput.value = state.drafts[chatId];
@@ -2014,7 +2062,6 @@
         }
 
         chatBackBtn.addEventListener('click', () => {
-            // Save draft
             const chatId = [state.currentUID, state.chatPartnerId].sort().join('_');
             if (chatInput.value.trim()) {
                 state.drafts[chatId] = chatInput.value;
@@ -2217,7 +2264,6 @@
             }, (err) => { console.error('Error loading messages:', err); });
             state.chatListeners.push(unsubscribe);
 
-            // Typing listener
             const typingRef = doc(db, 'chats', chatId, 'typing', 'status');
             const typingUnsub = onSnapshot(typingRef, (docSnap) => {
                 if (docSnap.exists()) {
@@ -2251,14 +2297,13 @@
             div.className = `chat-message ${isSent ? 'sent' : 'received'}`;
             div.dataset.id = msg.id;
             div.dataset.sender = msg.sender;
-            
+
             let html = '';
             if (msg.text) html += `<div>${msg.text}</div>`;
             if (msg.imageURL) {
                 html += `<img src="${msg.imageURL}" class="msg-image" onclick="document.getElementById('imageViewerImg').src='${msg.imageURL}';document.getElementById('imageViewer').classList.add('active');" />`;
             }
             html += `<div class="msg-time">${getTimeString(msg.timestamp)}</div>`;
-            // Status
             if (isSent) {
                 let statusText = 'sent';
                 if (msg.readBy && msg.readBy.length > 1) statusText = 'seen';
@@ -2272,7 +2317,6 @@
                 });
                 html += `</div>`;
             }
-            // Check if starred
             if (state.starredMessages && state.starredMessages.includes(msg.id)) {
                 html += `<div style="font-size:12px;color:#f1c40f;">⭐</div>`;
             }
@@ -2328,13 +2372,10 @@
                     updatedAt: serverTimestamp(),
                 });
                 await updateUserChatList(state.chatPartnerId, chatId, text || '📷 Image');
-                // Clear draft
                 delete state.drafts[chatId];
                 chatInput.value = '';
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-                // Send read receipt
                 await updateDoc(msgRef, { delivered: true });
-                // Update readBy
                 await updateDoc(msgRef, { readBy: arrayUnion(state.currentUID) });
             } catch (err) { showToast('Error sending message'); }
         }
@@ -2369,7 +2410,6 @@
             }
         });
 
-        // Typing indicator
         chatInput.addEventListener('input', async () => {
             const chatId = [state.currentUID, state.chatPartnerId].sort().join('_');
             const typingRef = doc(db, 'chats', chatId, 'typing', 'status');
@@ -2384,7 +2424,6 @@
             }
         });
 
-        // Attachment
         chatAttachmentBtn.addEventListener('click', () => chatImageInput.click());
         chatImageInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
@@ -2600,7 +2639,6 @@
                 const chatPromises = [];
                 snapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    // Check if archived
                     if (state.archivedChats && state.archivedChats.includes(data.chatId)) return;
                     if (data.unreadCount) unreadTotal += data.unreadCount;
                     chatPromises.push(renderChatItem(data));
@@ -3042,7 +3080,6 @@
 
             loadChatList();
 
-            // Update last seen periodically
             setInterval(async () => {
                 if (state.currentUID) {
                     await updateDoc(doc(db, 'users', state.currentUID), { lastSeen: serverTimestamp() });
@@ -3071,16 +3108,183 @@
             imageViewerImg.src = '';
         });
 
-        // Visibility change
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && state.currentUser) {
-                loadingScreen.classList.remove('hidden');
-                loadUserData();
-                setTimeout(() => loadingScreen.classList.add('hidden'), 800);
-            }
+        // Games
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const game = card.dataset.game;
+                if (game === 'tictac') {
+                    showModal('Tic Tac Toe', `
+                        <div id="ticTacBoard" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:250px;margin:0 auto;">
+                            ${Array(9).fill(0).map((_,i) => `<div class="ttt-cell" data-index="${i}" style="background:#f8f9fa;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;border-radius:8px;cursor:pointer;border:2px solid #e8f0fe;"> </div>`).join('')}
+                        </div>
+                        <div id="tttStatus" style="text-align:center;margin-top:12px;color:#1a1a2e;">Your turn (X)</div>
+                    `, 'Reset', () => {
+                        document.querySelectorAll('.ttt-cell').forEach(cell => { cell.textContent = ' '; cell.style.color = '#1a1a2e'; });
+                        document.getElementById('tttStatus').textContent = 'Your turn (X)';
+                    });
+                    setTimeout(() => {
+                        let board = Array(9).fill(null);
+                        let turn = 'X';
+                        let gameOver = false;
+                        document.querySelectorAll('.ttt-cell').forEach(cell => {
+                            cell.addEventListener('click', () => {
+                                if (gameOver) return;
+                                const idx = parseInt(cell.dataset.index);
+                                if (board[idx]) return;
+                                board[idx] = turn;
+                                cell.textContent = turn;
+                                cell.style.color = turn === 'X' ? '#00b894' : '#e74c6f';
+                                const winner = checkWinner(board);
+                                if (winner) {
+                                    document.getElementById('tttStatus').textContent = `${winner} wins! 🎉`;
+                                    gameOver = true;
+                                    return;
+                                }
+                                if (board.every(v => v)) {
+                                    document.getElementById('tttStatus').textContent = 'Draw! 🤝';
+                                    gameOver = true;
+                                    return;
+                                }
+                                turn = turn === 'X' ? 'O' : 'X';
+                                document.getElementById('tttStatus').textContent = `${turn === 'X' ? 'Your' : 'AI'} turn (${turn})`;
+                                if (turn === 'O') {
+                                    setTimeout(() => aiMove(), 400);
+                                }
+                            });
+                        });
+                        function checkWinner(b) {
+                            const lines = [
+                                [0,1,2],[3,4,5],[6,7,8],
+                                [0,3,6],[1,4,7],[2,5,8],
+                                [0,4,8],[2,4,6]
+                            ];
+                            for (let l of lines) {
+                                if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[1]] === b[l[2]]) return b[l[0]];
+                            }
+                            return null;
+                        }
+                        function aiMove() {
+                            if (gameOver) return;
+                            // Simple AI: try to win or block
+                            let bestMove = null;
+                            for (let i = 0; i < 9; i++) {
+                                if (!board[i]) {
+                                    board[i] = 'O';
+                                    if (checkWinner(board)) { bestMove = i; board[i] = null; break; }
+                                    board[i] = null;
+                                }
+                            }
+                            if (bestMove === null) {
+                                for (let i = 0; i < 9; i++) {
+                                    if (!board[i]) {
+                                        board[i] = 'X';
+                                        if (checkWinner(board)) { bestMove = i; board[i] = null; break; }
+                                        board[i] = null;
+                                    }
+                                }
+                            }
+                            if (bestMove === null) {
+                                const empty = board.map((v,i) => v === null ? i : null).filter(v => v !== null);
+                                if (empty.length > 0) bestMove = empty[Math.floor(Math.random() * empty.length)];
+                            }
+                            if (bestMove !== null) {
+                                board[bestMove] = 'O';
+                                const cell = document.querySelector(`.ttt-cell[data-index="${bestMove}"]`);
+                                cell.textContent = 'O';
+                                cell.style.color = '#e74c6f';
+                                const winner = checkWinner(board);
+                                if (winner) {
+                                    document.getElementById('tttStatus').textContent = `${winner} wins! 🎉`;
+                                    gameOver = true;
+                                    return;
+                                }
+                                if (board.every(v => v)) {
+                                    document.getElementById('tttStatus').textContent = 'Draw! 🤝';
+                                    gameOver = true;
+                                    return;
+                                }
+                                turn = 'X';
+                                document.getElementById('tttStatus').textContent = 'Your turn (X)';
+                            }
+                        }
+                    }, 100);
+                } else if (game === 'timer') {
+                    let time = 25 * 60;
+                    let running = false;
+                    let interval;
+                    showModal('Pomodoro Timer', `
+                        <div style="text-align:center;">
+                            <div id="timerDisplay" style="font-size:48px;font-weight:700;color:#00b894;">25:00</div>
+                            <div style="display:flex;gap:12px;justify-content:center;margin-top:16px;">
+                                <button id="timerStartBtn" style="background:#00b894;border:none;color:#fff;padding:8px 20px;border-radius:8px;cursor:pointer;">Start</button>
+                                <button id="timerResetBtn" style="background:#e8f0fe;border:none;color:#1a1a2e;padding:8px 20px;border-radius:8px;cursor:pointer;">Reset</button>
+                            </div>
+                            <div style="margin-top:12px;display:flex;gap:12px;justify-content:center;">
+                                <button class="timer-mode" data-mode="25" style="background:#f8f9fa;border:2px solid #e8f0fe;border-radius:8px;padding:6px 14px;cursor:pointer;">25m</button>
+                                <button class="timer-mode" data-mode="5" style="background:#f8f9fa;border:2px solid #e8f0fe;border-radius:8px;padding:6px 14px;cursor:pointer;">5m</button>
+                            </div>
+                        </div>
+                    `, 'Close', null);
+                    const display = document.getElementById('timerDisplay');
+                    document.getElementById('timerStartBtn').addEventListener('click', () => {
+                        if (running) { clearInterval(interval); running = false; document.getElementById('timerStartBtn').textContent = 'Resume'; return; }
+                        running = true;
+                        document.getElementById('timerStartBtn').textContent = 'Pause';
+                        interval = setInterval(() => {
+                            time--;
+                            const m = Math.floor(time / 60);
+                            const s = time % 60;
+                            display.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                            if (time <= 0) { clearInterval(interval); running = false; document.getElementById('timerStartBtn').textContent = 'Start'; showToast('Time up! 🎉'); }
+                        }, 1000);
+                    });
+                    document.getElementById('timerResetBtn').addEventListener('click', () => {
+                        clearInterval(interval); running = false; time = 25 * 60; display.textContent = '25:00'; document.getElementById('timerStartBtn').textContent = 'Start';
+                    });
+                    document.querySelectorAll('.timer-mode').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            clearInterval(interval); running = false;
+                            time = parseInt(btn.dataset.mode) * 60;
+                            display.textContent = `${String(parseInt(btn.dataset.mode)).padStart(2,'0')}:00`;
+                            document.getElementById('timerStartBtn').textContent = 'Start';
+                        });
+                    });
+                } else if (game === 'quote') {
+                    const quotes = [
+                        "The only way to do great work is to love what you do. - Steve Jobs",
+                        "Innovation distinguishes between a leader and a follower. - Steve Jobs",
+                        "Life is what happens when you're busy making other plans. - John Lennon",
+                        "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+                        "It does not matter how slowly you go as long as you do not stop. - Confucius",
+                        "The best time to plant a tree was 20 years ago. The second best time is now. - Chinese Proverb",
+                        "Believe you can and you're halfway there. - Theodore Roosevelt",
+                        "The only impossible journey is the one you never begin. - Tony Robbins",
+                    ];
+                    const quote = quotes[Math.floor(Math.random() * quotes.length)];
+                    showModal('Daily Quote', `
+                        <div style="text-align:center;padding:12px;">
+                            <div style="font-size:20px;font-weight:300;color:#1a1a2e;line-height:1.6;">"${quote}"</div>
+                            <button id="newQuoteBtn" style="background:#00b894;border:none;color:#fff;padding:8px 20px;border-radius:8px;cursor:pointer;margin-top:16px;">New Quote</button>
+                        </div>
+                    `, 'Close', null);
+                    document.getElementById('newQuoteBtn')?.addEventListener('click', () => {
+                        const newQ = quotes[Math.floor(Math.random() * quotes.length)];
+                        document.querySelector('#modalBody .quote-text')?.remove();
+                        const div = document.querySelector('#modalBody div');
+                        if (div) {
+                            const qDiv = document.createElement('div');
+                            qDiv.className = 'quote-text';
+                            qDiv.style.cssText = 'font-size:20px;font-weight:300;color:#1a1a2e;line-height:1.6;';
+                            qDiv.textContent = `"${newQ}"`;
+                            div.insertBefore(qDiv, div.querySelector('button'));
+                        }
+                    });
+                }
+            });
         });
 
-        console.log('🚀 Stardust X Messenger initialized with ImgBB!');
+        // Init
+        console.log('🚀 Stardust X Messenger - Professional Edition');
         window.__stardust = { state, sendMessage, openChat, renderContacts, renderMoments, uploadToImgBB };
     </script>
 </body>
