@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,7 +82,6 @@
         .call-pip-video { position: absolute; top: 20px; right: 20px; width: 120px; height: 170px; border-radius: 16px; border: 2px solid #3b9b5e; object-fit: cover; z-index: 10; background: #000; cursor: pointer; }
         .call-pip-video:hover { border-color: #6fcf97; }
         
-        /* Custom Action Sheet */
         .action-sheet-overlay {
             position: fixed;
             inset: 0;
@@ -145,7 +145,6 @@
         }
         .action-cancel:active { background: #c8e6c9; }
 
-        /* Professional Popup */
         .custom-popup-overlay {
             position: fixed;
             inset: 0;
@@ -227,7 +226,6 @@
         .custom-popup-buttons .danger { background: #dc2626; color: white; }
         .custom-popup-buttons .danger:hover { background: #b91c1c; }
 
-        /* Loading spinner for group creation */
         .loading-overlay {
             position: fixed;
             inset: 0;
@@ -253,6 +251,27 @@
             color: white;
             font-size: 16px;
             font-weight: 500;
+        }
+        
+        .call-profile-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #3b9b5e;
+            object-fit: cover;
+            box-shadow: 0 0 60px rgba(59, 155, 94, 0.3);
+        }
+        .call-name-display {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+        .chat-item {
+            transition: all 0.2s;
+        }
+        .chat-item:active {
+            transform: scale(0.98);
         }
     </style>
 </head>
@@ -394,7 +413,6 @@
 
             <!-- PROFILE TAB -->
             <section id="profile-tab" class="hidden space-y-4">
-                <!-- Profile Card -->
                 <div class="bg-white rounded-3xl border border-[#b8d0b8] p-5 shadow-sm">
                     <div class="flex flex-col items-center text-center">
                         <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-[#2b7a4b] mb-3 bg-[#e5f0e5]">
@@ -406,8 +424,6 @@
                         <button onclick="openEditProfile()" class="mt-3 bg-[#e5f0e5] text-[#2b7a4b] px-4 py-1.5 rounded-full text-xs font-bold border border-[#b8d0b8]">Edit Profile</button>
                     </div>
                 </div>
-
-                <!-- Stardust Ecosystem Links -->
                 <div>
                     <h3 class="text-sm font-bold text-[#2b7a4b] mb-2 flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"></path></svg>
@@ -498,6 +514,10 @@
                 <svg class="icon text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                 Manage Comments
             </div>
+            <div class="action-item" onclick="postAction('report')">
+                <svg class="icon text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                Report
+            </div>
             <div class="action-cancel" onclick="closeActionSheet('post-action-sheet')">Cancel</div>
         </div>
     </div>
@@ -568,8 +588,11 @@
             <video id="call-remote-video" autoplay playsinline class="w-full h-full object-cover"></video>
             <video id="call-local-video" autoplay muted playsinline class="call-pip-video" onclick="swapPipFullscreen()"></video>
             <div class="absolute top-4 left-4 bg-black/50 px-3 py-1 rounded-full text-white/80 text-xs">● Encrypted</div>
-            <div class="absolute bottom-20 left-0 right-0 text-center">
-                <p id="call-status-lbl" class="text-white/60 text-sm">Connecting...</p>
+            <div class="absolute inset-0 flex flex-col items-center justify-center" id="call-profile-overlay">
+                <img id="call-peer-pfp" src="" class="call-profile-circle" alt="Caller">
+                <div id="call-peer-name" class="call-name-display">User</div>
+                <div id="call-peer-uid" class="text-[#3b9b5e] text-sm font-mono mt-1">@123456</div>
+                <div id="call-status-lbl" class="text-white/60 text-sm mt-2 call-status-pulse">Connecting...</div>
             </div>
         </div>
         <div id="call-bottom-nav" class="w-full flex justify-center items-center gap-3 py-3 px-2 bg-black/40 backdrop-blur-sm rounded-3xl mt-2">
@@ -872,7 +895,7 @@
         const db = getDatabase(app);
 
         const IMGBB_API = '550a3bcd47c1b0a86a9f2ba7a41770b6';
-        const ADMIN_UID = '296324'; // Change this to your UID
+        const ADMIN_UID = '306140'; // Updated to your UID
 
         let state = {
             currentUser: null, allUsers: [], contacts: [], chats: {}, messages: {}, posts: [],
@@ -1015,6 +1038,12 @@
                 });
             } else if (action === 'comments') {
                 openCommentsManagement(postId);
+            } else if (action === 'report') {
+                state.reportTarget = { type: 'post', postId: postId };
+                $('report-text').value = '';
+                $('report-image').value = '';
+                closeActionSheet('post-action-sheet');
+                $('report-modal').classList.remove('hidden');
             }
             state.postActionId = null;
         };
@@ -1181,7 +1210,6 @@
                 state.groups = snap.val() || {};
                 renderAll();
             });
-            // Bot messages
             onValue(ref(db, 'botMessages'), (snap) => {
                 loadBotMessages();
             });
@@ -1205,57 +1233,92 @@
             const placeholder = $('no-chats-placeholder');
             container.innerHTML = '';
             let hasChats = false;
+            
+            // Collect all chat entries with their latest message timestamp
+            let chatEntries = [];
             const chatKeys = Object.keys(state.chats).filter(key => key.includes(state.currentUser.uid));
+            
             for (let key of chatKeys) {
                 const otherUid = key.replace(state.currentUser.uid, '').replace('_text_', '').replace('_', '');
+                let msgs = state.messages[key] || [];
+                let lastMsg = msgs.length > 0 ? msgs[msgs.length-1] : null;
+                let lastTime = lastMsg ? lastMsg.timestamp : 0;
+                
                 // Check if it's a group
                 if (otherUid.startsWith('group_')) {
                     const group = state.groups[otherUid];
                     if (group) {
-                        const msgs = state.messages[key] || [];
-                        const lastMsg = msgs.length > 0 ? msgs[msgs.length-1] : null;
                         const unread = msgs.filter(m => m.sender !== state.currentUser.uid && !m.read).length;
-                        hasChats = true;
-                        const div = document.createElement('div');
-                        div.className = 'flex items-center justify-between p-3 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition clickable-row';
-                        div.innerHTML = `
-                            <div class="flex items-center space-x-3 w-full" onclick="openGroupChat('${otherUid}')">
-                                <div class="w-10 h-10 rounded-full bg-[#2b7a4b] flex items-center justify-center text-white font-bold text-xs">${group.name ? group.name.charAt(0).toUpperCase() : 'G'}</div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="font-bold text-sm text-[#1a2e1a]">${group.name || 'Group'}</p>
-                                    <p class="text-xs truncate ${unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${lastMsg ? lastMsg.text : 'Group chat'}</p>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-end">
-                                ${unread > 0 ? `<span class="bg-[#2b7a4b] text-white text-[9px] font-bold rounded-full h-5 px-2 flex items-center">${unread}</span>` : ''}
-                                <span class="text-[9px] text-[#2b7a4b] opacity-50">${lastMsg ? new Date(lastMsg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
-                            </div>
-                        `;
-                        container.appendChild(div);
+                        chatEntries.push({
+                            key: key,
+                            uid: otherUid,
+                            isGroup: true,
+                            group: group,
+                            msgs: msgs,
+                            lastMsg: lastMsg,
+                            lastTime: lastTime,
+                            unread: unread,
+                            name: group.name || 'Group',
+                            pfp: group.pfp || ''
+                        });
                         continue;
                     }
                 }
+                
                 const contact = state.contacts.find(c => c.uid === otherUid);
                 if (!contact) continue;
-                const msgs = state.messages[key] || [];
-                const lastMsg = msgs.length > 0 ? msgs[msgs.length-1] : null;
                 const unread = msgs.filter(m => m.sender === otherUid && !m.read).length;
+                chatEntries.push({
+                    key: key,
+                    uid: otherUid,
+                    isGroup: false,
+                    contact: contact,
+                    msgs: msgs,
+                    lastMsg: lastMsg,
+                    lastTime: lastTime,
+                    unread: unread,
+                    name: contact.name,
+                    pfp: contact.pfp || ''
+                });
+            }
+            
+            // Sort by last message time (newest first)
+            chatEntries.sort((a, b) => b.lastTime - a.lastTime);
+            
+            for (let entry of chatEntries) {
                 hasChats = true;
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-3 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition clickable-row';
-                div.innerHTML = `
-                    <div class="flex items-center space-x-3 w-full" onclick="openChat('${otherUid}')">
-                        <img src="${contact.pfp || ''}" class="w-10 h-10 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
-                        <div class="flex-1 min-w-0">
-                            <p class="font-bold text-sm text-[#1a2e1a]">${contact.name}</p>
-                            <p class="text-xs truncate ${unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${lastMsg ? lastMsg.text : 'Start chatting'}</p>
+                div.className = 'flex items-center justify-between p-3 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition clickable-row chat-item';
+                
+                if (entry.isGroup) {
+                    div.innerHTML = `
+                        <div class="flex items-center space-x-3 w-full" onclick="openGroupChat('${entry.uid}')">
+                            <div class="w-10 h-10 rounded-full bg-[#2b7a4b] flex items-center justify-center text-white font-bold text-xs">${entry.name.charAt(0).toUpperCase()}</div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-bold text-sm text-[#1a2e1a]">${entry.name}</p>
+                                <p class="text-xs truncate ${entry.unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${entry.lastMsg ? entry.lastMsg.text : 'Group chat'}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex flex-col items-end">
-                        ${unread > 0 ? `<span class="bg-[#2b7a4b] text-white text-[9px] font-bold rounded-full h-5 px-2 flex items-center">${unread}</span>` : ''}
-                        <span class="text-[9px] text-[#2b7a4b] opacity-50">${lastMsg ? new Date(lastMsg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
-                    </div>
-                `;
+                        <div class="flex flex-col items-end">
+                            ${entry.unread > 0 ? `<span class="bg-[#2b7a4b] text-white text-[9px] font-bold rounded-full h-5 px-2 flex items-center">${entry.unread}</span>` : ''}
+                            <span class="text-[9px] text-[#2b7a4b] opacity-50">${entry.lastMsg ? new Date(entry.lastMsg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
+                        </div>
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <div class="flex items-center space-x-3 w-full" onclick="openChat('${entry.uid}')">
+                            <img src="${entry.pfp || ''}" class="w-10 h-10 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
+                            <div class="flex-1 min-w-0">
+                                <p class="font-bold text-sm text-[#1a2e1a]">${entry.name}</p>
+                                <p class="text-xs truncate ${entry.unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${entry.lastMsg ? entry.lastMsg.text : 'Start chatting'}</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            ${entry.unread > 0 ? `<span class="bg-[#2b7a4b] text-white text-[9px] font-bold rounded-full h-5 px-2 flex items-center">${entry.unread}</span>` : ''}
+                            <span class="text-[9px] text-[#2b7a4b] opacity-50">${entry.lastMsg ? new Date(entry.lastMsg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
+                        </div>
+                    `;
+                }
                 container.appendChild(div);
             }
             placeholder.classList.toggle('hidden', hasChats);
@@ -1322,7 +1385,7 @@
                         </div>
                         <div class="flex items-center space-x-1">
                             <span class="text-[9px] text-[#2b7a4b] opacity-50">${new Date(post.timestamp).toLocaleString()}</span>
-                            ${isOwner ? `<button onclick="event.stopPropagation(); openPostActions('${post.id}')" class="post-menu-btn p-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>` : ''}
+                            ${isOwner ? `<button onclick="event.stopPropagation(); openPostActions('${post.id}')" class="post-menu-btn p-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>` : `<button onclick="event.stopPropagation(); openPostReport('${post.id}')" class="post-menu-btn p-1 text-yellow-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></button>`}
                             ${state.currentUser.uid === ADMIN_UID ? `<button onclick="event.stopPropagation(); adminDeletePost('${post.id}')" class="post-menu-btn p-1 text-red-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>` : ''}
                         </div>
                     </div>
@@ -1349,6 +1412,13 @@
                 container.appendChild(div);
             }
         }
+
+        window.openPostReport = function(postId) {
+            state.reportTarget = { type: 'post', postId: postId };
+            $('report-text').value = '';
+            $('report-image').value = '';
+            $('report-modal').classList.remove('hidden');
+        };
 
         function renderProfile() {
             const u = state.currentUser;
@@ -1421,7 +1491,6 @@
                 if (data) {
                     const key = Object.keys(data).find(k => data[k].id === postId);
                     if (key) update(ref(db, 'posts/' + key), { likes });
-                    // Send notification
                     if (post.author !== state.currentUser.uid) {
                         push(ref(db, 'notifications/' + post.author), {
                             from: state.currentUser.uid,
@@ -1475,7 +1544,6 @@
             push(ref(db, 'chats/' + key), msg);
             closeForwardModal();
             alert('Shared!');
-            // Send notification
             push(ref(db, 'notifications/' + uid), {
                 from: state.currentUser.uid,
                 type: 'share',
@@ -1502,7 +1570,6 @@
                                     text: val.trim(),
                                     timestamp: Date.now()
                                 });
-                                // Send notification
                                 if (post.author !== state.currentUser.uid) {
                                     push(ref(db, 'notifications/' + post.author), {
                                         from: state.currentUser.uid,
@@ -1579,7 +1646,6 @@
             $('chat-window-avatar').src = group.pfp || '';
             $('chat-window-modal').classList.remove('hidden');
             renderChatMessages();
-            // Mark group messages as read
             const key = getChatKey(state.currentUser.uid, groupId);
             const msgs = state.messages[key] || [];
             for (let msg of msgs) {
@@ -1593,7 +1659,6 @@
         window.closeChatWindow = function() { state.activeChat = null; $('chat-window-modal').classList.add('hidden'); $('msg-context-menu').classList.add('hidden'); };
 
         function getChatKey(uid1, uid2) {
-            // For groups, ensure consistent ordering
             if (uid1.startsWith('group_') || uid2.startsWith('group_')) {
                 return uid1 + '_text_' + uid2;
             }
@@ -1606,7 +1671,6 @@
             if (!state.activeChat) return;
             const key = getChatKey(state.currentUser.uid, state.activeChat);
             const msgs = state.messages[key] || [];
-            // For groups, show sender names
             const isGroup = state.activeChat.startsWith('group_');
             for (let msg of msgs) {
                 const isMe = msg.sender === state.currentUser.uid;
@@ -1644,7 +1708,6 @@
             const key = getChatKey(state.currentUser.uid, state.activeChat);
             const msg = { sender: state.currentUser.uid, text, timestamp: Date.now(), read: false, reactions: {}, replyTo: null };
             push(ref(db, 'chats/' + key), msg);
-            // Send notification to all group members if group
             if (state.activeChat.startsWith('group_')) {
                 const group = state.groups[state.activeChat];
                 if (group) {
@@ -1661,7 +1724,6 @@
                     }
                 }
             } else {
-                // Single user chat
                 push(ref(db, 'notifications/' + state.activeChat), {
                     from: state.currentUser.uid,
                     type: 'msg',
@@ -1777,7 +1839,6 @@
             if (state.contacts.find(c => c.uid === uid)) return alert('Already friends');
             if (state.friendRequests.find(r => r.from === uid)) return alert('Request already sent');
             set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('add-friend-modal'); });
-            // Send notification
             push(ref(db, 'notifications/' + uid), {
                 from: state.currentUser.uid,
                 type: 'friend_request',
@@ -1797,7 +1858,6 @@
             const reqKey = Object.keys(state.chats).find(k => state.chats[k]?.from === uid && state.chats[k]?.to === state.currentUser.uid);
             if (reqKey) updates['friendRequests/' + reqKey] = null;
             update(ref(db), updates).then(() => {
-                // Remove from friendRequests list locally
                 state.friendRequests = state.friendRequests.filter(r => r.from !== uid);
                 renderAll();
                 showPopup('Name this contact', 'Enter a name for this contact:', req.fromUser.name || uid, 'Save', (val) => {
@@ -1861,18 +1921,24 @@
                 const groupId = 'group_' + Date.now();
                 const groupData = { id: groupId, name, bio, pfp: pfpUrl, members, admin: state.currentUser.uid, created: Date.now() };
                 set(ref(db, 'groups/' + groupId), groupData).then(() => {
-                    const key = 'group_' + groupId;
+                    // Create chat key for group
+                    const key = getChatKey(state.currentUser.uid, groupId);
                     push(ref(db, 'chats/' + key), { sender: state.currentUser.uid, text: 'Group "' + name + '" created!', timestamp: Date.now(), read: false, reactions: {} });
                     hideLoading();
                     alert('Group created!');
                     closeModal('create-group-modal');
-                    // Reset form
                     $('group-name-input').value = '';
                     $('group-bio-input').value = '';
                     $('group-pfp-input').value = '';
-                    // Send notifications to members
                     for (let member of members) {
                         if (member !== state.currentUser.uid) {
+                            const memberKey = getChatKey('bot', member);
+                            push(ref(db, 'chats/' + memberKey), {
+                                sender: 'bot',
+                                text: `📢 You were added to group "${name}" by ${state.currentUser.name}`,
+                                timestamp: Date.now(),
+                                read: false
+                            });
                             push(ref(db, 'notifications/' + member), {
                                 from: state.currentUser.uid,
                                 type: 'group_invite',
@@ -1883,6 +1949,7 @@
                             });
                         }
                     }
+                    renderAll();
                 });
             });
         };
@@ -1896,7 +1963,6 @@
                 const peerUid = call.peer.replace('stardust_', '');
                 const user = state.allUsers.find(u => u.uid === peerUid) || state.currentUser;
                 if (state.blocked.includes(peerUid)) { call.close(); return; }
-                // Fix: call-status-lbl exists in the call overlay
                 const statusLbl = document.getElementById('call-status-lbl');
                 if (statusLbl) statusLbl.innerText = 'Incoming call...';
                 showIncomingCall(user);
@@ -1923,11 +1989,16 @@
                     showCallUI(targetUid);
                     call.on('stream', (remoteStream) => {
                         document.getElementById('call-remote-video').srcObject = remoteStream;
+                        document.getElementById('call-profile-overlay').style.display = 'none';
                         const statusLbl = document.getElementById('call-status-lbl');
                         if (statusLbl) statusLbl.innerText = 'Connected';
                         startCallTimer();
                     });
-                    call.on('close', () => { terminateCall(); closeChatWindow(); });
+                    call.on('close', () => { 
+                        document.getElementById('call-profile-overlay').style.display = 'flex';
+                        terminateCall(); 
+                        closeChatWindow(); 
+                    });
                 }).catch(err => alert('Camera/Mic access denied: ' + err.message));
         };
 
@@ -1941,6 +2012,7 @@
                     document.getElementById('call-local-video').style.display = 'block';
                     document.getElementById('incoming-call-actions').classList.add('hidden');
                     document.getElementById('call-bottom-nav').classList.remove('hidden');
+                    document.getElementById('call-profile-overlay').style.display = 'none';
                     state.call.answer(stream);
                     state.call.on('stream', (remoteStream) => {
                         document.getElementById('call-remote-video').srcObject = remoteStream;
@@ -1948,7 +2020,11 @@
                         if (statusLbl) statusLbl.innerText = 'Connected';
                         startCallTimer();
                     });
-                    state.call.on('close', () => { terminateCall(); closeChatWindow(); });
+                    state.call.on('close', () => { 
+                        document.getElementById('call-profile-overlay').style.display = 'flex';
+                        terminateCall(); 
+                        closeChatWindow(); 
+                    });
                 }).catch(err => alert('Failed to answer: ' + err.message));
         };
 
@@ -1962,6 +2038,7 @@
             if (nameEl) nameEl.innerText = user.name;
             if (uidEl) uidEl.innerText = '@' + user.uid;
             if (pfpEl) pfpEl.src = user.pfp || '';
+            document.getElementById('call-profile-overlay').style.display = 'flex';
             const overlay = document.getElementById('call-interface-overlay');
             if (overlay) overlay.classList.remove('hidden');
             const statusLbl = document.getElementById('call-status-lbl');
@@ -1971,8 +2048,10 @@
             if (state.callIsVideo) {
                 document.getElementById('call-local-video').style.display = 'block';
                 document.getElementById('call-local-video').srcObject = state.callStream;
+                document.getElementById('call-remote-video').style.display = 'block';
             } else {
                 document.getElementById('call-local-video').style.display = 'none';
+                document.getElementById('call-remote-video').style.display = 'none';
             }
         }
 
@@ -1983,6 +2062,7 @@
             if (nameEl) nameEl.innerText = user.name;
             if (uidEl) uidEl.innerText = '@' + user.uid;
             if (pfpEl) pfpEl.src = user.pfp || '';
+            document.getElementById('call-profile-overlay').style.display = 'flex';
             const overlay = document.getElementById('call-interface-overlay');
             if (overlay) overlay.classList.remove('hidden');
             const statusLbl = document.getElementById('call-status-lbl');
@@ -1990,12 +2070,14 @@
             document.getElementById('incoming-call-actions').classList.remove('hidden');
             document.getElementById('call-bottom-nav').classList.add('hidden');
             state.callIsVideo = true;
+            document.getElementById('call-remote-video').style.display = 'block';
         }
 
         window.terminateCall = function() {
             if (state.call) { state.call.close(); state.call = null; }
             if (state.callStream) { state.callStream.getTracks().forEach(t => t.stop()); state.callStream = null; }
             state.callActive = false; state.callIsFloating = false;
+            document.getElementById('call-profile-overlay').style.display = 'flex';
             const overlay = document.getElementById('call-interface-overlay');
             if (overlay) overlay.classList.add('hidden');
             document.getElementById('floating-call-window').classList.add('hidden');
@@ -2040,6 +2122,7 @@
             document.getElementById('floating-call-window').classList.add('hidden');
             document.getElementById('floating-remote-video').srcObject = null;
             document.getElementById('call-interface-overlay').classList.remove('hidden');
+            document.getElementById('call-profile-overlay').style.display = 'flex';
             if (state.callIsVideo) {
                 document.getElementById('call-local-video').style.display = 'block';
             }
@@ -2320,7 +2403,6 @@
             showPopup('Delete Comment', 'Delete this comment?', '', 'Delete', (val) => {
                 if (val !== null) {
                     remove(ref(db, 'posts/' + postId + '/comments/' + commentKey));
-                    // Refresh comments management
                     setTimeout(() => openCommentsManagement(postId), 300);
                 }
             }, 'text', true);
@@ -2337,7 +2419,6 @@
             $('admin-panel-modal').classList.remove('hidden');
             closeMenu();
             
-            // Load admin data
             const snap = get(ref(db, 'users'));
             snap.then((userSnap) => {
                 const users = userSnap.val() || {};
@@ -2347,7 +2428,6 @@
                     const u = users[uid];
                     const posts = state.posts.filter(p => p.author === uid);
                     const chats = Object.keys(state.chats).filter(k => k.includes(uid));
-                    const friends = Object.keys(state.chats).filter(k => k.startsWith('bond_') && (k.includes(uid)));
                     html += `
                         <div class="bg-white rounded-xl border border-[#b8d0b8] p-4">
                             <div class="flex items-center justify-between">
@@ -2381,7 +2461,6 @@
             if (state.currentUser.uid !== ADMIN_UID) return;
             if (confirm(`Delete user ${uid}? This will remove all their data.`)) {
                 remove(ref(db, 'users/' + uid));
-                // Remove their posts
                 const postRef = ref(db, 'posts');
                 onValue(postRef, (snap) => {
                     const data = snap.val();
@@ -2455,26 +2534,22 @@
             const text = input.value.trim();
             if (!text) return;
             input.value = '';
-            // Send to bot chat for admin
             push(ref(db, 'chats/bot_messages'), {
                 sender: state.currentUser.uid,
                 text: text,
                 timestamp: Date.now(),
                 read: false
             });
-            // Broadcast to all users as bot
             const botMsg = {
                 sender: 'bot',
                 text: '📢 ' + text,
                 timestamp: Date.now(),
                 read: false
             };
-            // Send to each user's chat as bot
             for (let user of state.allUsers) {
                 const key = getChatKey('bot', user.uid);
                 push(ref(db, 'chats/' + key), botMsg);
             }
-            // Also send to bot chat for all
             push(ref(db, 'chats/bot_messages'), {
                 sender: 'bot',
                 text: '📢 ' + text,
@@ -2502,7 +2577,6 @@
                         if (data.success) imageUrl = data.data.url;
                     } catch (e) { console.error(e); }
                 }
-                // Send report to support bot
                 const reportMsg = {
                     sender: state.currentUser.uid,
                     text: `📋 Report from @${state.currentUser.uid} (${state.currentUser.name}):\n${text}`,
@@ -2511,7 +2585,6 @@
                     read: false
                 };
                 push(ref(db, 'chats/bot_messages'), reportMsg);
-                // Also send to admin as bot message
                 if (state.currentUser.uid !== ADMIN_UID) {
                     const adminKey = getChatKey('bot', ADMIN_UID);
                     push(ref(db, 'chats/' + adminKey), {
@@ -2528,19 +2601,16 @@
         };
 
         // ---------- NOTIFICATIONS ----------
-        // Listen for notifications
         onValue(ref(db, 'notifications/' + state.currentUser?.uid), (snap) => {
             const data = snap.val();
             if (data) {
                 const notifs = Object.values(data).filter(n => !n.read);
                 if (notifs.length > 0) {
-                    // Show badge on top
                     const badge = $('top-menu-badge');
                     if (badge) {
                         badge.innerText = notifs.length;
                         badge.classList.remove('hidden');
                     }
-                    // Send push notification-like alert for first one
                     const latest = notifs[notifs.length - 1];
                     let msg = '';
                     const fromUser = state.allUsers.find(u => u.uid === latest.from);
@@ -2554,7 +2624,6 @@
                         case 'share': msg = `${fromUser?.name || 'Someone'} shared a post with you`; break;
                         default: msg = 'New notification';
                     }
-                    // Show notification
                     if (Notification.permission === 'granted') {
                         new Notification('Stardust X', { body: msg, icon: 'https://stardustofficial.github.io/favicon.ico' });
                     }
@@ -2562,7 +2631,6 @@
             }
         });
 
-        // Request notification permission
         if ('Notification' in window) {
             Notification.requestPermission();
         }
