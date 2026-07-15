@@ -272,6 +272,110 @@
         .chat-item:active {
             transform: scale(0.98);
         }
+        
+        /* Voice Recording */
+        .recording-pulse {
+            animation: pulse 1s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+        
+        /* Admin Dashboard */
+        .admin-stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid #b8d0b8;
+            transition: all 0.2s;
+        }
+        .admin-stat-card:active {
+            transform: scale(0.97);
+        }
+        .admin-stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #2b7a4b;
+        }
+        .admin-stat-label {
+            font-size: 12px;
+            color: #2b7a4b;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+        
+        .admin-user-item {
+            background: white;
+            border-radius: 14px;
+            padding: 12px 14px;
+            border: 1px solid #b8d0b8;
+            margin-bottom: 8px;
+        }
+        .admin-user-item:active {
+            background: #f0f7f0;
+        }
+        
+        .admin-action-btn {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        .admin-action-btn.danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .admin-action-btn.danger:active {
+            background: #fecaca;
+        }
+        .admin-action-btn.primary {
+            background: #e5f0e5;
+            color: #2b7a4b;
+        }
+        .admin-action-btn.primary:active {
+            background: #c8e6c9;
+        }
+        
+        /* Attachment Menu */
+        .attachment-menu {
+            position: absolute;
+            bottom: 70px;
+            left: 10px;
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #b8d0b8;
+            padding: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 50;
+            min-width: 160px;
+        }
+        .attachment-menu.active {
+            display: block;
+        }
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a2e1a;
+        }
+        .attachment-item:active {
+            background: #e5f0e5;
+        }
+        .attachment-item .icon {
+            width: 24px;
+            height: 24px;
+            color: #2b7a4b;
+        }
     </style>
 </head>
 <body>
@@ -372,10 +476,6 @@
             <button onclick="openAdminPanel()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2 border-t border-[#b8d0b8] mt-1 pt-2">
                 <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
                 Admin Panel
-            </button>
-            <button onclick="openSupportBot()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2">
-                <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                Support Bot
             </button>
         </div>
 
@@ -563,11 +663,41 @@
             </div>
         </div>
         <footer class="p-3 bg-white border-t border-[#b8d0b8] flex items-center space-x-2">
-            <input type="text" id="chat-input-field" placeholder="Type a message..." class="flex-1 input-field">
-            <button onclick="sendMessage()" class="bg-[#2b7a4b] hover:bg-[#1e5a35] text-white p-2.5 rounded-full transition">
+            <button onclick="toggleAttachmentMenu()" class="p-2 bg-[#e5f0e5] rounded-full text-[#2b7a4b] flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </button>
+            <div id="attachment-menu" class="attachment-menu">
+                <div class="attachment-item" onclick="sendPhoto()">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Send Photo
+                </div>
+                <div class="attachment-item" onclick="sendDocument()">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    Send Document
+                </div>
+            </div>
+            <div id="input-container" class="flex-1 flex items-center space-x-2">
+                <input type="text" id="chat-input-field" placeholder="Type a message..." class="flex-1 input-field">
+                <button onclick="toggleVoiceRecording()" id="voice-toggle-btn" class="p-2 bg-[#e5f0e5] rounded-full text-[#2b7a4b] flex-shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                </button>
+            </div>
+            <button onclick="sendMessage()" class="bg-[#2b7a4b] hover:bg-[#1e5a35] text-white p-2.5 rounded-full transition flex-shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
             </button>
         </footer>
+        <!-- Voice Recording UI -->
+        <div id="voice-recording-ui" class="hidden absolute bottom-20 left-4 right-4 bg-white border border-[#b8d0b8] rounded-2xl shadow-xl p-3 z-50 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-3 h-3 bg-red-500 rounded-full recording-pulse"></div>
+                <span class="text-sm font-medium text-[#1a2e1a]">Recording...</span>
+                <span id="recording-timer" class="text-sm text-[#2b7a4b]">0s</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="cancelRecording()" class="bg-red-100 text-red-600 px-3 py-1.5 rounded-xl text-xs font-bold">Cancel</button>
+                <button onclick="sendVoiceMessage()" class="bg-[#2b7a4b] text-white px-3 py-1.5 rounded-xl text-xs font-bold">Send</button>
+            </div>
+        </div>
     </div>
 
     <!-- FORWARD MODAL -->
@@ -583,15 +713,14 @@
 
     <!-- CALL INTERFACE OVERLAY -->
     <div id="call-interface-overlay" class="hidden fixed inset-0 bg-black/98 z-[80] flex flex-col items-center justify-between p-4 max-w-md mx-auto w-full call-fullscreen-bg">
-        <div class="w-full flex-1 relative bg-black rounded-3xl overflow-hidden">
+        <div class="w-full flex-1 relative bg-black rounded-3xl overflow-hidden" onclick="toggleCallOverlay()">
             <video id="call-remote-video" autoplay playsinline class="w-full h-full object-cover"></video>
-            <video id="call-local-video" autoplay muted playsinline class="call-pip-video" onclick="swapPipFullscreen()"></video>
-            <div class="absolute top-4 left-4 bg-black/50 px-3 py-1 rounded-full text-white/80 text-xs">● Encrypted</div>
-            <div class="absolute inset-0 flex flex-col items-center justify-center" id="call-profile-overlay">
-                <img id="call-peer-pfp" src="" class="call-profile-circle" alt="Caller">
-                <div id="call-peer-name" class="call-name-display">User</div>
-                <div id="call-peer-uid" class="text-[#3b9b5e] text-sm font-mono mt-1">@123456</div>
-                <div id="call-status-lbl" class="text-white/60 text-sm mt-2 call-status-pulse">Connecting...</div>
+            <video id="call-local-video" autoplay muted playsinline class="call-pip-video" onclick="event.stopPropagation(); swapPipFullscreen()"></video>
+            <div id="call-overlay-content" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <img id="call-peer-pfp" src="" class="call-profile-circle pointer-events-auto" alt="Caller">
+                <div id="call-peer-name" class="call-name-display pointer-events-auto">User</div>
+                <div id="call-peer-uid" class="text-[#3b9b5e] text-sm font-mono mt-1 pointer-events-auto">@123456</div>
+                <div id="call-status-lbl" class="text-white/60 text-sm mt-2 call-status-pulse pointer-events-auto">Connecting...</div>
             </div>
         </div>
         <div id="call-bottom-nav" class="w-full flex justify-center items-center gap-3 py-3 px-2 bg-black/40 backdrop-blur-sm rounded-3xl mt-2">
@@ -828,33 +957,12 @@
     <!-- ADMIN PANEL MODAL -->
     <div id="admin-panel-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex flex-col max-w-md mx-auto w-full h-full border-x border-[#b8d0b8] bg-[#e5f0e5]">
         <div class="bg-white p-4 border-b border-[#b8d0b8] flex justify-between items-center sticky top-0 z-10">
-            <h2 class="text-lg font-bold text-[#2b7a4b]">Admin Panel</h2>
+            <h2 class="text-lg font-bold text-[#2b7a4b]">Admin Dashboard</h2>
             <button onclick="closeModal('admin-panel-modal')" class="text-[#2b7a4b] bg-[#e5f0e5] px-3 py-1 rounded-xl text-sm font-bold">✕</button>
         </div>
         <div id="admin-content" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
             <div class="text-center text-[#2b7a4b] opacity-60 py-10">Loading admin data...</div>
         </div>
-    </div>
-
-    <!-- SUPPORT BOT CHAT -->
-    <div id="support-bot-modal" class="hidden fixed inset-0 bg-[#e5f0e5] z-50 flex flex-col max-w-md mx-auto w-full h-full border-x border-[#b8d0b8]">
-        <div class="bg-white p-3 border-b border-[#b8d0b8] flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 rounded-full bg-[#2b7a4b] flex items-center justify-center text-white font-bold text-sm">B</div>
-                <div>
-                    <h3 class="text-sm font-bold text-[#1a2e1a]">Stardust Bot</h3>
-                    <p class="text-[10px] text-[#2b7a4b] opacity-60">Support & Announcements</p>
-                </div>
-            </div>
-            <button onclick="closeSupportBot()" class="text-[#2b7a4b] bg-[#e5f0e5] px-3 py-1 rounded-xl text-xs font-bold">✕</button>
-        </div>
-        <div id="bot-messages" class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar"></div>
-        <footer class="p-3 bg-white border-t border-[#b8d0b8] flex items-center space-x-2">
-            <input type="text" id="bot-input-field" placeholder="Type announcement..." class="flex-1 input-field">
-            <button onclick="sendBotMessage()" class="bg-[#2b7a4b] hover:bg-[#1e5a35] text-white p-2.5 rounded-full transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-            </button>
-        </footer>
     </div>
 
     <!-- REPORT MODAL -->
@@ -871,6 +979,13 @@
             </div>
             <button onclick="submitReport()" class="w-full bg-red-600 text-white py-2.5 rounded-xl text-sm font-bold">Submit Report</button>
         </div>
+    </div>
+
+    <!-- IMAGE VIEWER MODAL -->
+    <div id="image-viewer-modal" class="hidden fixed inset-0 bg-black/95 z-[100] flex flex-col items-center justify-center p-4">
+        <button onclick="closeModal('image-viewer-modal')" class="absolute top-4 right-4 text-white bg-black/50 px-4 py-2 rounded-xl text-sm z-10">✕</button>
+        <img id="viewer-image" src="" class="max-w-full max-h-[75vh] object-contain rounded-lg">
+        <div id="viewer-actions" class="flex gap-4 mt-4"></div>
     </div>
 
     <script type="module">
@@ -894,7 +1009,8 @@
         const db = getDatabase(app);
 
         const IMGBB_API = '550a3bcd47c1b0a86a9f2ba7a41770b6';
-        const ADMIN_UID = '306140'; // Updated to your UID
+        const ADMIN_UID = '306140';
+        const BOT_UID = 'stardust_bot';
 
         let state = {
             currentUser: null, allUsers: [], contacts: [], chats: {}, messages: {}, posts: [],
@@ -907,6 +1023,9 @@
             contactActionUid: null, postActionId: null,
             popupCallback: null, reportTarget: null,
             groups: {}, groupMembers: {},
+            mediaRecorder: null, audioChunks: [], isRecording: false, recordingStartTime: null,
+            recordingTimer: null, voiceMessageData: null,
+            viewerFileType: null, viewerFileId: null, viewerSender: null,
         };
 
         const $ = id => document.getElementById(id);
@@ -1109,6 +1228,12 @@
             const snap = await get(ref(db, 'users'));
             const users = snap.val() || {};
             state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid);
+            // Add bot as a special user
+            const botExists = state.allUsers.find(u => u.uid === BOT_UID);
+            if (!botExists) {
+                state.allUsers.push({ uid: BOT_UID, name: 'Stardust Bot', pfp: '', bio: 'Official Stardust Bot', isBot: true });
+            }
+            
             const friendSnap = await get(ref(db, 'friendships'));
             const friendships = friendSnap.val() || {};
             state.contacts = [];
@@ -1123,6 +1248,12 @@
                     }
                 }
             }
+            // Always add bot to contacts
+            const botUser = state.allUsers.find(u => u.uid === BOT_UID);
+            if (botUser && !state.contacts.find(c => c.uid === BOT_UID)) {
+                state.contacts.push(botUser);
+            }
+            
             const reqSnap = await get(ref(db, 'friendRequests'));
             const reqs = reqSnap.val() || {};
             state.friendRequests = [];
@@ -1136,7 +1267,7 @@
             state.chats = chatSnap.val() || {};
             state.messages = {};
             for (let key in state.chats) {
-                if (key.includes(state.currentUser.uid)) {
+                if (key.includes(state.currentUser.uid) || key.includes(BOT_UID)) {
                     const msgs = state.chats[key] || {};
                     state.messages[key] = Object.values(msgs).sort((a,b) => a.timestamp - b.timestamp);
                 }
@@ -1154,7 +1285,15 @@
         }
 
         function listenToRealtime() {
-            onValue(ref(db, 'users'), (snap) => { const users = snap.val() || {}; state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid); renderAll(); });
+            onValue(ref(db, 'users'), (snap) => { 
+                const users = snap.val() || {}; 
+                state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid);
+                const botUser = state.allUsers.find(u => u.uid === BOT_UID);
+                if (!botUser) {
+                    state.allUsers.push({ uid: BOT_UID, name: 'Stardust Bot', pfp: '', bio: 'Official Stardust Bot', isBot: true });
+                }
+                renderAll(); 
+            });
             onValue(ref(db, 'friendships'), (snap) => {
                 const friendships = snap.val() || {};
                 state.contacts = [];
@@ -1168,6 +1307,10 @@
                             if (user && !state.contacts.find(c => c.uid === contactUid)) state.contacts.push(user);
                         }
                     }
+                }
+                const botUser = state.allUsers.find(u => u.uid === BOT_UID);
+                if (botUser && !state.contacts.find(c => c.uid === BOT_UID)) {
+                    state.contacts.push(botUser);
                 }
                 renderAll();
             });
@@ -1186,14 +1329,14 @@
                 state.chats = snap.val() || {};
                 state.messages = {};
                 for (let key in state.chats) {
-                    if (key.includes(state.currentUser.uid)) {
+                    if (key.includes(state.currentUser.uid) || key.includes(BOT_UID)) {
                         const msgs = state.chats[key] || {};
                         state.messages[key] = Object.values(msgs).sort((a,b) => a.timestamp - b.timestamp);
                     }
                 }
                 renderAll();
                 if (state.activeChat) renderChatMessages();
-                loadBotMessages();
+                renderBotMessages();
             });
             onValue(ref(db, 'posts'), (snap) => {
                 state.posts = snap.val() ? Object.values(snap.val()).sort((a,b) => b.timestamp - a.timestamp) : [];
@@ -1208,9 +1351,6 @@
             onValue(ref(db, 'groups'), (snap) => {
                 state.groups = snap.val() || {};
                 renderAll();
-            });
-            onValue(ref(db, 'botMessages'), (snap) => {
-                loadBotMessages();
             });
         }
 
@@ -1233,17 +1373,18 @@
             container.innerHTML = '';
             let hasChats = false;
             
-            // Collect all chat entries with their latest message timestamp
             let chatEntries = [];
-            const chatKeys = Object.keys(state.chats).filter(key => key.includes(state.currentUser.uid));
+            const chatKeys = Object.keys(state.chats).filter(key => key.includes(state.currentUser.uid) || key.includes(BOT_UID));
             
             for (let key of chatKeys) {
-                const otherUid = key.replace(state.currentUser.uid, '').replace('_text_', '').replace('_', '');
+                const parts = key.split('_text_');
+                let otherUid = parts[0] === state.currentUser.uid ? parts[1] : parts[0];
+                if (!otherUid || otherUid === state.currentUser.uid) continue;
+                
                 let msgs = state.messages[key] || [];
                 let lastMsg = msgs.length > 0 ? msgs[msgs.length-1] : null;
                 let lastTime = lastMsg ? lastMsg.timestamp : 0;
                 
-                // Check if it's a group
                 if (otherUid.startsWith('group_')) {
                     const group = state.groups[otherUid];
                     if (group) {
@@ -1258,7 +1399,8 @@
                             lastTime: lastTime,
                             unread: unread,
                             name: group.name || 'Group',
-                            pfp: group.pfp || ''
+                            pfp: group.pfp || '',
+                            isBot: false
                         });
                         continue;
                     }
@@ -1266,7 +1408,8 @@
                 
                 const contact = state.contacts.find(c => c.uid === otherUid);
                 if (!contact) continue;
-                const unread = msgs.filter(m => m.sender === otherUid && !m.read).length;
+                const unread = msgs.filter(m => m.sender !== state.currentUser.uid && m.sender !== 'bot' && !m.read).length;
+                const isBot = otherUid === BOT_UID;
                 chatEntries.push({
                     key: key,
                     uid: otherUid,
@@ -1276,44 +1419,46 @@
                     lastMsg: lastMsg,
                     lastTime: lastTime,
                     unread: unread,
-                    name: contact.name,
-                    pfp: contact.pfp || ''
+                    name: isBot ? 'Stardust Bot' : contact.name,
+                    pfp: isBot ? '' : (contact.pfp || ''),
+                    isBot: isBot
                 });
             }
             
-            // Sort by last message time (newest first)
             chatEntries.sort((a, b) => b.lastTime - a.lastTime);
             
             for (let entry of chatEntries) {
                 hasChats = true;
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-3 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition clickable-row chat-item';
+                const isBot = entry.isBot;
+                const unread = entry.unread;
+                div.className = `flex items-center justify-between p-3 bg-white rounded-xl border ${unread > 0 ? 'border-[#2b7a4b] shadow-md' : 'border-[#b8d0b8]'} cursor-pointer hover:bg-[#f0f7f0] transition clickable-row chat-item`;
                 
                 if (entry.isGroup) {
                     div.innerHTML = `
-                        <div class="flex items-center space-x-3 w-full" onclick="openGroupChat('${entry.uid}')">
+                        <div class="flex items-center space-x-3 w-full" onclick="${isBot ? `openBotChat()` : `openGroupChat('${entry.uid}')`}">
                             <div class="w-10 h-10 rounded-full bg-[#2b7a4b] flex items-center justify-center text-white font-bold text-xs">${entry.name.charAt(0).toUpperCase()}</div>
                             <div class="flex-1 min-w-0">
                                 <p class="font-bold text-sm text-[#1a2e1a]">${entry.name}</p>
-                                <p class="text-xs truncate ${entry.unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${entry.lastMsg ? entry.lastMsg.text : 'Group chat'}</p>
+                                <p class="text-xs truncate ${unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${entry.lastMsg ? (isBot ? '📢 ' + entry.lastMsg.text : entry.lastMsg.text) : 'Start chatting'}</p>
                             </div>
                         </div>
                         <div class="flex flex-col items-end">
-                            ${entry.unread > 0 ? `<span class="bg-[#2b7a4b] text-white text-[9px] font-bold rounded-full h-5 px-2 flex items-center">${entry.unread}</span>` : ''}
+                            ${unread > 0 ? `<span class="bg-[#2b7a4b] text-white text-[9px] font-bold rounded-full h-5 px-2 flex items-center">${unread}</span>` : ''}
                             <span class="text-[9px] text-[#2b7a4b] opacity-50">${entry.lastMsg ? new Date(entry.lastMsg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
                         </div>
                     `;
                 } else {
                     div.innerHTML = `
-                        <div class="flex items-center space-x-3 w-full" onclick="openChat('${entry.uid}')">
+                        <div class="flex items-center space-x-3 w-full" onclick="${isBot ? `openBotChat()` : `openChat('${entry.uid}')`}">
                             <img src="${entry.pfp || ''}" class="w-10 h-10 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
                             <div class="flex-1 min-w-0">
                                 <p class="font-bold text-sm text-[#1a2e1a]">${entry.name}</p>
-                                <p class="text-xs truncate ${entry.unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${entry.lastMsg ? entry.lastMsg.text : 'Start chatting'}</p>
+                                <p class="text-xs truncate ${unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${entry.lastMsg ? (isBot ? '📢 ' + entry.lastMsg.text : entry.lastMsg.text) : 'Start chatting'}</p>
                             </div>
                         </div>
                         <div class="flex flex-col items-end">
-                            ${entry.unread > 0 ? `<span class="bg-[#2b7a4b] text-white text-[9px] font-bold rounded-full h-5 px-2 flex items-center">${entry.unread}</span>` : ''}
+                            ${unread > 0 ? `<span class="bg-[#2b7a4b] text-white text-[9px] font-bold rounded-full h-5 px-2 flex items-center">${unread}</span>` : ''}
                             <span class="text-[9px] text-[#2b7a4b] opacity-50">${entry.lastMsg ? new Date(entry.lastMsg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
                         </div>
                     `;
@@ -1321,6 +1466,10 @@
                 container.appendChild(div);
             }
             placeholder.classList.toggle('hidden', hasChats);
+        }
+
+        function renderBotMessages() {
+            // Bot messages are rendered in chat list
         }
 
         function renderGroups() {
@@ -1334,6 +1483,7 @@
             const sorted = [...state.contacts].sort((a,b) => a.name.localeCompare(b.name));
             let currentLetter = '';
             for (let contact of sorted) {
+                if (contact.uid === BOT_UID) continue; // Bot is special, not in contacts list
                 const letter = contact.name.charAt(0).toUpperCase();
                 if (letter !== currentLetter) { currentLetter = letter; const header = document.createElement('div'); header.className = 'text-xs font-bold text-[#2b7a4b] opacity-60 py-1 px-2'; header.innerText = letter; container.appendChild(header); }
                 const div = document.createElement('div');
@@ -1355,7 +1505,7 @@
                 `;
                 container.appendChild(div);
             }
-            placeholder.classList.toggle('hidden', sorted.length > 0);
+            placeholder.classList.toggle('hidden', sorted.length > 1);
         }
 
         function renderMoments() {
@@ -1471,8 +1621,10 @@
             let total = 0;
             for (let key in state.messages) {
                 const msgs = state.messages[key] || [];
-                const otherUid = key.replace(state.currentUser.uid, '').replace('_text_', '').replace('_', '');
-                total += msgs.filter(m => m.sender === otherUid && !m.read).length;
+                const parts = key.split('_text_');
+                let otherUid = parts[0] === state.currentUser.uid ? parts[1] : parts[0];
+                if (!otherUid) continue;
+                total += msgs.filter(m => m.sender !== state.currentUser.uid && m.sender !== 'bot' && !m.read).length;
             }
             if (total > 0) { badge.innerText = total; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
         }
@@ -1520,7 +1672,7 @@
             const container = $('forward-contact-list');
             container.innerHTML = '';
             for (let contact of state.contacts) {
-                if (contact.uid === state.currentUser.uid) continue;
+                if (contact.uid === state.currentUser.uid || contact.uid === BOT_UID) continue;
                 const div = document.createElement('div');
                 div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#e5f0e5]';
                 div.innerHTML = `
@@ -1596,6 +1748,10 @@
         window.openProfileView = function(uid) {
             const user = state.allUsers.find(u => u.uid === uid) || state.contacts.find(c => c.uid === uid);
             if (!user) return;
+            if (user.isBot) {
+                alert('This is Stardust Bot. You cannot interact with it.');
+                return;
+            }
             state.viewProfileUid = uid;
             $('view-profile-pfp').src = user.pfp || '';
             $('view-profile-name').innerText = user.name;
@@ -1624,6 +1780,7 @@
 
         // ---------- CHAT ----------
         window.openChat = function(uid) {
+            if (uid === BOT_UID) { openBotChat(); return; }
             if (state.blocked.includes(uid)) { alert('This user is blocked.'); return; }
             state.activeChat = uid;
             const contact = state.contacts.find(c => c.uid === uid) || state.allUsers.find(c => c.uid === uid);
@@ -1634,6 +1791,28 @@
             $('chat-window-modal').classList.remove('hidden');
             renderChatMessages();
             markChatAsRead(uid);
+            // Show input field for normal users
+            document.querySelector('#chat-window-modal footer').style.display = 'flex';
+        };
+
+        window.openBotChat = function() {
+            state.activeChat = BOT_UID;
+            $('chat-window-name').innerText = 'Stardust Bot';
+            $('chat-window-uid').innerText = '@' + BOT_UID;
+            $('chat-window-avatar').src = '';
+            $('chat-window-modal').classList.remove('hidden');
+            renderChatMessages();
+            // Hide input field for bot chat (read-only)
+            document.querySelector('#chat-window-modal footer').style.display = 'none';
+            // Mark bot messages as read
+            const key = getChatKey(state.currentUser.uid, BOT_UID);
+            const msgs = state.messages[key] || [];
+            for (let msg of msgs) {
+                if (msg.sender === 'bot' && !msg.read) {
+                    const msgKey = Object.keys(state.chats[key]).find(k => state.chats[key][k].timestamp === msg.timestamp && state.chats[key][k].sender === 'bot');
+                    if (msgKey) update(ref(db, 'chats/' + key + '/' + msgKey), { read: true });
+                }
+            }
         };
 
         window.openGroupChat = function(groupId) {
@@ -1655,9 +1834,22 @@
             }
         };
 
-        window.closeChatWindow = function() { state.activeChat = null; $('chat-window-modal').classList.add('hidden'); $('msg-context-menu').classList.add('hidden'); };
+        window.closeChatWindow = function() { 
+            state.activeChat = null; 
+            $('chat-window-modal').classList.add('hidden'); 
+            $('msg-context-menu').classList.add('hidden');
+            document.querySelector('#chat-window-modal footer').style.display = 'flex';
+            // Reset voice recording UI
+            cancelRecording();
+            $('attachment-menu').classList.remove('active');
+            $('voice-recording-ui').classList.add('hidden');
+            document.getElementById('input-container').style.display = 'flex';
+        };
 
         function getChatKey(uid1, uid2) {
+            if (uid1 === BOT_UID || uid2 === BOT_UID) {
+                return uid1 + '_text_' + uid2;
+            }
             if (uid1.startsWith('group_') || uid2.startsWith('group_')) {
                 return uid1 + '_text_' + uid2;
             }
@@ -1671,38 +1863,75 @@
             const key = getChatKey(state.currentUser.uid, state.activeChat);
             const msgs = state.messages[key] || [];
             const isGroup = state.activeChat.startsWith('group_');
+            const isBot = state.activeChat === BOT_UID;
+            
             for (let msg of msgs) {
                 const isMe = msg.sender === state.currentUser.uid;
+                const isBotMsg = msg.sender === 'bot';
                 const sender = isGroup ? state.allUsers.find(u => u.uid === msg.sender) : null;
                 const div = document.createElement('div');
-                div.className = `max-w-[80%] p-2.5 rounded-2xl text-sm ${isMe ? 'chat-bubble-self self-end' : 'chat-bubble-other self-start'} relative group`;
+                div.className = `max-w-[80%] p-2.5 rounded-2xl text-sm ${isMe ? 'chat-bubble-self self-end' : (isBotMsg ? 'bg-[#2b7a4b] text-white self-start' : 'chat-bubble-other self-start')} relative group`;
+                
                 let reactionsHtml = '';
                 if (msg.reactions && Object.keys(msg.reactions).length > 0) {
                     reactionsHtml = `<div class="flex gap-0.5 mt-1 flex-wrap">${Object.values(msg.reactions).map(r => `<span class="text-xs">${r}</span>`).join('')}</div>`;
                 }
+                
+                let contentHtml = '';
+                if (msg.type === 'voice') {
+                    contentHtml = `
+                        <div class="flex items-center space-x-2">
+                            <button onclick="playVoiceMessage('${key}','${msg.timestamp}')" class="bg-white/20 p-1.5 rounded-full hover:bg-white/30 transition">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
+                            <span class="text-xs">🎤 Voice message</span>
+                            <span class="text-[8px] opacity-60">${msg.duration || '0s'}</span>
+                        </div>
+                    `;
+                } else if (msg.type === 'image') {
+                    contentHtml = `
+                        <div class="cursor-pointer" onclick="openMediaViewer('${key}','${msg.timestamp}','image','${msg.sender}')">
+                            <img src="${msg.url}" class="max-w-[200px] max-h-[200px] rounded-lg object-cover">
+                        </div>
+                    `;
+                } else if (msg.type === 'document') {
+                    contentHtml = `
+                        <div class="flex items-center space-x-2 bg-white/10 p-2 rounded-lg cursor-pointer" onclick="openMediaViewer('${key}','${msg.timestamp}','document','${msg.sender}')">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            <span class="text-xs truncate max-w-[120px]">${msg.filename || 'Document'}</span>
+                        </div>
+                    `;
+                } else {
+                    contentHtml = `<p class="break-words">${msg.text}</p>`;
+                }
+                
                 div.innerHTML = `
-                    ${isGroup && !isMe ? `<div class="text-[8px] font-bold text-[#2b7a4b] mb-0.5">${sender ? sender.name : 'Unknown'}</div>` : ''}
-                    <p class="break-words">${msg.text}</p>
+                    ${isGroup && !isMe && !isBotMsg ? `<div class="text-[8px] font-bold text-[#2b7a4b] mb-0.5">${sender ? sender.name : 'Unknown'}</div>` : ''}
+                    ${isBotMsg ? `<div class="text-[8px] font-bold text-[#6fcf97] mb-0.5">🤖 Stardust Bot</div>` : ''}
+                    ${contentHtml}
                     <span class="text-[8px] opacity-60 block text-right mt-0.5">${new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
-                    ${msg.read ? '<span class="text-[8px] text-blue-400 ml-1">✓✓</span>' : isMe ? '<span class="text-[8px] opacity-40 ml-1">✓</span>' : ''}
+                    ${!isBotMsg && (msg.read ? '<span class="text-[8px] text-blue-400 ml-1">✓✓</span>' : isMe ? '<span class="text-[8px] opacity-40 ml-1">✓</span>' : '')}
                     ${reactionsHtml}
                 `;
-                div.oncontextmenu = (e) => {
-                    e.preventDefault();
-                    state.selectedMessage = msg;
-                    const menu = $('msg-context-menu');
-                    menu.classList.remove('hidden');
-                    menu.style.bottom = '80px';
-                };
+                if (!isBotMsg && !isBot) {
+                    div.oncontextmenu = (e) => {
+                        e.preventDefault();
+                        state.selectedMessage = msg;
+                        const menu = $('msg-context-menu');
+                        menu.classList.remove('hidden');
+                        menu.style.bottom = '80px';
+                    };
+                }
                 container.appendChild(div);
             }
             container.scrollTop = container.scrollHeight;
         }
 
         window.sendMessage = function() {
+            if (!state.activeChat || state.activeChat === BOT_UID) return;
             const input = $('chat-input-field');
             const text = input.value.trim();
-            if (!text || !state.activeChat) return;
+            if (!text) return;
             input.value = '';
             const key = getChatKey(state.currentUser.uid, state.activeChat);
             const msg = { sender: state.currentUser.uid, text, timestamp: Date.now(), read: false, reactions: {}, replyTo: null };
@@ -1738,8 +1967,8 @@
             const key = getChatKey(state.currentUser.uid, uid);
             const msgs = state.messages[key] || [];
             for (let msg of msgs) {
-                if (msg.sender === uid && !msg.read) {
-                    const msgKey = Object.keys(state.chats[key]).find(k => state.chats[key][k].timestamp === msg.timestamp && state.chats[key][k].sender === uid);
+                if (msg.sender !== state.currentUser.uid && !msg.read) {
+                    const msgKey = Object.keys(state.chats[key]).find(k => state.chats[key][k].timestamp === msg.timestamp && state.chats[key][k].sender === msg.sender);
                     if (msgKey) update(ref(db, 'chats/' + key + '/' + msgKey), { read: true });
                 }
             }
@@ -1747,7 +1976,7 @@
 
         let typingTimeout;
         $('chat-input-field')?.addEventListener('input', function() {
-            if (!state.activeChat) return;
+            if (!state.activeChat || state.activeChat === BOT_UID) return;
             if (typingTimeout) clearTimeout(typingTimeout);
             update(ref(db, 'users/' + state.currentUser.uid), { typing: true });
             typingTimeout = setTimeout(() => update(ref(db, 'users/' + state.currentUser.uid), { typing: false }), 2000);
@@ -1755,7 +1984,7 @@
 
         onValue(ref(db, 'users'), (snap) => {
             const users = snap.val() || {};
-            if (state.activeChat) {
+            if (state.activeChat && state.activeChat !== BOT_UID && !state.activeChat.startsWith('group_')) {
                 const other = users[state.activeChat];
                 if (other && other.typing) $('chat-typing-indicator').classList.remove('hidden');
                 else $('chat-typing-indicator').classList.add('hidden');
@@ -1785,7 +2014,7 @@
             const container = $('forward-contact-list');
             container.innerHTML = '';
             for (let contact of state.contacts) {
-                if (contact.uid === state.currentUser.uid) continue;
+                if (contact.uid === state.currentUser.uid || contact.uid === BOT_UID) continue;
                 const div = document.createElement('div');
                 div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#e5f0e5]';
                 div.innerHTML = `<div class="flex items-center space-x-3"><img src="${contact.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''"><span class="text-sm font-medium">${contact.name}</span></div><button onclick="executeForward('${contact.uid}')" class="bg-[#2b7a4b] text-white px-3 py-1 rounded-full text-xs font-bold">Forward</button>`;
@@ -1826,7 +2055,7 @@
             const preview = $('add-friend-preview');
             if (uid.length === 6) {
                 const user = state.allUsers.find(u => u.uid === uid);
-                if (user) { $('add-friend-preview-pfp').src = user.pfp || ''; $('add-friend-preview-name').innerText = user.name; $('add-friend-preview-uid').innerText = '@' + user.uid; preview.classList.remove('hidden'); } else preview.classList.add('hidden');
+                if (user && user.uid !== BOT_UID) { $('add-friend-preview-pfp').src = user.pfp || ''; $('add-friend-preview-name').innerText = user.name; $('add-friend-preview-uid').innerText = '@' + user.uid; preview.classList.remove('hidden'); } else preview.classList.add('hidden');
             } else preview.classList.add('hidden');
         });
 
@@ -1835,6 +2064,7 @@
             if (!uid) return;
             const user = state.allUsers.find(u => u.uid === uid);
             if (!user) return alert('User not found');
+            if (user.uid === BOT_UID) return alert('Cannot add bot as friend');
             if (state.contacts.find(c => c.uid === uid)) return alert('Already friends');
             if (state.friendRequests.find(r => r.from === uid)) return alert('Request already sent');
             set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('add-friend-modal'); });
@@ -1884,6 +2114,7 @@
             const container = $('group-contact-selection');
             container.innerHTML = '';
             for (let contact of state.contacts) {
+                if (contact.uid === BOT_UID) continue;
                 const div = document.createElement('div');
                 div.className = 'flex items-center space-x-2 p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
                 div.innerHTML = `<input type="checkbox" value="${contact.uid}" class="group-contact-check"><img src="${contact.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''"><span class="text-sm">${contact.name}</span>`;
@@ -1920,7 +2151,6 @@
                 const groupId = 'group_' + Date.now();
                 const groupData = { id: groupId, name, bio, pfp: pfpUrl, members, admin: state.currentUser.uid, created: Date.now() };
                 set(ref(db, 'groups/' + groupId), groupData).then(() => {
-                    // Create chat key for group
                     const key = getChatKey(state.currentUser.uid, groupId);
                     push(ref(db, 'chats/' + key), { sender: state.currentUser.uid, text: 'Group "' + name + '" created!', timestamp: Date.now(), read: false, reactions: {} });
                     hideLoading();
@@ -1931,7 +2161,7 @@
                     $('group-pfp-input').value = '';
                     for (let member of members) {
                         if (member !== state.currentUser.uid) {
-                            const memberKey = getChatKey('bot', member);
+                            const memberKey = getChatKey(BOT_UID, member);
                             push(ref(db, 'chats/' + memberKey), {
                                 sender: 'bot',
                                 text: `📢 You were added to group "${name}" by ${state.currentUser.name}`,
@@ -1953,7 +2183,292 @@
             });
         };
 
+        // ---------- VOICE RECORDING ----------
+        window.toggleVoiceRecording = function() {
+            if (state.isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        };
+
+        function startRecording() {
+            if (!state.activeChat || state.activeChat === BOT_UID) {
+                alert('Cannot record in bot chat.');
+                return;
+            }
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    state.mediaRecorder = new MediaRecorder(stream);
+                    state.audioChunks = [];
+                    state.isRecording = true;
+                    state.recordingStartTime = Date.now();
+                    
+                    state.mediaRecorder.ondataavailable = event => {
+                        state.audioChunks.push(event.data);
+                    };
+                    
+                    state.mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
+                        state.voiceMessageData = audioBlob;
+                        // Show send UI
+                        document.getElementById('voice-recording-ui').classList.remove('hidden');
+                        document.getElementById('input-container').style.display = 'none';
+                        // Update timer
+                        const elapsed = Math.floor((Date.now() - state.recordingStartTime) / 1000);
+                        document.getElementById('recording-timer').textContent = elapsed + 's';
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+                    
+                    state.mediaRecorder.start();
+                    // Show recording UI
+                    document.getElementById('voice-toggle-btn').innerHTML = `
+                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path></svg>
+                    `;
+                    // Update timer
+                    state.recordingTimer = setInterval(() => {
+                        const elapsed = Math.floor((Date.now() - state.recordingStartTime) / 1000);
+                        document.getElementById('recording-timer').textContent = elapsed + 's';
+                    }, 1000);
+                })
+                .catch(err => alert('Microphone access denied: ' + err.message));
+        }
+
+        function stopRecording() {
+            if (state.mediaRecorder && state.isRecording) {
+                state.mediaRecorder.stop();
+                state.isRecording = false;
+                if (state.recordingTimer) {
+                    clearInterval(state.recordingTimer);
+                    state.recordingTimer = null;
+                }
+                document.getElementById('voice-toggle-btn').innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                `;
+            }
+        }
+
+        window.cancelRecording = function() {
+            if (state.mediaRecorder && state.isRecording) {
+                state.mediaRecorder.stop();
+                state.isRecording = false;
+                if (state.recordingTimer) {
+                    clearInterval(state.recordingTimer);
+                    state.recordingTimer = null;
+                }
+            }
+            state.voiceMessageData = null;
+            document.getElementById('voice-recording-ui').classList.add('hidden');
+            document.getElementById('input-container').style.display = 'flex';
+            document.getElementById('voice-toggle-btn').innerHTML = `
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+            `;
+        };
+
+        window.sendVoiceMessage = function() {
+            if (!state.voiceMessageData || !state.activeChat) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Audio = e.target.result;
+                // Upload to imgbb or store as base64 (for demo, store as base64 in Firebase)
+                // For production, use a proper audio hosting service
+                // We'll store the base64 directly in Firebase (limited size)
+                const key = getChatKey(state.currentUser.uid, state.activeChat);
+                const msg = {
+                    sender: state.currentUser.uid,
+                    type: 'voice',
+                    url: base64Audio,
+                    duration: Math.floor((Date.now() - state.recordingStartTime) / 1000) + 's',
+                    timestamp: Date.now(),
+                    read: false,
+                    reactions: {},
+                    replyTo: null
+                };
+                push(ref(db, 'chats/' + key), msg);
+                state.voiceMessageData = null;
+                document.getElementById('voice-recording-ui').classList.add('hidden');
+                document.getElementById('input-container').style.display = 'flex';
+                document.getElementById('voice-toggle-btn').innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                `;
+            };
+            reader.readAsDataURL(state.voiceMessageData);
+        };
+
+        // Voice message play
+        window.playVoiceMessage = function(key, timestamp) {
+            const msgs = state.chats[key] || {};
+            const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === timestamp && msgs[k].type === 'voice');
+            if (!msgKey) return;
+            const msg = msgs[msgKey];
+            if (!msg.url) return;
+            const audio = new Audio(msg.url);
+            audio.play().catch(e => console.log('Audio play error:', e));
+        };
+
+        // ---------- ATTACHMENT MENU ----------
+        window.toggleAttachmentMenu = function() {
+            document.getElementById('attachment-menu').classList.toggle('active');
+        };
+
+        window.sendPhoto = function() {
+            if (!state.activeChat || state.activeChat === BOT_UID) return;
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.multiple = true;
+            input.onchange = function(e) {
+                const files = e.target.files;
+                for (let file of files) {
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        const base64 = ev.target.result;
+                        const key = getChatKey(state.currentUser.uid, state.activeChat);
+                        const msg = {
+                            sender: state.currentUser.uid,
+                            type: 'image',
+                            url: base64,
+                            filename: file.name,
+                            timestamp: Date.now(),
+                            read: false,
+                            reactions: {},
+                            replyTo: null
+                        };
+                        push(ref(db, 'chats/' + key), msg);
+                        // Notification
+                        if (!state.activeChat.startsWith('group_')) {
+                            push(ref(db, 'notifications/' + state.activeChat), {
+                                from: state.currentUser.uid,
+                                type: 'msg',
+                                timestamp: Date.now(),
+                                read: false
+                            });
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+                document.getElementById('attachment-menu').classList.remove('active');
+            };
+            input.click();
+        };
+
+        window.sendDocument = function() {
+            if (!state.activeChat || state.activeChat === BOT_UID) return;
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '*/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const base64 = ev.target.result;
+                    const key = getChatKey(state.currentUser.uid, state.activeChat);
+                    const msg = {
+                        sender: state.currentUser.uid,
+                        type: 'document',
+                        url: base64,
+                        filename: file.name,
+                        timestamp: Date.now(),
+                        read: false,
+                        reactions: {},
+                        replyTo: null
+                    };
+                    push(ref(db, 'chats/' + key), msg);
+                    if (!state.activeChat.startsWith('group_')) {
+                        push(ref(db, 'notifications/' + state.activeChat), {
+                            from: state.currentUser.uid,
+                            type: 'msg',
+                            timestamp: Date.now(),
+                            read: false
+                        });
+                    }
+                };
+                reader.readAsDataURL(file);
+                document.getElementById('attachment-menu').classList.remove('active');
+            };
+            input.click();
+        };
+
+        // ---------- MEDIA VIEWER ----------
+        window.openMediaViewer = function(key, timestamp, type, sender) {
+            const msgs = state.chats[key] || {};
+            const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === timestamp && msgs[k].type === type);
+            if (!msgKey) return;
+            const msg = msgs[msgKey];
+            state.viewerFileType = type;
+            state.viewerFileId = { key, timestamp };
+            state.viewerSender = sender;
+            
+            const viewer = document.getElementById('image-viewer-modal');
+            const img = document.getElementById('viewer-image');
+            const actions = document.getElementById('viewer-actions');
+            
+            if (type === 'image') {
+                img.src = msg.url;
+                img.style.display = 'block';
+                actions.innerHTML = `
+                    <button onclick="saveViewerMedia()" class="bg-[#2b7a4b] text-white px-4 py-2 rounded-xl text-sm font-bold">💾 Save</button>
+                    ${sender === state.currentUser.uid ? `<button onclick="deleteViewerMedia()" class="bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-bold">🗑️ Delete</button>` : ''}
+                `;
+            } else if (type === 'document') {
+                img.style.display = 'none';
+                actions.innerHTML = `
+                    <button onclick="downloadViewerDocument()" class="bg-[#2b7a4b] text-white px-4 py-2 rounded-xl text-sm font-bold">📥 Download</button>
+                    ${sender === state.currentUser.uid ? `<button onclick="deleteViewerMedia()" class="bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-bold">🗑️ Delete</button>` : ''}
+                `;
+            }
+            viewer.classList.remove('hidden');
+        };
+
+        window.saveViewerMedia = function() {
+            const img = document.getElementById('viewer-image');
+            const link = document.createElement('a');
+            link.download = 'stardust_image.jpg';
+            link.href = img.src;
+            link.click();
+        };
+
+        window.downloadViewerDocument = function() {
+            const { key, timestamp } = state.viewerFileId;
+            const msgs = state.chats[key] || {};
+            const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === timestamp);
+            if (!msgKey) return;
+            const msg = msgs[msgKey];
+            const link = document.createElement('a');
+            link.download = msg.filename || 'document';
+            link.href = msg.url;
+            link.click();
+        };
+
+        window.deleteViewerMedia = function() {
+            if (!confirm('Delete this media?')) return;
+            const { key, timestamp } = state.viewerFileId;
+            const msgs = state.chats[key] || {};
+            const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === timestamp);
+            if (msgKey) {
+                remove(ref(db, 'chats/' + key + '/' + msgKey));
+                closeModal('image-viewer-modal');
+                alert('Media deleted.');
+            }
+        };
+
         // ---------- CALLS ----------
+        let callOverlayVisible = true;
+
+        function toggleCallOverlay() {
+            if (!state.callActive) return;
+            callOverlayVisible = !callOverlayVisible;
+            const overlay = document.getElementById('call-overlay-content');
+            if (callOverlayVisible) {
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = 'auto';
+            } else {
+                overlay.style.opacity = '0';
+                overlay.style.pointerEvents = 'none';
+            }
+        }
+
         function initPeer() {
             if (state.peerInstance) state.peerInstance.destroy();
             state.peerInstance = new Peer('stardust_' + state.currentUser.uid);
@@ -1971,11 +2486,12 @@
         window.initiateCall = function(type) {
             if (!state.activeChat) return alert('Open a chat first');
             const targetUid = state.activeChat;
-            if (targetUid.startsWith('group_')) { alert('Group calls not supported yet.'); return; }
+            if (targetUid.startsWith('group_') || targetUid === BOT_UID) { alert('Calls not supported for groups or bot.'); return; }
             if (state.blocked.includes(targetUid)) { alert('This user is blocked.'); return; }
             const targetPeerId = 'stardust_' + targetUid;
             if (!state.peerInstance) return alert('Peer not ready');
             state.callIsVideo = type === 'video';
+            callOverlayVisible = true;
             navigator.mediaDevices.getUserMedia({ audio: true, video: type === 'video' })
                 .then(stream => {
                     state.callStream = stream;
@@ -1988,13 +2504,15 @@
                     showCallUI(targetUid);
                     call.on('stream', (remoteStream) => {
                         document.getElementById('call-remote-video').srcObject = remoteStream;
-                        document.getElementById('call-profile-overlay').style.display = 'none';
+                        document.getElementById('call-overlay-content').style.opacity = '0';
+                        document.getElementById('call-overlay-content').style.pointerEvents = 'none';
                         const statusLbl = document.getElementById('call-status-lbl');
                         if (statusLbl) statusLbl.innerText = 'Connected';
                         startCallTimer();
                     });
                     call.on('close', () => { 
-                        document.getElementById('call-profile-overlay').style.display = 'flex';
+                        document.getElementById('call-overlay-content').style.opacity = '1';
+                        document.getElementById('call-overlay-content').style.pointerEvents = 'auto';
                         terminateCall(); 
                         closeChatWindow(); 
                     });
@@ -2011,7 +2529,8 @@
                     document.getElementById('call-local-video').style.display = 'block';
                     document.getElementById('incoming-call-actions').classList.add('hidden');
                     document.getElementById('call-bottom-nav').classList.remove('hidden');
-                    document.getElementById('call-profile-overlay').style.display = 'none';
+                    document.getElementById('call-overlay-content').style.opacity = '0';
+                    document.getElementById('call-overlay-content').style.pointerEvents = 'none';
                     state.call.answer(stream);
                     state.call.on('stream', (remoteStream) => {
                         document.getElementById('call-remote-video').srcObject = remoteStream;
@@ -2020,7 +2539,8 @@
                         startCallTimer();
                     });
                     state.call.on('close', () => { 
-                        document.getElementById('call-profile-overlay').style.display = 'flex';
+                        document.getElementById('call-overlay-content').style.opacity = '1';
+                        document.getElementById('call-overlay-content').style.pointerEvents = 'auto';
                         terminateCall(); 
                         closeChatWindow(); 
                     });
@@ -2037,7 +2557,9 @@
             if (nameEl) nameEl.innerText = user.name;
             if (uidEl) uidEl.innerText = '@' + user.uid;
             if (pfpEl) pfpEl.src = user.pfp || '';
-            document.getElementById('call-profile-overlay').style.display = 'flex';
+            document.getElementById('call-overlay-content').style.opacity = '1';
+            document.getElementById('call-overlay-content').style.pointerEvents = 'auto';
+            callOverlayVisible = true;
             const overlay = document.getElementById('call-interface-overlay');
             if (overlay) overlay.classList.remove('hidden');
             const statusLbl = document.getElementById('call-status-lbl');
@@ -2061,7 +2583,9 @@
             if (nameEl) nameEl.innerText = user.name;
             if (uidEl) uidEl.innerText = '@' + user.uid;
             if (pfpEl) pfpEl.src = user.pfp || '';
-            document.getElementById('call-profile-overlay').style.display = 'flex';
+            document.getElementById('call-overlay-content').style.opacity = '1';
+            document.getElementById('call-overlay-content').style.pointerEvents = 'auto';
+            callOverlayVisible = true;
             const overlay = document.getElementById('call-interface-overlay');
             if (overlay) overlay.classList.remove('hidden');
             const statusLbl = document.getElementById('call-status-lbl');
@@ -2076,7 +2600,8 @@
             if (state.call) { state.call.close(); state.call = null; }
             if (state.callStream) { state.callStream.getTracks().forEach(t => t.stop()); state.callStream = null; }
             state.callActive = false; state.callIsFloating = false;
-            document.getElementById('call-profile-overlay').style.display = 'flex';
+            document.getElementById('call-overlay-content').style.opacity = '1';
+            document.getElementById('call-overlay-content').style.pointerEvents = 'auto';
             const overlay = document.getElementById('call-interface-overlay');
             if (overlay) overlay.classList.add('hidden');
             document.getElementById('floating-call-window').classList.add('hidden');
@@ -2121,7 +2646,6 @@
             document.getElementById('floating-call-window').classList.add('hidden');
             document.getElementById('floating-remote-video').srcObject = null;
             document.getElementById('call-interface-overlay').classList.remove('hidden');
-            document.getElementById('call-profile-overlay').style.display = 'flex';
             if (state.callIsVideo) {
                 document.getElementById('call-local-video').style.display = 'block';
             }
@@ -2336,7 +2860,7 @@
         window.toggleSearchBar = function() { $('search-bar-container').classList.toggle('hidden'); };
         window.closeMenu = function() { $('top-menu-dropdown').classList.add('hidden'); };
         window.closeModal = function(id) { document.getElementById(id).classList.add('hidden'); };
-        window.openProfileFromChat = function() { if (state.activeChat && !state.activeChat.startsWith('group_')) openProfileView(state.activeChat); };
+        window.openProfileFromChat = function() { if (state.activeChat && !state.activeChat.startsWith('group_') && state.activeChat !== BOT_UID) openProfileView(state.activeChat); };
 
         window.handleGlobalSearch = function() {
             const query = $('global-search-input').value.trim().toLowerCase();
@@ -2344,6 +2868,7 @@
             container.innerHTML = '';
             const filtered = state.contacts.filter(c => c.name.toLowerCase().includes(query) || c.uid.includes(query));
             for (let contact of filtered) {
+                if (contact.uid === BOT_UID) continue;
                 const div = document.createElement('div');
                 div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition clickable-row';
                 div.innerHTML = `
@@ -2421,142 +2946,122 @@
             const snap = get(ref(db, 'users'));
             snap.then((userSnap) => {
                 const users = userSnap.val() || {};
-                let html = '<div class="space-y-4">';
-                html += `<div class="bg-white rounded-xl border border-[#b8d0b8] p-4"><h3 class="font-bold text-[#2b7a4b] mb-2">Total Users: ${Object.keys(users).length}</h3></div>`;
+                const totalUsers = Object.keys(users).length;
+                const totalPosts = state.posts.length;
+                const totalChats = Object.keys(state.chats).filter(k => k.includes(state.currentUser.uid)).length;
+                
+                let html = `
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="admin-stat-card">
+                            <div class="admin-stat-number">${totalUsers}</div>
+                            <div class="admin-stat-label">Total Users</div>
+                        </div>
+                        <div class="admin-stat-card">
+                            <div class="admin-stat-number">${totalPosts}</div>
+                            <div class="admin-stat-label">Total Posts</div>
+                        </div>
+                        <div class="admin-stat-card">
+                            <div class="admin-stat-number">${totalChats}</div>
+                            <div class="admin-stat-label">Chats</div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl border border-[#b8d0b8] p-4">
+                        <h3 class="font-bold text-[#2b7a4b] mb-3">User Management</h3>
+                `;
                 for (let uid in users) {
                     const u = users[uid];
                     const posts = state.posts.filter(p => p.author === uid);
-                    const chats = Object.keys(state.chats).filter(k => k.includes(uid));
+                    const isAdmin = uid === ADMIN_UID;
                     html += `
-                        <div class="bg-white rounded-xl border border-[#b8d0b8] p-4">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="font-bold">${u.name} <span class="text-xs text-[#2b7a4b] font-mono">@${uid}</span></p>
-                                    <p class="text-xs text-[#2b7a4b] opacity-60">Posts: ${posts.length} | Friends: ${state.contacts.filter(c => c.uid === uid).length}</p>
-                                </div>
-                                <div class="flex gap-2">
-                                    ${state.currentUser.uid === ADMIN_UID ? `<button onclick="adminDeleteUser('${uid}')" class="bg-red-100 text-red-600 px-2 py-1 rounded-lg text-xs font-bold">Delete</button>` : ''}
-                                </div>
+                        <div class="admin-user-item flex items-center justify-between">
+                            <div>
+                                <p class="font-bold text-sm text-[#1a2e1a]">${u.name} ${isAdmin ? '⭐' : ''}</p>
+                                <p class="text-[10px] text-[#2b7a4b] font-mono">@${uid} • ${posts.length} posts</p>
                             </div>
-                            <div class="mt-2 text-xs">
-                                <details>
-                                    <summary class="cursor-pointer text-[#2b7a4b]">View Activity</summary>
-                                    <div class="mt-1 space-y-1">
-                                        <p>Chats: ${chats.length}</p>
-                                        <p>Last seen: ${u.lastSeen ? new Date(u.lastSeen).toLocaleString() : 'Never'}</p>
-                                        <p>Online: ${u.online ? '🟢 Yes' : '🔴 No'}</p>
-                                    </div>
-                                </details>
+                            <div class="flex gap-1">
+                                ${!isAdmin ? `
+                                    <button onclick="adminDeleteUser('${uid}')" class="admin-action-btn danger">Delete</button>
+                                    <button onclick="adminSuspendUser('${uid}')" class="admin-action-btn primary">Suspend</button>
+                                ` : `<span class="text-xs text-[#2b7a4b] font-bold">Admin</span>`}
                             </div>
                         </div>
                     `;
                 }
-                html += '</div>';
+                html += `</div>
+                    <div class="bg-white rounded-xl border border-[#b8d0b8] p-4">
+                        <h3 class="font-bold text-[#2b7a4b] mb-3">Posts Management</h3>
+                `;
+                const recentPosts = state.posts.slice(0, 5);
+                if (recentPosts.length === 0) {
+                    html += `<p class="text-sm text-[#2b7a4b] opacity-60">No posts yet</p>`;
+                } else {
+                    for (let post of recentPosts) {
+                        const author = users[post.author] || { name: 'Unknown' };
+                        html += `
+                            <div class="admin-user-item flex items-center justify-between">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm truncate">${post.text}</p>
+                                    <p class="text-[10px] text-[#2b7a4b] opacity-60">by ${author.name} • ${new Date(post.timestamp).toLocaleString()}</p>
+                                </div>
+                                <button onclick="adminDeletePost('${post.id}')" class="admin-action-btn danger">Delete</button>
+                            </div>
+                        `;
+                    }
+                }
+                html += `</div>`;
                 container.innerHTML = html;
             });
         };
 
         window.adminDeleteUser = function(uid) {
             if (state.currentUser.uid !== ADMIN_UID) return;
-            if (confirm(`Delete user ${uid}? This will remove all their data.`)) {
-                remove(ref(db, 'users/' + uid));
-                const postRef = ref(db, 'posts');
-                onValue(postRef, (snap) => {
-                    const data = snap.val();
-                    if (data) {
-                        for (let key in data) {
-                            if (data[key].author === uid) {
-                                remove(ref(db, 'posts/' + key));
+            showPopup('Delete User', `Delete user ${uid}? This will remove all their data.`, '', 'Delete', (val) => {
+                if (val !== null) {
+                    remove(ref(db, 'users/' + uid));
+                    const postRef = ref(db, 'posts');
+                    onValue(postRef, (snap) => {
+                        const data = snap.val();
+                        if (data) {
+                            for (let key in data) {
+                                if (data[key].author === uid) {
+                                    remove(ref(db, 'posts/' + key));
+                                }
                             }
                         }
-                    }
-                }, { onlyOnce: true });
-                alert('User deleted.');
-                openAdminPanel();
-            }
+                    }, { onlyOnce: true });
+                    alert('User deleted.');
+                    openAdminPanel();
+                }
+            });
+        };
+
+        window.adminSuspendUser = function(uid) {
+            if (state.currentUser.uid !== ADMIN_UID) return;
+            showPopup('Suspend User', `Suspend user ${uid}? They won't be able to use the app.`, '', 'Suspend', (val) => {
+                if (val !== null) {
+                    update(ref(db, 'users/' + uid), { suspended: true });
+                    alert('User suspended.');
+                    openAdminPanel();
+                }
+            });
         };
 
         window.adminDeletePost = function(postId) {
             if (state.currentUser.uid !== ADMIN_UID) return;
-            if (confirm('Delete this post?')) {
-                const dbRef = ref(db, 'posts');
-                onValue(dbRef, (snap) => {
-                    const data = snap.val();
-                    if (data) {
-                        const key = Object.keys(data).find(k => data[k].id === postId);
-                        if (key) remove(ref(db, 'posts/' + key));
-                    }
-                }, { onlyOnce: true });
-            }
-        };
-
-        // ---------- SUPPORT BOT ----------
-        window.openSupportBot = function() {
-            $('support-bot-modal').classList.remove('hidden');
-            closeMenu();
-            loadBotMessages();
-        };
-
-        window.closeSupportBot = function() {
-            $('support-bot-modal').classList.add('hidden');
-        };
-
-        function loadBotMessages() {
-            const container = $('bot-messages');
-            if (!container) return;
-            const msgs = state.chats['bot_messages'] || {};
-            const msgList = Object.values(msgs).sort((a,b) => a.timestamp - b.timestamp);
-            container.innerHTML = '';
-            if (msgList.length === 0) {
-                container.innerHTML = '<div class="text-center text-[#2b7a4b] opacity-50 text-sm py-10">No announcements yet.</div>';
-                return;
-            }
-            for (let msg of msgList) {
-                const isBot = msg.sender === 'bot';
-                const div = document.createElement('div');
-                div.className = `max-w-[80%] p-2.5 rounded-2xl text-sm ${isBot ? 'bg-[#2b7a4b] text-white self-start' : 'chat-bubble-self self-end'}`;
-                div.innerHTML = `
-                    <p>${msg.text}</p>
-                    <span class="text-[8px] opacity-60 block text-right mt-0.5">${new Date(msg.timestamp).toLocaleTimeString()}</span>
-                `;
-                container.appendChild(div);
-            }
-            container.scrollTop = container.scrollHeight;
-        }
-
-        window.sendBotMessage = function() {
-            if (state.currentUser.uid !== ADMIN_UID) {
-                alert('Only admin can send announcements.');
-                return;
-            }
-            const input = $('bot-input-field');
-            const text = input.value.trim();
-            if (!text) return;
-            input.value = '';
-            push(ref(db, 'chats/bot_messages'), {
-                sender: state.currentUser.uid,
-                text: text,
-                timestamp: Date.now(),
-                read: false
+            showPopup('Delete Post', 'Delete this post?', '', 'Delete', (val) => {
+                if (val !== null) {
+                    const dbRef = ref(db, 'posts');
+                    onValue(dbRef, (snap) => {
+                        const data = snap.val();
+                        if (data) {
+                            const key = Object.keys(data).find(k => data[k].id === postId);
+                            if (key) remove(ref(db, 'posts/' + key));
+                        }
+                    }, { onlyOnce: true });
+                    alert('Post deleted.');
+                    openAdminPanel();
+                }
             });
-            const botMsg = {
-                sender: 'bot',
-                text: '📢 ' + text,
-                timestamp: Date.now(),
-                read: false
-            };
-            for (let user of state.allUsers) {
-                const key = getChatKey('bot', user.uid);
-                push(ref(db, 'chats/' + key), botMsg);
-            }
-            push(ref(db, 'chats/bot_messages'), {
-                sender: 'bot',
-                text: '📢 ' + text,
-                timestamp: Date.now(),
-                read: false
-            });
-            alert('Announcement sent to all users!');
-            loadBotMessages();
         };
 
         // ---------- REPORT SYSTEM ----------
@@ -2583,16 +3088,16 @@
                     timestamp: Date.now(),
                     read: false
                 };
+                // Send to admin via bot chat
+                const adminKey = getChatKey(BOT_UID, ADMIN_UID);
+                push(ref(db, 'chats/' + adminKey), {
+                    sender: 'bot',
+                    text: `📋 Report from @${state.currentUser.uid} (${state.currentUser.name}):\n${text}`,
+                    timestamp: Date.now(),
+                    read: false
+                });
+                // Also send to bot messages
                 push(ref(db, 'chats/bot_messages'), reportMsg);
-                if (state.currentUser.uid !== ADMIN_UID) {
-                    const adminKey = getChatKey('bot', ADMIN_UID);
-                    push(ref(db, 'chats/' + adminKey), {
-                        sender: 'bot',
-                        text: `📋 Report from @${state.currentUser.uid} (${state.currentUser.name}):\n${text}`,
-                        timestamp: Date.now(),
-                        read: false
-                    });
-                }
                 closeModal('report-modal');
                 alert('Report submitted. Thank you for helping us improve!');
             };
