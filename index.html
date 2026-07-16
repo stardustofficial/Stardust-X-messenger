@@ -6,22 +6,6 @@
     <title>Stardust X Messenger</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        darkbg: '#e5f0e5',
-                        darkcard: '#d1e0d1',
-                        accentgreen: '#2b7a4b',
-                        softgreen: '#3b9b5e',
-                        lightgreen: '#c8e6c9',
-                        white: '#ffffff',
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         * { scrollbar-width: thin; scrollbar-color: #2b7a4b #d1e0d1; }
         *::-webkit-scrollbar { width: 4px; }
@@ -273,7 +257,6 @@
             transform: scale(0.98);
         }
         
-        /* Voice Recording */
         .recording-pulse {
             animation: pulse 1s ease-in-out infinite;
         }
@@ -282,7 +265,6 @@
             50% { transform: scale(1.1); opacity: 0.7; }
         }
         
-        /* Admin Dashboard */
         .admin-stat-card {
             background: white;
             border-radius: 16px;
@@ -339,7 +321,6 @@
             background: #c8e6c9;
         }
         
-        /* Attachment Menu */
         .attachment-menu {
             position: absolute;
             bottom: 70px;
@@ -376,6 +357,138 @@
             height: 24px;
             color: #2b7a4b;
         }
+        
+        .recording-wave {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 30px;
+        }
+        .recording-wave span {
+            display: block;
+            width: 4px;
+            background: #2b7a4b;
+            border-radius: 2px;
+            animation: wave 0.8s ease-in-out infinite alternate;
+        }
+        .recording-wave span:nth-child(1) { height: 10px; animation-delay: 0s; }
+        .recording-wave span:nth-child(2) { height: 18px; animation-delay: 0.1s; }
+        .recording-wave span:nth-child(3) { height: 25px; animation-delay: 0.2s; }
+        .recording-wave span:nth-child(4) { height: 20px; animation-delay: 0.3s; }
+        .recording-wave span:nth-child(5) { height: 14px; animation-delay: 0.4s; }
+        .recording-wave span:nth-child(6) { height: 22px; animation-delay: 0.5s; }
+        .recording-wave span:nth-child(7) { height: 16px; animation-delay: 0.6s; }
+        .recording-wave span:nth-child(8) { height: 12px; animation-delay: 0.7s; }
+        @keyframes wave {
+            0% { transform: scaleY(0.3); }
+            100% { transform: scaleY(1); }
+        }
+        
+        .group-chat-menu {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #b8d0b8;
+            padding: 8px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 60;
+            min-width: 140px;
+        }
+        .group-chat-menu.active {
+            display: block;
+        }
+        .group-chat-menu-item {
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a2e1a;
+            transition: background 0.2s;
+        }
+        .group-chat-menu-item:active {
+            background: #e5f0e5;
+        }
+        .group-chat-menu-item.danger {
+            color: #dc2626;
+        }
+        .group-chat-menu-item.danger:active {
+            background: #fee2e2;
+        }
+        
+        .fullscreen-media {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 500;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .fullscreen-media.active {
+            display: flex;
+        }
+        .fullscreen-media img {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+        .fullscreen-media iframe {
+            width: 100%;
+            height: 70vh;
+            border: none;
+            border-radius: 12px;
+        }
+        .fullscreen-media .media-actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .fullscreen-media .media-actions button {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .fullscreen-media .media-actions .save-btn {
+            background: #2b7a4b;
+            color: white;
+        }
+        .fullscreen-media .media-actions .save-btn:active {
+            transform: scale(0.95);
+        }
+        .fullscreen-media .media-actions .delete-btn {
+            background: #dc2626;
+            color: white;
+        }
+        .fullscreen-media .media-actions .delete-btn:active {
+            transform: scale(0.95);
+        }
+        .fullscreen-media .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .fullscreen-media .close-btn:active {
+            background: rgba(255,255,255,0.2);
+        }
     </style>
 </head>
 <body>
@@ -402,8 +515,11 @@
                 <p class="text-xs text-[#2b7a4b] mt-4">Don't have an account? <span onclick="switchToSignup()" class="font-bold cursor-pointer hover:underline">Create one</span></p>
             </div>
             <div id="signup-form" class="space-y-4 hidden mt-4">
+                <input type="text" id="signup-name" placeholder="Full Name" class="w-full px-4 py-3 bg-[#f0f7f0] border border-[#b8d0b8] rounded-xl text-sm focus:outline-none focus:border-[#2b7a4b] transition text-center">
+                <input type="file" id="signup-pfp" accept="image/*" class="w-full text-xs text-[#2b7a4b] file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#e5f0e5] file:text-[#2b7a4b]">
                 <input type="email" id="signup-email" placeholder="Email address" class="w-full px-4 py-3 bg-[#f0f7f0] border border-[#b8d0b8] rounded-xl text-sm focus:outline-none focus:border-[#2b7a4b] transition text-center">
                 <input type="password" id="signup-password" placeholder="Password" class="w-full px-4 py-3 bg-[#f0f7f0] border border-[#b8d0b8] rounded-xl text-sm focus:outline-none focus:border-[#2b7a4b] transition text-center">
+                <input type="password" id="signup-repeat-password" placeholder="Repeat Password" class="w-full px-4 py-3 bg-[#f0f7f0] border border-[#b8d0b8] rounded-xl text-sm focus:outline-none focus:border-[#2b7a4b] transition text-center">
                 <button onclick="handleSignup()" class="w-full flex items-center justify-center space-x-2 bg-[#3b9b5e] hover:bg-[#2b7a4b] text-white py-3 px-4 rounded-xl transition duration-200 font-semibold text-sm shadow-lg shadow-[#3b9b5e]/20">
                     <span id="btn-signup-text">Register</span>
                     <div id="btn-signup-spinner" class="spinner hidden"></div>
@@ -476,6 +592,10 @@
             <button onclick="openAdminPanel()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2 border-t border-[#b8d0b8] mt-1 pt-2">
                 <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
                 Admin Panel
+            </button>
+            <button onclick="openBotSettings()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2 border-t border-[#b8d0b8] mt-1 pt-2">
+                <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Bot Settings
             </button>
         </div>
 
@@ -623,7 +743,7 @@
 
     <!-- CHAT WINDOW MODAL -->
     <div id="chat-window-modal" class="hidden fixed inset-0 bg-[#e5f0e5] z-50 flex flex-col max-w-md mx-auto w-full h-full border-x border-[#b8d0b8]">
-        <header class="p-3 bg-white border-b border-[#b8d0b8] flex justify-between items-center">
+        <header class="p-3 bg-white border-b border-[#b8d0b8] flex justify-between items-center relative">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="openProfileFromChat()">
                 <img id="chat-window-avatar" src="" class="w-9 h-9 rounded-full border border-[#b8d0b8] object-cover">
                 <div>
@@ -632,6 +752,10 @@
                 </div>
             </div>
             <div class="flex items-center space-x-1">
+                <!-- Group Chat Menu Button -->
+                <button id="group-chat-menu-btn" onclick="toggleGroupChatMenu()" class="p-2 bg-[#e5f0e5] rounded-full text-[#2b7a4b] hidden">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                </button>
                 <button onclick="initiateCall('audio')" class="p-2 bg-[#e5f0e5] rounded-full text-[#2b7a4b]">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                 </button>
@@ -639,6 +763,10 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                 </button>
                 <button onclick="closeChatWindow()" class="text-[#2b7a4b] bg-[#e5f0e5] px-3 py-1 rounded-xl text-xs font-bold">✕</button>
+            </div>
+            <!-- Group Chat Dropdown Menu -->
+            <div id="group-chat-dropdown" class="group-chat-menu">
+                <div class="group-chat-menu-item danger" onclick="leaveGroupChat()">Leave Group</div>
             </div>
         </header>
         <div id="chat-messages-container" class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar flex flex-col relative">
@@ -690,8 +818,10 @@
         <div id="voice-recording-ui" class="hidden absolute bottom-20 left-4 right-4 bg-white border border-[#b8d0b8] rounded-2xl shadow-xl p-3 z-50 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="w-3 h-3 bg-red-500 rounded-full recording-pulse"></div>
-                <span class="text-sm font-medium text-[#1a2e1a]">Recording...</span>
-                <span id="recording-timer" class="text-sm text-[#2b7a4b]">0s</span>
+                <div class="recording-wave">
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <span id="recording-timer" class="text-sm text-[#2b7a4b] font-medium">0s</span>
             </div>
             <div class="flex items-center space-x-2">
                 <button onclick="cancelRecording()" class="bg-red-100 text-red-600 px-3 py-1.5 rounded-xl text-xs font-bold">Cancel</button>
@@ -965,6 +1095,37 @@
         </div>
     </div>
 
+    <!-- BOT SETTINGS MODAL -->
+    <div id="bot-settings-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex flex-col max-w-md mx-auto w-full h-full border-x border-[#b8d0b8] bg-[#e5f0e5]">
+        <div class="bg-white p-4 border-b border-[#b8d0b8] flex justify-between items-center sticky top-0 z-10">
+            <h2 class="text-lg font-bold text-[#2b7a4b]">Bot Settings</h2>
+            <button onclick="closeModal('bot-settings-modal')" class="text-[#2b7a4b] bg-[#e5f0e5] px-3 py-1 rounded-xl text-sm font-bold">✕</button>
+        </div>
+        <div id="bot-settings-content" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+            <div class="bg-white rounded-xl border border-[#b8d0b8] p-4">
+                <h3 class="font-bold text-[#2b7a4b] mb-3">Bot Profile</h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-xs font-medium text-[#2b7a4b]">Bot Name</label>
+                        <input id="bot-name-input" class="w-full input-field" placeholder="Bot name">
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium text-[#2b7a4b]">Bot Avatar</label>
+                        <input type="file" id="bot-pfp-input" accept="image/*" class="w-full text-xs text-[#2b7a4b] file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#e5f0e5] file:text-[#2b7a4b]">
+                    </div>
+                    <button onclick="saveBotSettings()" class="w-full bg-[#2b7a4b] text-white py-2.5 rounded-xl text-sm font-bold">Save Bot Settings</button>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl border border-[#b8d0b8] p-4">
+                <h3 class="font-bold text-[#2b7a4b] mb-3">Send Announcement</h3>
+                <div class="space-y-3">
+                    <textarea id="bot-announcement-input" class="w-full input-field resize-none h-20" placeholder="Type announcement for all users..."></textarea>
+                    <button onclick="sendBotAnnouncement()" class="w-full bg-[#2b7a4b] text-white py-2.5 rounded-xl text-sm font-bold">Send to All Users</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- REPORT MODAL -->
     <div id="report-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white w-full max-w-sm rounded-3xl border border-[#b8d0b8] p-5 max-h-[80vh] overflow-y-auto">
@@ -981,11 +1142,11 @@
         </div>
     </div>
 
-    <!-- IMAGE VIEWER MODAL -->
-    <div id="image-viewer-modal" class="hidden fixed inset-0 bg-black/95 z-[100] flex flex-col items-center justify-center p-4">
-        <button onclick="closeModal('image-viewer-modal')" class="absolute top-4 right-4 text-white bg-black/50 px-4 py-2 rounded-xl text-sm z-10">✕</button>
-        <img id="viewer-image" src="" class="max-w-full max-h-[75vh] object-contain rounded-lg">
-        <div id="viewer-actions" class="flex gap-4 mt-4"></div>
+    <!-- FULLSCREEN MEDIA VIEWER -->
+    <div id="fullscreen-media" class="fullscreen-media">
+        <button class="close-btn" onclick="closeFullscreenMedia()">✕ Close</button>
+        <div id="fullscreen-media-content"></div>
+        <div class="media-actions" id="fullscreen-media-actions"></div>
     </div>
 
     <script type="module">
@@ -1011,6 +1172,8 @@
         const IMGBB_API = '550a3bcd47c1b0a86a9f2ba7a41770b6';
         const ADMIN_UID = '306140';
         const BOT_UID = 'stardust_bot';
+        const ONESIGNAL_APP_ID = '49d9bfd2-9125-484c-a5e6-2f29ef289b3e';
+        const ONESIGNAL_API_KEY = 'os_v2_app_jhm37uureveezjpgf4u66ke3h2ayumte23mu5wmxdxvbhpi2nj7cwk3dsgsfxoqqdwxnfmsattxganjwjkwchxlwgyici2suk6aapmi';
 
         let state = {
             currentUser: null, allUsers: [], contacts: [], chats: {}, messages: {}, posts: [],
@@ -1026,6 +1189,7 @@
             mediaRecorder: null, audioChunks: [], isRecording: false, recordingStartTime: null,
             recordingTimer: null, voiceMessageData: null,
             viewerFileType: null, viewerFileId: null, viewerSender: null,
+            botName: 'Stardust Bot', botPfp: '',
         };
 
         const $ = id => document.getElementById(id);
@@ -1072,6 +1236,31 @@
         window.hideLoading = function() {
             document.getElementById('loading-overlay').classList.remove('active');
         };
+
+        // ---------- ONESIGNAL NOTIFICATION ----------
+        async function sendOneSignalNotification(toUid, title, message, data = {}) {
+            try {
+                const response = await fetch('https://onesignal.com/api/v1/notifications', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + ONESIGNAL_API_KEY
+                    },
+                    body: JSON.stringify({
+                        app_id: ONESIGNAL_APP_ID,
+                        include_external_user_ids: [toUid],
+                        headings: { en: title },
+                        contents: { en: message },
+                        data: data,
+                        target_channel: 'push'
+                    })
+                });
+                const result = await response.json();
+                console.log('Notification sent:', result);
+            } catch (e) {
+                console.error('Notification error:', e);
+            }
+        }
 
         // ---------- ACTION SHEET HELPERS ----------
         window.openActionSheet = function(id) {
@@ -1180,20 +1369,45 @@
         };
 
         window.handleSignup = async () => {
+            const name = $('signup-name').value.trim();
             const email = $('signup-email').value.trim();
             const pass = $('signup-password').value.trim();
-            if (!email || !pass) return alert('Please fill all fields');
+            const repeatPass = $('signup-repeat-password').value.trim();
+            if (!name || !email || !pass || !repeatPass) return alert('Please fill all fields');
+            if (pass !== repeatPass) return alert('Passwords do not match');
+            
+            const file = $('signup-pfp').files[0];
             $('btn-signup-text').classList.add('hidden');
             $('btn-signup-spinner').classList.remove('hidden');
+            
+            let pfpUrl = '';
+            if (file) {
+                const formData = new FormData();
+                formData.append('image', file);
+                try {
+                    const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API, { method: 'POST', body: formData });
+                    const data = await res.json();
+                    if (data.success) pfpUrl = data.data.url;
+                } catch (e) { console.error('PFP upload error:', e); }
+            }
+            
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
                 const uid = String(Math.floor(100000 + Math.random() * 900000));
-                await set(ref(db, 'users/' + uid), { uid, email, name: 'User_' + uid, bio: 'Hey there! I\'m using Stardust X.', pfp: '', createdAt: Date.now(), lastSeen: Date.now(), online: true });
+                await set(ref(db, 'users/' + uid), { 
+                    uid, email, name, pfp: pfpUrl, 
+                    bio: 'Hey there! I\'m using Stardust X.', 
+                    createdAt: Date.now(), lastSeen: Date.now(), online: true 
+                });
                 alert('Account created! Your UID: ' + uid);
                 await signInWithEmailAndPassword(auth, email, pass);
                 $('btn-signup-text').classList.remove('hidden');
                 $('btn-signup-spinner').classList.add('hidden');
-            } catch (e) { alert('Signup failed: ' + e.message); $('btn-signup-text').classList.remove('hidden'); $('btn-signup-spinner').classList.add('hidden'); }
+            } catch (e) { 
+                alert('Signup failed: ' + e.message); 
+                $('btn-signup-text').classList.remove('hidden'); 
+                $('btn-signup-spinner').classList.add('hidden'); 
+            }
         };
 
         onAuthStateChanged(auth, async (user) => {
@@ -1208,6 +1422,10 @@
                 if (!found) { alert('User data not found. Please re-login.'); await signOut(auth); loadingScreen.classList.add('hidden'); loginScreen.classList.remove('hidden'); return; }
                 state.currentUser = found;
                 await update(ref(db, 'users/' + found.uid), { online: true, lastSeen: Date.now() });
+                // Send OneSignal external ID
+                if (window.OneSignal) {
+                    window.OneSignal.login(found.uid);
+                }
                 await loadAllData();
                 renderAll();
                 initPeer();
@@ -1220,6 +1438,9 @@
                 loginScreen.classList.remove('hidden');
                 appLayout.style.display = 'none';
                 if (state.peerInstance) { state.peerInstance.destroy(); state.peerInstance = null; }
+                if (window.OneSignal) {
+                    window.OneSignal.logout();
+                }
             }
         });
 
@@ -1228,10 +1449,19 @@
             const snap = await get(ref(db, 'users'));
             const users = snap.val() || {};
             state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid);
-            // Add bot as a special user
-            const botExists = state.allUsers.find(u => u.uid === BOT_UID);
-            if (!botExists) {
-                state.allUsers.push({ uid: BOT_UID, name: 'Stardust Bot', pfp: '', bio: 'Official Stardust Bot', isBot: true });
+            
+            // Load bot settings
+            const botSnap = await get(ref(db, 'botSettings'));
+            const botSettings = botSnap.val() || {};
+            state.botName = botSettings.name || 'Stardust Bot';
+            state.botPfp = botSettings.pfp || '';
+            
+            const botUser = state.allUsers.find(u => u.uid === BOT_UID);
+            if (!botUser) {
+                state.allUsers.push({ uid: BOT_UID, name: state.botName, pfp: state.botPfp, bio: 'Official Stardust Bot', isBot: true });
+            } else {
+                botUser.name = state.botName;
+                botUser.pfp = state.botPfp;
             }
             
             const friendSnap = await get(ref(db, 'friendships'));
@@ -1248,10 +1478,14 @@
                     }
                 }
             }
-            // Always add bot to contacts
-            const botUser = state.allUsers.find(u => u.uid === BOT_UID);
-            if (botUser && !state.contacts.find(c => c.uid === BOT_UID)) {
-                state.contacts.push(botUser);
+            // Bot is NOT automatically added to contacts
+            const botUser2 = state.allUsers.find(u => u.uid === BOT_UID);
+            if (botUser2 && !state.contacts.find(c => c.uid === BOT_UID)) {
+                // Only add bot if user is admin or if there's a chat with bot
+                const botChatKey = getChatKey(state.currentUser.uid, BOT_UID);
+                if (state.chats[botChatKey] || state.currentUser.uid === ADMIN_UID) {
+                    state.contacts.push(botUser2);
+                }
             }
             
             const reqSnap = await get(ref(db, 'friendRequests'));
@@ -1282,6 +1516,9 @@
             state.savedPosts = savedSnap.val() || [];
             const groupSnap = await get(ref(db, 'groups'));
             state.groups = groupSnap.val() || {};
+            
+            // Initialize bot settings input
+            $('bot-name-input').value = state.botName;
         }
 
         function listenToRealtime() {
@@ -1290,7 +1527,10 @@
                 state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid);
                 const botUser = state.allUsers.find(u => u.uid === BOT_UID);
                 if (!botUser) {
-                    state.allUsers.push({ uid: BOT_UID, name: 'Stardust Bot', pfp: '', bio: 'Official Stardust Bot', isBot: true });
+                    state.allUsers.push({ uid: BOT_UID, name: state.botName, pfp: state.botPfp, bio: 'Official Stardust Bot', isBot: true });
+                } else {
+                    botUser.name = state.botName;
+                    botUser.pfp = state.botPfp;
                 }
                 renderAll(); 
             });
@@ -1307,10 +1547,6 @@
                             if (user && !state.contacts.find(c => c.uid === contactUid)) state.contacts.push(user);
                         }
                     }
-                }
-                const botUser = state.allUsers.find(u => u.uid === BOT_UID);
-                if (botUser && !state.contacts.find(c => c.uid === BOT_UID)) {
-                    state.contacts.push(botUser);
                 }
                 renderAll();
             });
@@ -1336,7 +1572,6 @@
                 }
                 renderAll();
                 if (state.activeChat) renderChatMessages();
-                renderBotMessages();
             });
             onValue(ref(db, 'posts'), (snap) => {
                 state.posts = snap.val() ? Object.values(snap.val()).sort((a,b) => b.timestamp - a.timestamp) : [];
@@ -1350,6 +1585,17 @@
             });
             onValue(ref(db, 'groups'), (snap) => {
                 state.groups = snap.val() || {};
+                renderAll();
+            });
+            onValue(ref(db, 'botSettings'), (snap) => {
+                const settings = snap.val() || {};
+                state.botName = settings.name || 'Stardust Bot';
+                state.botPfp = settings.pfp || '';
+                const botUser = state.allUsers.find(u => u.uid === BOT_UID);
+                if (botUser) {
+                    botUser.name = state.botName;
+                    botUser.pfp = state.botPfp;
+                }
                 renderAll();
             });
         }
@@ -1419,8 +1665,8 @@
                     lastMsg: lastMsg,
                     lastTime: lastTime,
                     unread: unread,
-                    name: isBot ? 'Stardust Bot' : contact.name,
-                    pfp: isBot ? '' : (contact.pfp || ''),
+                    name: isBot ? state.botName : contact.name,
+                    pfp: isBot ? state.botPfp : (contact.pfp || ''),
                     isBot: isBot
                 });
             }
@@ -1434,13 +1680,14 @@
                 const unread = entry.unread;
                 div.className = `flex items-center justify-between p-3 bg-white rounded-xl border ${unread > 0 ? 'border-[#2b7a4b] shadow-md' : 'border-[#b8d0b8]'} cursor-pointer hover:bg-[#f0f7f0] transition clickable-row chat-item`;
                 
-                if (entry.isGroup) {
+                const isGroup = entry.isGroup;
+                if (isGroup) {
                     div.innerHTML = `
-                        <div class="flex items-center space-x-3 w-full" onclick="${isBot ? `openBotChat()` : `openGroupChat('${entry.uid}')`}">
+                        <div class="flex items-center space-x-3 w-full" onclick="openGroupChat('${entry.uid}')">
                             <div class="w-10 h-10 rounded-full bg-[#2b7a4b] flex items-center justify-center text-white font-bold text-xs">${entry.name.charAt(0).toUpperCase()}</div>
                             <div class="flex-1 min-w-0">
                                 <p class="font-bold text-sm text-[#1a2e1a]">${entry.name}</p>
-                                <p class="text-xs truncate ${unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${entry.lastMsg ? (isBot ? '📢 ' + entry.lastMsg.text : entry.lastMsg.text) : 'Start chatting'}</p>
+                                <p class="text-xs truncate ${unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${entry.lastMsg ? entry.lastMsg.text : 'Group chat'}</p>
                             </div>
                         </div>
                         <div class="flex flex-col items-end">
@@ -1468,10 +1715,6 @@
             placeholder.classList.toggle('hidden', hasChats);
         }
 
-        function renderBotMessages() {
-            // Bot messages are rendered in chat list
-        }
-
         function renderGroups() {
             // Groups are rendered in chat list
         }
@@ -1483,7 +1726,7 @@
             const sorted = [...state.contacts].sort((a,b) => a.name.localeCompare(b.name));
             let currentLetter = '';
             for (let contact of sorted) {
-                if (contact.uid === BOT_UID) continue; // Bot is special, not in contacts list
+                if (contact.uid === BOT_UID) continue;
                 const letter = contact.name.charAt(0).toUpperCase();
                 if (letter !== currentLetter) { currentLetter = letter; const header = document.createElement('div'); header.className = 'text-xs font-bold text-[#2b7a4b] opacity-60 py-1 px-2'; header.innerText = letter; container.appendChild(header); }
                 const div = document.createElement('div');
@@ -1505,7 +1748,26 @@
                 `;
                 container.appendChild(div);
             }
-            placeholder.classList.toggle('hidden', sorted.length > 1);
+            // Show groups in contacts too
+            for (let groupId in state.groups) {
+                const group = state.groups[groupId];
+                if (group.members && group.members.includes(state.currentUser.uid)) {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] transition clickable-row';
+                    div.innerHTML = `
+                        <div class="flex items-center space-x-3 w-full" onclick="openGroupChat('${groupId}')">
+                            <div class="w-8 h-8 rounded-full bg-[#2b7a4b] flex items-center justify-center text-white font-bold text-xs">${group.name.charAt(0).toUpperCase()}</div>
+                            <div class="flex-1">
+                                <p class="font-bold text-sm text-[#1a2e1a]">${group.name}</p>
+                                <p class="text-[10px] text-[#2b7a4b] font-mono">Group</p>
+                            </div>
+                        </div>
+                        <button onclick="event.stopPropagation(); openGroupChat('${groupId}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
+                    `;
+                    container.appendChild(div);
+                }
+            }
+            placeholder.classList.toggle('hidden', sorted.length > 0 || Object.keys(state.groups).length > 0);
         }
 
         function renderMoments() {
@@ -1650,6 +1912,7 @@
                             timestamp: Date.now(),
                             read: false
                         });
+                        sendOneSignalNotification(post.author, 'Someone liked your post', `${state.currentUser.name} liked your post`, { type: 'like', postId: postId });
                     }
                 }
             }, { onlyOnce: true });
@@ -1702,6 +1965,7 @@
                 timestamp: Date.now(),
                 read: false
             });
+            sendOneSignalNotification(uid, 'Post Shared', `${state.currentUser.name} shared a post with you`, { type: 'share', postId: postId });
         };
 
         window.openCommentModal = function(postId) {
@@ -1729,6 +1993,7 @@
                                         timestamp: Date.now(),
                                         read: false
                                     });
+                                    sendOneSignalNotification(post.author, 'New Comment', `${state.currentUser.name} commented on your post`, { type: 'comment', postId: postId });
                                 }
                             }
                         }
@@ -1738,10 +2003,82 @@
         };
 
         window.openImageViewer = function(src) {
-            const viewer = document.createElement('div');
-            viewer.className = 'fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4';
-            viewer.innerHTML = `<button onclick="this.parentElement.remove()" class="absolute top-4 right-4 text-white bg-black/50 px-4 py-2 rounded-xl text-sm z-10">✕</button><img src="${src}" class="max-w-full max-h-[90vh] object-contain rounded-lg">`;
-            document.body.appendChild(viewer);
+            showFullscreenMedia('image', src, null, null);
+        };
+
+        // ---------- FULLSCREEN MEDIA VIEWER ----------
+        function showFullscreenMedia(type, url, key, timestamp) {
+            const viewer = document.getElementById('fullscreen-media');
+            const content = document.getElementById('fullscreen-media-content');
+            const actions = document.getElementById('fullscreen-media-actions');
+            
+            content.innerHTML = '';
+            actions.innerHTML = '';
+            
+            if (type === 'image') {
+                const img = document.createElement('img');
+                img.src = url;
+                content.appendChild(img);
+                actions.innerHTML = `
+                    <button class="save-btn" onclick="saveMediaToGallery('${url}')">💾 Save</button>
+                    ${state.viewerSender === state.currentUser.uid ? `<button class="delete-btn" onclick="deleteMediaFromChat('${key}','${timestamp}')">🗑️ Delete</button>` : ''}
+                `;
+            } else if (type === 'document') {
+                const iframe = document.createElement('iframe');
+                iframe.src = url;
+                iframe.style.width = '100%';
+                iframe.style.height = '70vh';
+                iframe.style.border = 'none';
+                iframe.style.borderRadius = '12px';
+                content.appendChild(iframe);
+                actions.innerHTML = `
+                    <button class="save-btn" onclick="downloadDocument('${url}')">📥 Download</button>
+                    ${state.viewerSender === state.currentUser.uid ? `<button class="delete-btn" onclick="deleteMediaFromChat('${key}','${timestamp}')">🗑️ Delete</button>` : ''}
+                `;
+            } else if (type === 'voice') {
+                const audio = document.createElement('audio');
+                audio.src = url;
+                audio.controls = true;
+                audio.style.width = '100%';
+                audio.style.maxWidth = '400px';
+                content.appendChild(audio);
+                actions.innerHTML = `
+                    ${state.viewerSender === state.currentUser.uid ? `<button class="delete-btn" onclick="deleteMediaFromChat('${key}','${timestamp}')">🗑️ Delete</button>` : ''}
+                `;
+            }
+            
+            viewer.classList.add('active');
+        }
+
+        window.closeFullscreenMedia = function() {
+            document.getElementById('fullscreen-media').classList.remove('active');
+        };
+
+        window.saveMediaToGallery = function(url) {
+            const link = document.createElement('a');
+            link.download = 'stardust_image.jpg';
+            link.href = url;
+            link.click();
+            alert('Image saved!');
+        };
+
+        window.downloadDocument = function(url) {
+            const link = document.createElement('a');
+            link.download = 'document';
+            link.href = url;
+            link.click();
+            alert('Document downloaded!');
+        };
+
+        window.deleteMediaFromChat = function(key, timestamp) {
+            if (!confirm('Delete this media?')) return;
+            const msgs = state.chats[key] || {};
+            const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === parseInt(timestamp));
+            if (msgKey) {
+                remove(ref(db, 'chats/' + key + '/' + msgKey));
+                closeFullscreenMedia();
+                alert('Media deleted.');
+            }
         };
 
         // ---------- PROFILE VIEW ----------
@@ -1776,6 +2113,13 @@
             if (state.contacts.find(c => c.uid === uid)) return alert('Already friends');
             if (state.friendRequests.find(r => r.from === uid)) return alert('Request already sent');
             set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('profile-view-modal'); });
+            push(ref(db, 'notifications/' + uid), {
+                from: state.currentUser.uid,
+                type: 'friend_request',
+                timestamp: Date.now(),
+                read: false
+            });
+            sendOneSignalNotification(uid, 'Friend Request', `${state.currentUser.name} sent you a friend request`, { type: 'friend_request' });
         };
 
         // ---------- CHAT ----------
@@ -1789,22 +2133,26 @@
             $('chat-window-uid').innerText = '@' + contact.uid;
             $('chat-window-avatar').src = contact.pfp || '';
             $('chat-window-modal').classList.remove('hidden');
+            document.getElementById('group-chat-menu-btn').classList.add('hidden');
             renderChatMessages();
             markChatAsRead(uid);
-            // Show input field for normal users
             document.querySelector('#chat-window-modal footer').style.display = 'flex';
         };
 
         window.openBotChat = function() {
             state.activeChat = BOT_UID;
-            $('chat-window-name').innerText = 'Stardust Bot';
+            $('chat-window-name').innerText = state.botName;
             $('chat-window-uid').innerText = '@' + BOT_UID;
-            $('chat-window-avatar').src = '';
+            $('chat-window-avatar').src = state.botPfp || '';
             $('chat-window-modal').classList.remove('hidden');
+            document.getElementById('group-chat-menu-btn').classList.add('hidden');
             renderChatMessages();
-            // Hide input field for bot chat (read-only)
-            document.querySelector('#chat-window-modal footer').style.display = 'none';
-            // Mark bot messages as read
+            // Only admin can send messages to bot
+            if (state.currentUser.uid === ADMIN_UID) {
+                document.querySelector('#chat-window-modal footer').style.display = 'flex';
+            } else {
+                document.querySelector('#chat-window-modal footer').style.display = 'none';
+            }
             const key = getChatKey(state.currentUser.uid, BOT_UID);
             const msgs = state.messages[key] || [];
             for (let msg of msgs) {
@@ -1823,6 +2171,8 @@
             $('chat-window-uid').innerText = groupId;
             $('chat-window-avatar').src = group.pfp || '';
             $('chat-window-modal').classList.remove('hidden');
+            document.getElementById('group-chat-menu-btn').classList.remove('hidden');
+            document.querySelector('#chat-window-modal footer').style.display = 'flex';
             renderChatMessages();
             const key = getChatKey(state.currentUser.uid, groupId);
             const msgs = state.messages[key] || [];
@@ -1839,7 +2189,8 @@
             $('chat-window-modal').classList.add('hidden'); 
             $('msg-context-menu').classList.add('hidden');
             document.querySelector('#chat-window-modal footer').style.display = 'flex';
-            // Reset voice recording UI
+            document.getElementById('group-chat-menu-btn').classList.add('hidden');
+            document.getElementById('group-chat-dropdown').classList.remove('active');
             cancelRecording();
             $('attachment-menu').classList.remove('active');
             $('voice-recording-ui').classList.add('hidden');
@@ -1890,13 +2241,13 @@
                     `;
                 } else if (msg.type === 'image') {
                     contentHtml = `
-                        <div class="cursor-pointer" onclick="openMediaViewer('${key}','${msg.timestamp}','image','${msg.sender}')">
+                        <div class="cursor-pointer" onclick="openMediaInFullscreen('${key}','${msg.timestamp}','image','${msg.sender}','${msg.url}')">
                             <img src="${msg.url}" class="max-w-[200px] max-h-[200px] rounded-lg object-cover">
                         </div>
                     `;
                 } else if (msg.type === 'document') {
                     contentHtml = `
-                        <div class="flex items-center space-x-2 bg-white/10 p-2 rounded-lg cursor-pointer" onclick="openMediaViewer('${key}','${msg.timestamp}','document','${msg.sender}')">
+                        <div class="flex items-center space-x-2 bg-white/10 p-2 rounded-lg cursor-pointer" onclick="openMediaInFullscreen('${key}','${msg.timestamp}','document','${msg.sender}','${msg.url}')">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                             <span class="text-xs truncate max-w-[120px]">${msg.filename || 'Document'}</span>
                         </div>
@@ -1907,7 +2258,7 @@
                 
                 div.innerHTML = `
                     ${isGroup && !isMe && !isBotMsg ? `<div class="text-[8px] font-bold text-[#2b7a4b] mb-0.5">${sender ? sender.name : 'Unknown'}</div>` : ''}
-                    ${isBotMsg ? `<div class="text-[8px] font-bold text-[#6fcf97] mb-0.5">🤖 Stardust Bot</div>` : ''}
+                    ${isBotMsg ? `<div class="text-[8px] font-bold text-[#6fcf97] mb-0.5">🤖 ${state.botName}</div>` : ''}
                     ${contentHtml}
                     <span class="text-[8px] opacity-60 block text-right mt-0.5">${new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
                     ${!isBotMsg && (msg.read ? '<span class="text-[8px] text-blue-400 ml-1">✓✓</span>' : isMe ? '<span class="text-[8px] opacity-40 ml-1">✓</span>' : '')}
@@ -1927,8 +2278,19 @@
             container.scrollTop = container.scrollHeight;
         }
 
+        window.openMediaInFullscreen = function(key, timestamp, type, sender, url) {
+            state.viewerSender = sender;
+            state.viewerFileId = { key, timestamp };
+            showFullscreenMedia(type, url, key, timestamp);
+        };
+
         window.sendMessage = function() {
-            if (!state.activeChat || state.activeChat === BOT_UID) return;
+            if (!state.activeChat || state.activeChat === BOT_UID) {
+                if (state.activeChat === BOT_UID && state.currentUser.uid !== ADMIN_UID) {
+                    alert('Only admin can send messages to bot.');
+                }
+                return;
+            }
             const input = $('chat-input-field');
             const text = input.value.trim();
             if (!text) return;
@@ -1936,6 +2298,7 @@
             const key = getChatKey(state.currentUser.uid, state.activeChat);
             const msg = { sender: state.currentUser.uid, text, timestamp: Date.now(), read: false, reactions: {}, replyTo: null };
             push(ref(db, 'chats/' + key), msg);
+            // Send notification
             if (state.activeChat.startsWith('group_')) {
                 const group = state.groups[state.activeChat];
                 if (group) {
@@ -1948,6 +2311,7 @@
                                 timestamp: Date.now(),
                                 read: false
                             });
+                            sendOneSignalNotification(member, 'New Group Message', `${state.currentUser.name} sent a message in ${group.name}`, { type: 'group_msg', groupId: state.activeChat });
                         }
                     }
                 }
@@ -1958,6 +2322,7 @@
                     timestamp: Date.now(),
                     read: false
                 });
+                sendOneSignalNotification(state.activeChat, 'New Message', `${state.currentUser.name} sent you a message`, { type: 'msg' });
             }
             if (state.typingTimeout) clearTimeout(state.typingTimeout);
             update(ref(db, 'users/' + state.currentUser.uid), { typing: false });
@@ -1990,6 +2355,44 @@
                 else $('chat-typing-indicator').classList.add('hidden');
             }
         });
+
+        // ---------- GROUP CHAT MENU ----------
+        window.toggleGroupChatMenu = function() {
+            document.getElementById('group-chat-dropdown').classList.toggle('active');
+        };
+
+        window.leaveGroupChat = function() {
+            if (!state.activeChat || !state.activeChat.startsWith('group_')) return;
+            const groupId = state.activeChat;
+            const group = state.groups[groupId];
+            if (!group) return;
+            if (group.admin === state.currentUser.uid) {
+                if (!confirm('You are the admin. Deleting the group will remove it for everyone. Continue?')) return;
+                // Delete group
+                remove(ref(db, 'groups/' + groupId));
+                // Remove group chat
+                const key = getChatKey(state.currentUser.uid, groupId);
+                remove(ref(db, 'chats/' + key));
+                closeChatWindow();
+                alert('Group deleted.');
+                return;
+            }
+            if (confirm(`Leave group "${group.name}"?`)) {
+                const members = group.members.filter(m => m !== state.currentUser.uid);
+                update(ref(db, 'groups/' + groupId), { members });
+                // Send bot notification
+                const botKey = getChatKey(BOT_UID, state.currentUser.uid);
+                push(ref(db, 'chats/' + botKey), {
+                    sender: 'bot',
+                    text: `📢 ${state.currentUser.name} left the group "${group.name}"`,
+                    timestamp: Date.now(),
+                    read: false
+                });
+                closeChatWindow();
+                alert('You left the group.');
+            }
+            document.getElementById('group-chat-dropdown').classList.remove('active');
+        };
 
         // ---------- CONTEXT MENU ----------
         window.closeContextMenu = function() { $('msg-context-menu').classList.add('hidden'); };
@@ -2031,6 +2434,7 @@
             push(ref(db, 'chats/' + key), msg);
             closeForwardModal();
             alert('Forwarded!');
+            sendOneSignalNotification(uid, 'Message Forwarded', `${state.currentUser.name} forwarded a message to you`, { type: 'forward' });
         };
 
         window.deleteMessage = function() {
@@ -2074,6 +2478,7 @@
                 timestamp: Date.now(),
                 read: false
             });
+            sendOneSignalNotification(uid, 'Friend Request', `${state.currentUser.name} sent you a friend request`, { type: 'friend_request' });
         };
 
         window.acceptFriendRequest = function(uid) {
@@ -2095,6 +2500,7 @@
                     }
                     alert('Friend added!');
                 });
+                sendOneSignalNotification(uid, 'Friend Request Accepted', `${state.currentUser.name} accepted your friend request`, { type: 'friend_accept' });
             });
         };
 
@@ -2164,7 +2570,7 @@
                             const memberKey = getChatKey(BOT_UID, member);
                             push(ref(db, 'chats/' + memberKey), {
                                 sender: 'bot',
-                                text: `📢 You were added to group "${name}" by ${state.currentUser.name}`,
+                                text: `📢 ${state.currentUser.name} added you to group "${name}"`,
                                 timestamp: Date.now(),
                                 read: false
                             });
@@ -2176,6 +2582,7 @@
                                 timestamp: Date.now(),
                                 read: false
                             });
+                            sendOneSignalNotification(member, 'Group Invite', `${state.currentUser.name} added you to "${name}"`, { type: 'group_invite', groupId: groupId });
                         }
                     }
                     renderAll();
@@ -2211,21 +2618,17 @@
                     state.mediaRecorder.onstop = () => {
                         const audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
                         state.voiceMessageData = audioBlob;
-                        // Show send UI
                         document.getElementById('voice-recording-ui').classList.remove('hidden');
                         document.getElementById('input-container').style.display = 'none';
-                        // Update timer
                         const elapsed = Math.floor((Date.now() - state.recordingStartTime) / 1000);
                         document.getElementById('recording-timer').textContent = elapsed + 's';
                         stream.getTracks().forEach(track => track.stop());
                     };
                     
                     state.mediaRecorder.start();
-                    // Show recording UI
                     document.getElementById('voice-toggle-btn').innerHTML = `
                         <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path></svg>
                     `;
-                    // Update timer
                     state.recordingTimer = setInterval(() => {
                         const elapsed = Math.floor((Date.now() - state.recordingStartTime) / 1000);
                         document.getElementById('recording-timer').textContent = elapsed + 's';
@@ -2268,11 +2671,8 @@
         window.sendVoiceMessage = function() {
             if (!state.voiceMessageData || !state.activeChat) return;
             const reader = new FileReader();
-            reader.onload = async function(e) {
+            reader.onload = function(e) {
                 const base64Audio = e.target.result;
-                // Upload to imgbb or store as base64 (for demo, store as base64 in Firebase)
-                // For production, use a proper audio hosting service
-                // We'll store the base64 directly in Firebase (limited size)
                 const key = getChatKey(state.currentUser.uid, state.activeChat);
                 const msg = {
                     sender: state.currentUser.uid,
@@ -2291,11 +2691,13 @@
                 document.getElementById('voice-toggle-btn').innerHTML = `
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
                 `;
+                if (!state.activeChat.startsWith('group_')) {
+                    sendOneSignalNotification(state.activeChat, 'Voice Message', `${state.currentUser.name} sent a voice message`, { type: 'voice' });
+                }
             };
             reader.readAsDataURL(state.voiceMessageData);
         };
 
-        // Voice message play
         window.playVoiceMessage = function(key, timestamp) {
             const msgs = state.chats[key] || {};
             const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === timestamp && msgs[k].type === 'voice');
@@ -2312,7 +2714,10 @@
         };
 
         window.sendPhoto = function() {
-            if (!state.activeChat || state.activeChat === BOT_UID) return;
+            if (!state.activeChat || state.activeChat === BOT_UID) {
+                if (state.activeChat === BOT_UID) alert('Cannot send to bot.');
+                return;
+            }
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
@@ -2335,14 +2740,8 @@
                             replyTo: null
                         };
                         push(ref(db, 'chats/' + key), msg);
-                        // Notification
                         if (!state.activeChat.startsWith('group_')) {
-                            push(ref(db, 'notifications/' + state.activeChat), {
-                                from: state.currentUser.uid,
-                                type: 'msg',
-                                timestamp: Date.now(),
-                                read: false
-                            });
+                            sendOneSignalNotification(state.activeChat, 'Photo', `${state.currentUser.name} sent a photo`, { type: 'photo' });
                         }
                     };
                     reader.readAsDataURL(file);
@@ -2353,7 +2752,10 @@
         };
 
         window.sendDocument = function() {
-            if (!state.activeChat || state.activeChat === BOT_UID) return;
+            if (!state.activeChat || state.activeChat === BOT_UID) {
+                if (state.activeChat === BOT_UID) alert('Cannot send to bot.');
+                return;
+            }
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = '*/*';
@@ -2376,81 +2778,13 @@
                     };
                     push(ref(db, 'chats/' + key), msg);
                     if (!state.activeChat.startsWith('group_')) {
-                        push(ref(db, 'notifications/' + state.activeChat), {
-                            from: state.currentUser.uid,
-                            type: 'msg',
-                            timestamp: Date.now(),
-                            read: false
-                        });
+                        sendOneSignalNotification(state.activeChat, 'Document', `${state.currentUser.name} sent a document`, { type: 'document' });
                     }
                 };
                 reader.readAsDataURL(file);
                 document.getElementById('attachment-menu').classList.remove('active');
             };
             input.click();
-        };
-
-        // ---------- MEDIA VIEWER ----------
-        window.openMediaViewer = function(key, timestamp, type, sender) {
-            const msgs = state.chats[key] || {};
-            const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === timestamp && msgs[k].type === type);
-            if (!msgKey) return;
-            const msg = msgs[msgKey];
-            state.viewerFileType = type;
-            state.viewerFileId = { key, timestamp };
-            state.viewerSender = sender;
-            
-            const viewer = document.getElementById('image-viewer-modal');
-            const img = document.getElementById('viewer-image');
-            const actions = document.getElementById('viewer-actions');
-            
-            if (type === 'image') {
-                img.src = msg.url;
-                img.style.display = 'block';
-                actions.innerHTML = `
-                    <button onclick="saveViewerMedia()" class="bg-[#2b7a4b] text-white px-4 py-2 rounded-xl text-sm font-bold">💾 Save</button>
-                    ${sender === state.currentUser.uid ? `<button onclick="deleteViewerMedia()" class="bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-bold">🗑️ Delete</button>` : ''}
-                `;
-            } else if (type === 'document') {
-                img.style.display = 'none';
-                actions.innerHTML = `
-                    <button onclick="downloadViewerDocument()" class="bg-[#2b7a4b] text-white px-4 py-2 rounded-xl text-sm font-bold">📥 Download</button>
-                    ${sender === state.currentUser.uid ? `<button onclick="deleteViewerMedia()" class="bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-bold">🗑️ Delete</button>` : ''}
-                `;
-            }
-            viewer.classList.remove('hidden');
-        };
-
-        window.saveViewerMedia = function() {
-            const img = document.getElementById('viewer-image');
-            const link = document.createElement('a');
-            link.download = 'stardust_image.jpg';
-            link.href = img.src;
-            link.click();
-        };
-
-        window.downloadViewerDocument = function() {
-            const { key, timestamp } = state.viewerFileId;
-            const msgs = state.chats[key] || {};
-            const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === timestamp);
-            if (!msgKey) return;
-            const msg = msgs[msgKey];
-            const link = document.createElement('a');
-            link.download = msg.filename || 'document';
-            link.href = msg.url;
-            link.click();
-        };
-
-        window.deleteViewerMedia = function() {
-            if (!confirm('Delete this media?')) return;
-            const { key, timestamp } = state.viewerFileId;
-            const msgs = state.chats[key] || {};
-            const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === timestamp);
-            if (msgKey) {
-                remove(ref(db, 'chats/' + key + '/' + msgKey));
-                closeModal('image-viewer-modal');
-                alert('Media deleted.');
-            }
         };
 
         // ---------- CALLS ----------
@@ -2480,6 +2814,7 @@
                 const statusLbl = document.getElementById('call-status-lbl');
                 if (statusLbl) statusLbl.innerText = 'Incoming call...';
                 showIncomingCall(user);
+                sendOneSignalNotification(peerUid, 'Incoming Call', `${state.currentUser.name} is calling you`, { type: 'call' });
             });
         }
 
@@ -2516,6 +2851,7 @@
                         terminateCall(); 
                         closeChatWindow(); 
                     });
+                    sendOneSignalNotification(targetUid, `${type === 'video' ? 'Video' : 'Audio'} Call`, `${state.currentUser.name} is calling you`, { type: 'call' });
                 }).catch(err => alert('Camera/Mic access denied: ' + err.message));
         };
 
@@ -3064,6 +3400,74 @@
             });
         };
 
+        // ---------- BOT SETTINGS ----------
+        window.openBotSettings = function() {
+            if (state.currentUser.uid !== ADMIN_UID) {
+                alert('Access denied. Admin only.');
+                return;
+            }
+            $('bot-name-input').value = state.botName;
+            $('bot-settings-modal').classList.remove('hidden');
+            closeMenu();
+        };
+
+        window.saveBotSettings = async function() {
+            if (state.currentUser.uid !== ADMIN_UID) return;
+            const name = $('bot-name-input').value.trim();
+            const file = $('bot-pfp-input').files[0];
+            if (!name) return alert('Please enter bot name');
+            let pfpUrl = state.botPfp;
+            if (file) {
+                const formData = new FormData();
+                formData.append('image', file);
+                try {
+                    const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API, { method: 'POST', body: formData });
+                    const data = await res.json();
+                    if (data.success) pfpUrl = data.data.url;
+                } catch (e) { console.error('Bot PFP upload error:', e); }
+            }
+            await set(ref(db, 'botSettings'), { name, pfp: pfpUrl });
+            state.botName = name;
+            state.botPfp = pfpUrl;
+            // Update bot user in allUsers
+            const botUser = state.allUsers.find(u => u.uid === BOT_UID);
+            if (botUser) {
+                botUser.name = name;
+                botUser.pfp = pfpUrl;
+            }
+            renderAll();
+            alert('Bot settings saved!');
+            closeModal('bot-settings-modal');
+        };
+
+        window.sendBotAnnouncement = function() {
+            if (state.currentUser.uid !== ADMIN_UID) {
+                alert('Access denied. Admin only.');
+                return;
+            }
+            const text = $('bot-announcement-input').value.trim();
+            if (!text) return alert('Please enter announcement text');
+            $('bot-announcement-input').value = '';
+            
+            // Send as bot message to all users
+            const botMsg = {
+                sender: 'bot',
+                text: '📢 ' + text,
+                timestamp: Date.now(),
+                read: false
+            };
+            // Send to each user's chat as bot
+            for (let user of state.allUsers) {
+                if (user.uid === BOT_UID) continue;
+                const key = getChatKey(BOT_UID, user.uid);
+                push(ref(db, 'chats/' + key), botMsg);
+                sendOneSignalNotification(user.uid, 'Announcement', text, { type: 'announcement' });
+            }
+            // Also send to bot chat
+            push(ref(db, 'chats/bot_messages'), botMsg);
+            alert('Announcement sent to all users!');
+        };
+
         // ---------- REPORT SYSTEM ----------
         window.submitReport = function() {
             const text = $('report-text').value.trim();
@@ -3081,14 +3485,7 @@
                         if (data.success) imageUrl = data.data.url;
                     } catch (e) { console.error(e); }
                 }
-                const reportMsg = {
-                    sender: state.currentUser.uid,
-                    text: `📋 Report from @${state.currentUser.uid} (${state.currentUser.name}):\n${text}`,
-                    image: imageUrl,
-                    timestamp: Date.now(),
-                    read: false
-                };
-                // Send to admin via bot chat
+                // Send report to admin via bot chat
                 const adminKey = getChatKey(BOT_UID, ADMIN_UID);
                 push(ref(db, 'chats/' + adminKey), {
                     sender: 'bot',
@@ -3096,10 +3493,15 @@
                     timestamp: Date.now(),
                     read: false
                 });
-                // Also send to bot messages
-                push(ref(db, 'chats/bot_messages'), reportMsg);
+                push(ref(db, 'chats/bot_messages'), {
+                    sender: 'bot',
+                    text: `📋 Report from @${state.currentUser.uid} (${state.currentUser.name}):\n${text}`,
+                    timestamp: Date.now(),
+                    read: false
+                });
                 closeModal('report-modal');
                 alert('Report submitted. Thank you for helping us improve!');
+                sendOneSignalNotification(ADMIN_UID, 'New Report', `Report from ${state.currentUser.name}: ${text.substring(0, 30)}...`, { type: 'report' });
             };
             uploadFile();
         };
@@ -3115,29 +3517,9 @@
                         badge.innerText = notifs.length;
                         badge.classList.remove('hidden');
                     }
-                    const latest = notifs[notifs.length - 1];
-                    let msg = '';
-                    const fromUser = state.allUsers.find(u => u.uid === latest.from);
-                    switch(latest.type) {
-                        case 'msg': msg = `${fromUser?.name || 'Someone'} sent you a message`; break;
-                        case 'like': msg = `${fromUser?.name || 'Someone'} liked your post`; break;
-                        case 'comment': msg = `${fromUser?.name || 'Someone'} commented on your post`; break;
-                        case 'friend_request': msg = `${fromUser?.name || 'Someone'} sent you a friend request`; break;
-                        case 'group_invite': msg = `${fromUser?.name || 'Someone'} added you to group "${latest.groupName || ''}"`; break;
-                        case 'group_msg': msg = `New message in group`; break;
-                        case 'share': msg = `${fromUser?.name || 'Someone'} shared a post with you`; break;
-                        default: msg = 'New notification';
-                    }
-                    if (Notification.permission === 'granted') {
-                        new Notification('Stardust X', { body: msg, icon: 'https://stardustofficial.github.io/favicon.ico' });
-                    }
                 }
             }
         });
-
-        if ('Notification' in window) {
-            Notification.requestPermission();
-        }
 
         // ---------- INIT ----------
         onAuthStateChanged(auth, (user) => { if (user) loadingScreen.classList.remove('hidden'); else loadingScreen.classList.add('hidden'); });
@@ -3148,6 +3530,15 @@
             }
         });
         console.log('Stardust X Messenger loaded.');
+
+        // OneSignal initialization (Android bridge)
+        if (window.OneSignal) {
+            window.OneSignal.init({
+                appId: ONESIGNAL_APP_ID,
+                allowLocalhostAsSecureOrigin: true,
+            });
+            window.OneSignal.login(state.currentUser?.uid || '');
+        }
     </script>
 
 </body>
