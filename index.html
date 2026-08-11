@@ -257,14 +257,6 @@
             transform: scale(0.98);
         }
         
-        .recording-pulse {
-            animation: pulse 1s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.7; }
-        }
-        
         .admin-stat-card {
             background: white;
             border-radius: 16px;
@@ -356,32 +348,6 @@
             width: 24px;
             height: 24px;
             color: #2b7a4b;
-        }
-        
-        .recording-wave {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            height: 30px;
-        }
-        .recording-wave span {
-            display: block;
-            width: 4px;
-            background: #2b7a4b;
-            border-radius: 2px;
-            animation: wave 0.8s ease-in-out infinite alternate;
-        }
-        .recording-wave span:nth-child(1) { height: 10px; animation-delay: 0s; }
-        .recording-wave span:nth-child(2) { height: 18px; animation-delay: 0.1s; }
-        .recording-wave span:nth-child(3) { height: 25px; animation-delay: 0.2s; }
-        .recording-wave span:nth-child(4) { height: 20px; animation-delay: 0.3s; }
-        .recording-wave span:nth-child(5) { height: 14px; animation-delay: 0.4s; }
-        .recording-wave span:nth-child(6) { height: 22px; animation-delay: 0.5s; }
-        .recording-wave span:nth-child(7) { height: 16px; animation-delay: 0.6s; }
-        .recording-wave span:nth-child(8) { height: 12px; animation-delay: 0.7s; }
-        @keyframes wave {
-            0% { transform: scaleY(0.3); }
-            100% { transform: scaleY(1); }
         }
         
         .group-chat-menu {
@@ -489,19 +455,36 @@
         .fullscreen-media .close-btn:active {
             background: rgba(255,255,255,0.2);
         }
+        
+        .footer-link {
+            color: #2563eb;
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .footer-link:hover {
+            color: #1d4ed8;
+        }
+        
+        .hidden-search .search-container {
+            display: none;
+        }
+        .search-container.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
 
     <!-- LOADING SCREEN -->
-    <div id="loading-screen" class="hidden">
+    <div id="loading-screen">
         <div class="loading-spinner"></div>
         <h1 class="text-2xl font-black tracking-widest text-[#2b7a4b]">STARDUST X</h1>
         <p class="text-[#2b7a4b] text-xs mt-2 opacity-70">Connecting to secure server...</p>
     </div>
 
     <!-- LOGIN SCREEN -->
-    <div id="login-screen" class="fixed inset-0 flex flex-col items-center justify-center p-6 bg-[#e5f0e5] z-50">
+    <div id="login-screen" class="hidden fixed inset-0 flex flex-col items-center justify-center p-6 bg-[#e5f0e5] z-50">
         <div class="text-center max-w-sm w-full bg-white p-8 rounded-3xl border border-[#b8d0b8] shadow-lg">
             <h1 class="text-3xl font-black tracking-widest text-[#2b7a4b] mb-1">STARDUST X</h1>
             <p class="text-[#2b7a4b] text-xs opacity-70 mb-6">Secure Messenger</p>
@@ -512,7 +495,10 @@
                     <span id="btn-login-text">Sign In</span>
                     <div id="btn-login-spinner" class="spinner hidden"></div>
                 </button>
-                <p class="text-xs text-[#2b7a4b] mt-4">Don't have an account? <span onclick="switchToSignup()" class="font-bold cursor-pointer hover:underline">Create one</span></p>
+                <div class="flex justify-between items-center text-xs text-[#2b7a4b]">
+                    <span>Don't have an account? <span onclick="switchToSignup()" class="font-bold cursor-pointer hover:underline">Create one</span></span>
+                    <span onclick="openForgotPassword()" class="font-bold cursor-pointer hover:underline">Forgot Password?</span>
+                </div>
             </div>
             <div id="signup-form" class="space-y-4 hidden mt-4">
                 <input type="text" id="signup-name" placeholder="Full Name" class="w-full px-4 py-3 bg-[#f0f7f0] border border-[#b8d0b8] rounded-xl text-sm focus:outline-none focus:border-[#2b7a4b] transition text-center">
@@ -526,7 +512,27 @@
                 </button>
                 <p class="text-xs text-[#2b7a4b]">Already have an account? <span onclick="switchToLogin()" class="font-bold cursor-pointer hover:underline">Sign in</span></p>
             </div>
-            <p class="text-[9px] text-[#2b7a4b] opacity-50 mt-6">End-to-end encrypted</p>
+            <div class="flex justify-center space-x-4 mt-4 text-xs">
+                <a href="privacy.html" target="_blank" class="footer-link">Privacy Policy</a>
+                <a href="terms.html" target="_blank" class="footer-link">Terms of Service</a>
+            </div>
+            <p class="text-[9px] text-[#2b7a4b] opacity-50 mt-4">End-to-end encrypted</p>
+        </div>
+    </div>
+
+    <!-- FORGOT PASSWORD POPUP -->
+    <div id="forgot-password-popup" class="custom-popup-overlay">
+        <div class="custom-popup">
+            <div class="custom-popup-icon">
+                <svg class="w-8 h-8 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+            </div>
+            <div class="custom-popup-title">Reset Password</div>
+            <div class="custom-popup-desc">Enter your email address to receive a password reset link</div>
+            <input id="forgot-email-input" class="custom-popup-input" placeholder="Email address" type="email">
+            <div class="custom-popup-buttons">
+                <button class="secondary" onclick="closeForgotPassword()">Cancel</button>
+                <button class="primary" onclick="sendResetLink()">Send Link</button>
+            </div>
         </div>
     </div>
 
@@ -553,7 +559,7 @@
     </div>
 
     <!-- MAIN APP -->
-    <div id="app-layout" class="hidden flex-1 flex-col pb-16 max-w-md mx-auto w-full bg-[#e5f0e5] min-h-screen relative border-x border-[#b8d0b8] shadow-xl" style="display:none;">
+    <div id="app-layout" class="hidden flex-1 flex-col pb-16 max-w-md mx-auto w-full bg-[#e5f0e5] min-h-screen relative border-x border-[#b8d0b8] shadow-xl">
         
         <!-- TOP BAR -->
         <div id="top-bar" class="bg-white border-b border-[#b8d0b8] px-4 py-3 flex justify-between items-center sticky top-0 z-30">
@@ -578,8 +584,7 @@
             </button>
             <button onclick="openIncomingRequests()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2 relative">
                 <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
-                Incoming Requests
-                <span id="menu-request-badge" class="ml-auto bg-red-500 text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center hidden">0</span>
+                Incoming Requests                <span id="menu-request-badge" class="ml-auto bg-red-500 text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center hidden">0</span>
             </button>
             <button onclick="openCreateGroup()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2">
                 <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -588,14 +593,6 @@
             <button onclick="openSettings()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2">
                 <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
                 Settings
-            </button>
-            <button onclick="openAdminPanel()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2 border-t border-[#b8d0b8] mt-1 pt-2">
-                <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-                Admin Panel
-            </button>
-            <button onclick="openBotSettings()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2 border-t border-[#b8d0b8] mt-1 pt-2">
-                <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                Bot Settings
             </button>
         </div>
 
@@ -752,7 +749,6 @@
                 </div>
             </div>
             <div class="flex items-center space-x-1">
-                <!-- Group Chat Menu Button -->
                 <button id="group-chat-menu-btn" onclick="toggleGroupChatMenu()" class="p-2 bg-[#e5f0e5] rounded-full text-[#2b7a4b] hidden">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
                 </button>
@@ -806,28 +802,11 @@
             </div>
             <div id="input-container" class="flex-1 flex items-center space-x-2">
                 <input type="text" id="chat-input-field" placeholder="Type a message..." class="flex-1 input-field">
-                <button onclick="toggleVoiceRecording()" id="voice-toggle-btn" class="p-2 bg-[#e5f0e5] rounded-full text-[#2b7a4b] flex-shrink-0">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
-                </button>
             </div>
             <button onclick="sendMessage()" class="bg-[#2b7a4b] hover:bg-[#1e5a35] text-white p-2.5 rounded-full transition flex-shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
             </button>
         </footer>
-        <!-- Voice Recording UI -->
-        <div id="voice-recording-ui" class="hidden absolute bottom-20 left-4 right-4 bg-white border border-[#b8d0b8] rounded-2xl shadow-xl p-3 z-50 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-3 h-3 bg-red-500 rounded-full recording-pulse"></div>
-                <div class="recording-wave">
-                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                </div>
-                <span id="recording-timer" class="text-sm text-[#2b7a4b] font-medium">0s</span>
-            </div>
-            <div class="flex items-center space-x-2">
-                <button onclick="cancelRecording()" class="bg-red-100 text-red-600 px-3 py-1.5 rounded-xl text-xs font-bold">Cancel</button>
-                <button onclick="sendVoiceMessage()" class="bg-[#2b7a4b] text-white px-3 py-1.5 rounded-xl text-xs font-bold">Send</button>
-            </div>
-        </div>
     </div>
 
     <!-- FORWARD MODAL -->
@@ -999,7 +978,11 @@
                 <button onclick="openSavedPosts()" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2">Saved Moments</button>
                 <button onclick="openBlockedContacts()" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2">Blocked Contacts</button>
                 <button onclick="openCallHistory()" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2">Call History</button>
+                <div class="border-t border-[#b8d0b8] pt-2"></div>
+                <a href="privacy.html" target="_blank" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2 text-[#2563eb] no-underline hover:bg-[#e5f0e5]">Privacy Policy</a>
+                <a href="terms.html" target="_blank" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2 text-[#2563eb] no-underline hover:bg-[#e5f0e5]">Terms of Service</a>
                 <button onclick="logout()" class="w-full text-left px-3 py-2.5 bg-red-50 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2">Logout</button>
+                <button onclick="deleteAccount()" class="w-full text-left px-3 py-2.5 bg-red-50 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2 border-t border-red-100 pt-3">Delete Account</button>
             </div>
         </div>
     </div>
@@ -1084,48 +1067,6 @@
         </div>
     </div>
 
-    <!-- ADMIN PANEL MODAL -->
-    <div id="admin-panel-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex flex-col max-w-md mx-auto w-full h-full border-x border-[#b8d0b8] bg-[#e5f0e5]">
-        <div class="bg-white p-4 border-b border-[#b8d0b8] flex justify-between items-center sticky top-0 z-10">
-            <h2 class="text-lg font-bold text-[#2b7a4b]">Admin Dashboard</h2>
-            <button onclick="closeModal('admin-panel-modal')" class="text-[#2b7a4b] bg-[#e5f0e5] px-3 py-1 rounded-xl text-sm font-bold">✕</button>
-        </div>
-        <div id="admin-content" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
-            <div class="text-center text-[#2b7a4b] opacity-60 py-10">Loading admin data...</div>
-        </div>
-    </div>
-
-    <!-- BOT SETTINGS MODAL -->
-    <div id="bot-settings-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex flex-col max-w-md mx-auto w-full h-full border-x border-[#b8d0b8] bg-[#e5f0e5]">
-        <div class="bg-white p-4 border-b border-[#b8d0b8] flex justify-between items-center sticky top-0 z-10">
-            <h2 class="text-lg font-bold text-[#2b7a4b]">Bot Settings</h2>
-            <button onclick="closeModal('bot-settings-modal')" class="text-[#2b7a4b] bg-[#e5f0e5] px-3 py-1 rounded-xl text-sm font-bold">✕</button>
-        </div>
-        <div id="bot-settings-content" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
-            <div class="bg-white rounded-xl border border-[#b8d0b8] p-4">
-                <h3 class="font-bold text-[#2b7a4b] mb-3">Bot Profile</h3>
-                <div class="space-y-3">
-                    <div>
-                        <label class="text-xs font-medium text-[#2b7a4b]">Bot Name</label>
-                        <input id="bot-name-input" class="w-full input-field" placeholder="Bot name">
-                    </div>
-                    <div>
-                        <label class="text-xs font-medium text-[#2b7a4b]">Bot Avatar</label>
-                        <input type="file" id="bot-pfp-input" accept="image/*" class="w-full text-xs text-[#2b7a4b] file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#e5f0e5] file:text-[#2b7a4b]">
-                    </div>
-                    <button onclick="saveBotSettings()" class="w-full bg-[#2b7a4b] text-white py-2.5 rounded-xl text-sm font-bold">Save Bot Settings</button>
-                </div>
-            </div>
-            <div class="bg-white rounded-xl border border-[#b8d0b8] p-4">
-                <h3 class="font-bold text-[#2b7a4b] mb-3">Send Announcement</h3>
-                <div class="space-y-3">
-                    <textarea id="bot-announcement-input" class="w-full input-field resize-none h-20" placeholder="Type announcement for all users..."></textarea>
-                    <button onclick="sendBotAnnouncement()" class="w-full bg-[#2b7a4b] text-white py-2.5 rounded-xl text-sm font-bold">Send to All Users</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- REPORT MODAL -->
     <div id="report-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white w-full max-w-sm rounded-3xl border border-[#b8d0b8] p-5 max-h-[80vh] overflow-y-auto">
@@ -1144,14 +1085,14 @@
 
     <!-- FULLSCREEN MEDIA VIEWER -->
     <div id="fullscreen-media" class="fullscreen-media">
-        <button class="close-btn" onclick="closeFullscreenMedia()">✕ Close</button>
+        <button class="close-btn" onclick="closeFullscreenMedia()">Close</button>
         <div id="fullscreen-media-content"></div>
         <div class="media-actions" id="fullscreen-media-actions"></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
         import { getDatabase, ref, set, onValue, push, update, get, remove } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -1186,10 +1127,9 @@
             contactActionUid: null, postActionId: null,
             popupCallback: null, reportTarget: null,
             groups: {}, groupMembers: {},
-            mediaRecorder: null, audioChunks: [], isRecording: false, recordingStartTime: null,
-            recordingTimer: null, voiceMessageData: null,
             viewerFileType: null, viewerFileId: null, viewerSender: null,
             botName: 'Stardust Bot', botPfp: '',
+            isInitialLoad: true
         };
 
         const $ = id => document.getElementById(id);
@@ -1226,6 +1166,33 @@
                 state.popupCallback($('popup-input').value);
             }
             closePopup();
+        };
+
+        // ---------- FORGOT PASSWORD ----------
+        window.openForgotPassword = function() {
+            document.getElementById('forgot-password-popup').classList.add('active');
+            document.getElementById('forgot-email-input').value = '';
+            setTimeout(() => document.getElementById('forgot-email-input').focus(), 100);
+        };
+
+        window.closeForgotPassword = function() {
+            document.getElementById('forgot-password-popup').classList.remove('active');
+        };
+
+        window.sendResetLink = function() {
+            const email = document.getElementById('forgot-email-input').value.trim();
+            if (!email) {
+                alert('Please enter your email address.');
+                return;
+            }
+            sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    alert('Password reset link sent to your email. Please check your inbox.');
+                    closeForgotPassword();
+                })
+                .catch((error) => {
+                    alert('Error: ' + error.message);
+                });
         };
 
         // ---------- LOADING OVERLAY ----------
@@ -1410,30 +1377,108 @@
             }
         };
 
+        // ---------- DELETE ACCOUNT ----------
+        window.deleteAccount = function() {
+            if (!state.currentUser) return;
+            showPopup('Delete Account', 'Are you sure you want to delete your account? This action cannot be undone. All your data will be permanently removed.', '', 'Delete Account', async (val) => {
+                if (val !== null) {
+                    try {
+                        // Delete user data from database
+                        const uid = state.currentUser.uid;
+                        await remove(ref(db, 'users/' + uid));
+                        // Delete user's posts
+                        const postSnap = await get(ref(db, 'posts'));
+                        const posts = postSnap.val() || {};
+                        for (let key in posts) {
+                            if (posts[key].author === uid) {
+                                await remove(ref(db, 'posts/' + key));
+                            }
+                        }
+                        // Delete user's chats
+                        for (let key in state.chats) {
+                            if (key.includes(uid)) {
+                                await remove(ref(db, 'chats/' + key));
+                            }
+                        }
+                        // Delete friend requests
+                        const reqSnap = await get(ref(db, 'friendRequests'));
+                        const reqs = reqSnap.val() || {};
+                        for (let key in reqs) {
+                            if (reqs[key].from === uid || reqs[key].to === uid) {
+                                await remove(ref(db, 'friendRequests/' + key));
+                            }
+                        }
+                        // Delete friendships
+                        const friendSnap = await get(ref(db, 'friendships'));
+                        const friends = friendSnap.val() || {};
+                        for (let key in friends) {
+                            if (key.includes(uid)) {
+                                await remove(ref(db, 'friendships/' + key));
+                            }
+                        }
+                        // Delete blocked list
+                        await remove(ref(db, 'blocked/' + uid));
+                        // Delete saved posts
+                        await remove(ref(db, 'saved/' + uid));
+                        // Delete call history
+                        const callSnap = await get(ref(db, 'callHistory'));
+                        const calls = callSnap.val() || {};
+                        for (let key in calls) {
+                            if (calls[key].user === uid || calls[key].other === uid) {
+                                await remove(ref(db, 'callHistory/' + key));
+                            }
+                        }
+                        // Delete user's Firebase Auth account
+                        const user = auth.currentUser;
+                        if (user) {
+                            await user.delete();
+                        }
+                        alert('Your account has been deleted successfully.');
+                        closeModal('settings-modal');
+                    } catch (e) {
+                        alert('Error deleting account: ' + e.message);
+                    }
+                }
+            }, 'text', true);
+        };
+
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                loadingScreen.classList.remove('hidden');
+                // User is logged in - show loading screen directly
                 loginScreen.classList.add('hidden');
+                loadingScreen.classList.remove('hidden');
                 appLayout.style.display = 'none';
+                
                 const snap = await get(ref(db, 'users'));
                 const users = snap.val() || {};
                 let found = null;
                 for (let key in users) { if (users[key].email === user.email) found = { ...users[key], dbKey: key }; }
-                if (!found) { alert('User data not found. Please re-login.'); await signOut(auth); loadingScreen.classList.add('hidden'); loginScreen.classList.remove('hidden'); return; }
+                if (!found) { 
+                    alert('User data not found. Please re-login.'); 
+                    await signOut(auth); 
+                    loadingScreen.classList.add('hidden'); 
+                    loginScreen.classList.remove('hidden'); 
+                    return; 
+                }
                 state.currentUser = found;
                 await update(ref(db, 'users/' + found.uid), { online: true, lastSeen: Date.now() });
-                // Send OneSignal external ID
                 if (window.OneSignal) {
                     window.OneSignal.login(found.uid);
                 }
                 await loadAllData();
                 renderAll();
                 initPeer();
-                setTimeout(() => { loadingScreen.classList.add('hidden'); appLayout.style.display = 'flex'; }, 400);
+                // Hide loading screen and show app
+                loadingScreen.classList.add('hidden');
+                appLayout.style.display = 'flex';
                 listenToRealtime();
-                $('btn-login-text').classList.remove('hidden'); $('btn-login-spinner').classList.add('hidden');
-                $('btn-signup-text').classList.remove('hidden'); $('btn-signup-spinner').classList.add('hidden');
+                $('btn-login-text').classList.remove('hidden'); 
+                $('btn-login-spinner').classList.add('hidden');
+                $('btn-signup-text').classList.remove('hidden'); 
+                $('btn-signup-spinner').classList.add('hidden');
+                state.isInitialLoad = false;
             } else {
+                // User is not logged in - show login screen
                 loadingScreen.classList.add('hidden');
                 loginScreen.classList.remove('hidden');
                 appLayout.style.display = 'none';
@@ -1450,7 +1495,6 @@
             const users = snap.val() || {};
             state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid);
             
-            // Load bot settings
             const botSnap = await get(ref(db, 'botSettings'));
             const botSettings = botSnap.val() || {};
             state.botName = botSettings.name || 'Stardust Bot';
@@ -1472,19 +1516,10 @@
                     const parts = key.split('_');
                     const uid1 = parts[1], uid2 = parts[2];
                     let contactUid = uid1 === state.currentUser.uid ? uid2 : uid1;
-                    if (contactUid) {
+                    if (contactUid && contactUid !== BOT_UID) {
                         const user = state.allUsers.find(u => u.uid === contactUid);
                         if (user && !state.contacts.find(c => c.uid === contactUid)) state.contacts.push(user);
                     }
-                }
-            }
-            // Bot is NOT automatically added to contacts
-            const botUser2 = state.allUsers.find(u => u.uid === BOT_UID);
-            if (botUser2 && !state.contacts.find(c => c.uid === BOT_UID)) {
-                // Only add bot if user is admin or if there's a chat with bot
-                const botChatKey = getChatKey(state.currentUser.uid, BOT_UID);
-                if (state.chats[botChatKey] || state.currentUser.uid === ADMIN_UID) {
-                    state.contacts.push(botUser2);
                 }
             }
             
@@ -1497,27 +1532,33 @@
                     if (fromUser) state.friendRequests.push({ ...reqs[key], fromUser });
                 }
             }
+            
             const chatSnap = await get(ref(db, 'chats'));
             state.chats = chatSnap.val() || {};
             state.messages = {};
             for (let key in state.chats) {
+                // Only load chats that belong to this user or are bot chats
                 if (key.includes(state.currentUser.uid) || key.includes(BOT_UID)) {
                     const msgs = state.chats[key] || {};
                     state.messages[key] = Object.values(msgs).sort((a,b) => a.timestamp - b.timestamp);
                 }
             }
+            
             const postSnap = await get(ref(db, 'posts'));
             state.posts = postSnap.val() ? Object.values(postSnap.val()).sort((a,b) => b.timestamp - a.timestamp) : [];
+            
             const callSnap = await get(ref(db, 'callHistory'));
-            state.callHistory = callSnap.val() ? Object.values(callSnap.val()).filter(c => c.user === state.currentUser.uid) : [];
+            state.callHistory = callSnap.val() ? Object.values(callSnap.val()).filter(c => c.user === state.currentUser.uid || c.other === state.currentUser.uid) : [];
+            
             const blockSnap = await get(ref(db, 'blocked/' + state.currentUser.uid));
             state.blocked = blockSnap.val() || [];
+            
             const savedSnap = await get(ref(db, 'saved/' + state.currentUser.uid));
             state.savedPosts = savedSnap.val() || [];
+            
             const groupSnap = await get(ref(db, 'groups'));
             state.groups = groupSnap.val() || {};
             
-            // Initialize bot settings input
             $('bot-name-input').value = state.botName;
         }
 
@@ -1542,7 +1583,7 @@
                         const parts = key.split('_');
                         const uid1 = parts[1], uid2 = parts[2];
                         let contactUid = uid1 === state.currentUser.uid ? uid2 : uid1;
-                        if (contactUid) {
+                        if (contactUid && contactUid !== BOT_UID) {
                             const user = state.allUsers.find(u => u.uid === contactUid);
                             if (user && !state.contacts.find(c => c.uid === contactUid)) state.contacts.push(user);
                         }
@@ -1578,7 +1619,7 @@
                 renderAll();
             });
             onValue(ref(db, 'callHistory'), (snap) => {
-                state.callHistory = snap.val() ? Object.values(snap.val()).filter(c => c.user === state.currentUser.uid) : [];
+                state.callHistory = snap.val() ? Object.values(snap.val()).filter(c => c.user === state.currentUser.uid || c.other === state.currentUser.uid) : [];
             });
             onValue(ref(db, 'saved/' + state.currentUser.uid), (snap) => {
                 state.savedPosts = snap.val() || [];
@@ -1633,7 +1674,7 @@
                 
                 if (otherUid.startsWith('group_')) {
                     const group = state.groups[otherUid];
-                    if (group) {
+                    if (group && group.members && group.members.includes(state.currentUser.uid)) {
                         const unread = msgs.filter(m => m.sender !== state.currentUser.uid && !m.read).length;
                         chatEntries.push({
                             key: key,
@@ -1652,10 +1693,11 @@
                     }
                 }
                 
+                // Only show chats with contacts
                 const contact = state.contacts.find(c => c.uid === otherUid);
                 if (!contact) continue;
+                if (otherUid === BOT_UID) continue;
                 const unread = msgs.filter(m => m.sender !== state.currentUser.uid && m.sender !== 'bot' && !m.read).length;
-                const isBot = otherUid === BOT_UID;
                 chatEntries.push({
                     key: key,
                     uid: otherUid,
@@ -1665,9 +1707,9 @@
                     lastMsg: lastMsg,
                     lastTime: lastTime,
                     unread: unread,
-                    name: isBot ? state.botName : contact.name,
-                    pfp: isBot ? state.botPfp : (contact.pfp || ''),
-                    isBot: isBot
+                    name: contact.name,
+                    pfp: contact.pfp || '',
+                    isBot: false
                 });
             }
             
@@ -1676,7 +1718,6 @@
             for (let entry of chatEntries) {
                 hasChats = true;
                 const div = document.createElement('div');
-                const isBot = entry.isBot;
                 const unread = entry.unread;
                 div.className = `flex items-center justify-between p-3 bg-white rounded-xl border ${unread > 0 ? 'border-[#2b7a4b] shadow-md' : 'border-[#b8d0b8]'} cursor-pointer hover:bg-[#f0f7f0] transition clickable-row chat-item`;
                 
@@ -1697,11 +1738,11 @@
                     `;
                 } else {
                     div.innerHTML = `
-                        <div class="flex items-center space-x-3 w-full" onclick="${isBot ? `openBotChat()` : `openChat('${entry.uid}')`}">
+                        <div class="flex items-center space-x-3 w-full" onclick="openChat('${entry.uid}')">
                             <img src="${entry.pfp || ''}" class="w-10 h-10 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
                             <div class="flex-1 min-w-0">
                                 <p class="font-bold text-sm text-[#1a2e1a]">${entry.name}</p>
-                                <p class="text-xs truncate ${unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${entry.lastMsg ? (isBot ? '📢 ' + entry.lastMsg.text : entry.lastMsg.text) : 'Start chatting'}</p>
+                                <p class="text-xs truncate ${unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${entry.lastMsg ? entry.lastMsg.text : 'Start chatting'}</p>
                             </div>
                         </div>
                         <div class="flex flex-col items-end">
@@ -1886,6 +1927,9 @@
                 const parts = key.split('_text_');
                 let otherUid = parts[0] === state.currentUser.uid ? parts[1] : parts[0];
                 if (!otherUid) continue;
+                // Only count unread from contacts
+                const contact = state.contacts.find(c => c.uid === otherUid);
+                if (!contact && !otherUid.startsWith('group_')) continue;
                 total += msgs.filter(m => m.sender !== state.currentUser.uid && m.sender !== 'bot' && !m.read).length;
             }
             if (total > 0) { badge.innerText = total; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
@@ -2020,8 +2064,8 @@
                 img.src = url;
                 content.appendChild(img);
                 actions.innerHTML = `
-                    <button class="save-btn" onclick="saveMediaToGallery('${url}')">💾 Save</button>
-                    ${state.viewerSender === state.currentUser.uid ? `<button class="delete-btn" onclick="deleteMediaFromChat('${key}','${timestamp}')">🗑️ Delete</button>` : ''}
+                    <button class="save-btn" onclick="saveMediaToGallery('${url}')">Save</button>
+                    ${state.viewerSender === state.currentUser.uid ? `<button class="delete-btn" onclick="deleteMediaFromChat('${key}','${timestamp}')">Delete</button>` : ''}
                 `;
             } else if (type === 'document') {
                 const iframe = document.createElement('iframe');
@@ -2032,18 +2076,8 @@
                 iframe.style.borderRadius = '12px';
                 content.appendChild(iframe);
                 actions.innerHTML = `
-                    <button class="save-btn" onclick="downloadDocument('${url}')">📥 Download</button>
-                    ${state.viewerSender === state.currentUser.uid ? `<button class="delete-btn" onclick="deleteMediaFromChat('${key}','${timestamp}')">🗑️ Delete</button>` : ''}
-                `;
-            } else if (type === 'voice') {
-                const audio = document.createElement('audio');
-                audio.src = url;
-                audio.controls = true;
-                audio.style.width = '100%';
-                audio.style.maxWidth = '400px';
-                content.appendChild(audio);
-                actions.innerHTML = `
-                    ${state.viewerSender === state.currentUser.uid ? `<button class="delete-btn" onclick="deleteMediaFromChat('${key}','${timestamp}')">🗑️ Delete</button>` : ''}
+                    <button class="save-btn" onclick="downloadDocument('${url}')">Download</button>
+                    ${state.viewerSender === state.currentUser.uid ? `<button class="delete-btn" onclick="deleteMediaFromChat('${key}','${timestamp}')">Delete</button>` : ''}
                 `;
             }
             
@@ -2112,6 +2146,7 @@
             if (!user) return alert('User not found');
             if (state.contacts.find(c => c.uid === uid)) return alert('Already friends');
             if (state.friendRequests.find(r => r.from === uid)) return alert('Request already sent');
+            if (state.friendRequests.find(r => r.from === state.currentUser.uid && r.to === uid)) return alert('You already sent a request to this user');
             set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('profile-view-modal'); });
             push(ref(db, 'notifications/' + uid), {
                 from: state.currentUser.uid,
@@ -2124,7 +2159,10 @@
 
         // ---------- CHAT ----------
         window.openChat = function(uid) {
-            if (uid === BOT_UID) { openBotChat(); return; }
+            if (uid === BOT_UID) { 
+                alert('Bot chat is not available for regular users.');
+                return;
+            }
             if (state.blocked.includes(uid)) { alert('This user is blocked.'); return; }
             state.activeChat = uid;
             const contact = state.contacts.find(c => c.uid === uid) || state.allUsers.find(c => c.uid === uid);
@@ -2137,30 +2175,6 @@
             renderChatMessages();
             markChatAsRead(uid);
             document.querySelector('#chat-window-modal footer').style.display = 'flex';
-        };
-
-        window.openBotChat = function() {
-            state.activeChat = BOT_UID;
-            $('chat-window-name').innerText = state.botName;
-            $('chat-window-uid').innerText = '@' + BOT_UID;
-            $('chat-window-avatar').src = state.botPfp || '';
-            $('chat-window-modal').classList.remove('hidden');
-            document.getElementById('group-chat-menu-btn').classList.add('hidden');
-            renderChatMessages();
-            // Only admin can send messages to bot
-            if (state.currentUser.uid === ADMIN_UID) {
-                document.querySelector('#chat-window-modal footer').style.display = 'flex';
-            } else {
-                document.querySelector('#chat-window-modal footer').style.display = 'none';
-            }
-            const key = getChatKey(state.currentUser.uid, BOT_UID);
-            const msgs = state.messages[key] || [];
-            for (let msg of msgs) {
-                if (msg.sender === 'bot' && !msg.read) {
-                    const msgKey = Object.keys(state.chats[key]).find(k => state.chats[key][k].timestamp === msg.timestamp && state.chats[key][k].sender === 'bot');
-                    if (msgKey) update(ref(db, 'chats/' + key + '/' + msgKey), { read: true });
-                }
-            }
         };
 
         window.openGroupChat = function(groupId) {
@@ -2191,10 +2205,7 @@
             document.querySelector('#chat-window-modal footer').style.display = 'flex';
             document.getElementById('group-chat-menu-btn').classList.add('hidden');
             document.getElementById('group-chat-dropdown').classList.remove('active');
-            cancelRecording();
             $('attachment-menu').classList.remove('active');
-            $('voice-recording-ui').classList.add('hidden');
-            document.getElementById('input-container').style.display = 'flex';
         };
 
         function getChatKey(uid1, uid2) {
@@ -2229,17 +2240,7 @@
                 }
                 
                 let contentHtml = '';
-                if (msg.type === 'voice') {
-                    contentHtml = `
-                        <div class="flex items-center space-x-2">
-                            <button onclick="playVoiceMessage('${key}','${msg.timestamp}')" class="bg-white/20 p-1.5 rounded-full hover:bg-white/30 transition">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </button>
-                            <span class="text-xs">🎤 Voice message</span>
-                            <span class="text-[8px] opacity-60">${msg.duration || '0s'}</span>
-                        </div>
-                    `;
-                } else if (msg.type === 'image') {
+                if (msg.type === 'image') {
                     contentHtml = `
                         <div class="cursor-pointer" onclick="openMediaInFullscreen('${key}','${msg.timestamp}','image','${msg.sender}','${msg.url}')">
                             <img src="${msg.url}" class="max-w-[200px] max-h-[200px] rounded-lg object-cover">
@@ -2286,8 +2287,8 @@
 
         window.sendMessage = function() {
             if (!state.activeChat || state.activeChat === BOT_UID) {
-                if (state.activeChat === BOT_UID && state.currentUser.uid !== ADMIN_UID) {
-                    alert('Only admin can send messages to bot.');
+                if (state.activeChat === BOT_UID) {
+                    alert('Bot chat is not available for regular users.');
                 }
                 return;
             }
@@ -2368,9 +2369,7 @@
             if (!group) return;
             if (group.admin === state.currentUser.uid) {
                 if (!confirm('You are the admin. Deleting the group will remove it for everyone. Continue?')) return;
-                // Delete group
                 remove(ref(db, 'groups/' + groupId));
-                // Remove group chat
                 const key = getChatKey(state.currentUser.uid, groupId);
                 remove(ref(db, 'chats/' + key));
                 closeChatWindow();
@@ -2380,14 +2379,6 @@
             if (confirm(`Leave group "${group.name}"?`)) {
                 const members = group.members.filter(m => m !== state.currentUser.uid);
                 update(ref(db, 'groups/' + groupId), { members });
-                // Send bot notification
-                const botKey = getChatKey(BOT_UID, state.currentUser.uid);
-                push(ref(db, 'chats/' + botKey), {
-                    sender: 'bot',
-                    text: `📢 ${state.currentUser.name} left the group "${group.name}"`,
-                    timestamp: Date.now(),
-                    read: false
-                });
                 closeChatWindow();
                 alert('You left the group.');
             }
@@ -2459,7 +2450,12 @@
             const preview = $('add-friend-preview');
             if (uid.length === 6) {
                 const user = state.allUsers.find(u => u.uid === uid);
-                if (user && user.uid !== BOT_UID) { $('add-friend-preview-pfp').src = user.pfp || ''; $('add-friend-preview-name').innerText = user.name; $('add-friend-preview-uid').innerText = '@' + user.uid; preview.classList.remove('hidden'); } else preview.classList.add('hidden');
+                if (user && user.uid !== BOT_UID) { 
+                    $('add-friend-preview-pfp').src = user.pfp || ''; 
+                    $('add-friend-preview-name').innerText = user.name; 
+                    $('add-friend-preview-uid').innerText = '@' + user.uid; 
+                    preview.classList.remove('hidden'); 
+                } else preview.classList.add('hidden');
             } else preview.classList.add('hidden');
         });
 
@@ -2471,6 +2467,7 @@
             if (user.uid === BOT_UID) return alert('Cannot add bot as friend');
             if (state.contacts.find(c => c.uid === uid)) return alert('Already friends');
             if (state.friendRequests.find(r => r.from === uid)) return alert('Request already sent');
+            if (state.friendRequests.find(r => r.from === state.currentUser.uid && r.to === uid)) return alert('You already sent a request to this user');
             set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('add-friend-modal'); });
             push(ref(db, 'notifications/' + uid), {
                 from: state.currentUser.uid,
@@ -2567,13 +2564,6 @@
                     $('group-pfp-input').value = '';
                     for (let member of members) {
                         if (member !== state.currentUser.uid) {
-                            const memberKey = getChatKey(BOT_UID, member);
-                            push(ref(db, 'chats/' + memberKey), {
-                                sender: 'bot',
-                                text: `📢 ${state.currentUser.name} added you to group "${name}"`,
-                                timestamp: Date.now(),
-                                read: false
-                            });
                             push(ref(db, 'notifications/' + member), {
                                 from: state.currentUser.uid,
                                 type: 'group_invite',
@@ -2588,124 +2578,6 @@
                     renderAll();
                 });
             });
-        };
-
-        // ---------- VOICE RECORDING ----------
-        window.toggleVoiceRecording = function() {
-            if (state.isRecording) {
-                stopRecording();
-            } else {
-                startRecording();
-            }
-        };
-
-        function startRecording() {
-            if (!state.activeChat || state.activeChat === BOT_UID) {
-                alert('Cannot record in bot chat.');
-                return;
-            }
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
-                    state.mediaRecorder = new MediaRecorder(stream);
-                    state.audioChunks = [];
-                    state.isRecording = true;
-                    state.recordingStartTime = Date.now();
-                    
-                    state.mediaRecorder.ondataavailable = event => {
-                        state.audioChunks.push(event.data);
-                    };
-                    
-                    state.mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
-                        state.voiceMessageData = audioBlob;
-                        document.getElementById('voice-recording-ui').classList.remove('hidden');
-                        document.getElementById('input-container').style.display = 'none';
-                        const elapsed = Math.floor((Date.now() - state.recordingStartTime) / 1000);
-                        document.getElementById('recording-timer').textContent = elapsed + 's';
-                        stream.getTracks().forEach(track => track.stop());
-                    };
-                    
-                    state.mediaRecorder.start();
-                    document.getElementById('voice-toggle-btn').innerHTML = `
-                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path></svg>
-                    `;
-                    state.recordingTimer = setInterval(() => {
-                        const elapsed = Math.floor((Date.now() - state.recordingStartTime) / 1000);
-                        document.getElementById('recording-timer').textContent = elapsed + 's';
-                    }, 1000);
-                })
-                .catch(err => alert('Microphone access denied: ' + err.message));
-        }
-
-        function stopRecording() {
-            if (state.mediaRecorder && state.isRecording) {
-                state.mediaRecorder.stop();
-                state.isRecording = false;
-                if (state.recordingTimer) {
-                    clearInterval(state.recordingTimer);
-                    state.recordingTimer = null;
-                }
-                document.getElementById('voice-toggle-btn').innerHTML = `
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
-                `;
-            }
-        }
-
-        window.cancelRecording = function() {
-            if (state.mediaRecorder && state.isRecording) {
-                state.mediaRecorder.stop();
-                state.isRecording = false;
-                if (state.recordingTimer) {
-                    clearInterval(state.recordingTimer);
-                    state.recordingTimer = null;
-                }
-            }
-            state.voiceMessageData = null;
-            document.getElementById('voice-recording-ui').classList.add('hidden');
-            document.getElementById('input-container').style.display = 'flex';
-            document.getElementById('voice-toggle-btn').innerHTML = `
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
-            `;
-        };
-
-        window.sendVoiceMessage = function() {
-            if (!state.voiceMessageData || !state.activeChat) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Audio = e.target.result;
-                const key = getChatKey(state.currentUser.uid, state.activeChat);
-                const msg = {
-                    sender: state.currentUser.uid,
-                    type: 'voice',
-                    url: base64Audio,
-                    duration: Math.floor((Date.now() - state.recordingStartTime) / 1000) + 's',
-                    timestamp: Date.now(),
-                    read: false,
-                    reactions: {},
-                    replyTo: null
-                };
-                push(ref(db, 'chats/' + key), msg);
-                state.voiceMessageData = null;
-                document.getElementById('voice-recording-ui').classList.add('hidden');
-                document.getElementById('input-container').style.display = 'flex';
-                document.getElementById('voice-toggle-btn').innerHTML = `
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
-                `;
-                if (!state.activeChat.startsWith('group_')) {
-                    sendOneSignalNotification(state.activeChat, 'Voice Message', `${state.currentUser.name} sent a voice message`, { type: 'voice' });
-                }
-            };
-            reader.readAsDataURL(state.voiceMessageData);
-        };
-
-        window.playVoiceMessage = function(key, timestamp) {
-            const msgs = state.chats[key] || {};
-            const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === timestamp && msgs[k].type === 'voice');
-            if (!msgKey) return;
-            const msg = msgs[msgKey];
-            if (!msg.url) return;
-            const audio = new Audio(msg.url);
-            audio.play().catch(e => console.log('Audio play error:', e));
         };
 
         // ---------- ATTACHMENT MENU ----------
@@ -3168,7 +3040,8 @@
             if (state.callHistory.length === 0) { $('no-call-history').classList.remove('hidden'); } else {
                 $('no-call-history').classList.add('hidden');
                 for (let call of state.callHistory) {
-                    const user = state.allUsers.find(u => u.uid === call.other) || state.contacts.find(c => c.uid === call.other);
+                    const otherUid = call.user === state.currentUser.uid ? call.other : call.user;
+                    const user = state.allUsers.find(u => u.uid === otherUid) || state.contacts.find(c => c.uid === otherUid);
                     if (!user) continue;
                     const div = document.createElement('div');
                     div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
@@ -3190,10 +3063,31 @@
                 if (t === tab) { el.classList.remove('hidden'); nav.classList.add('tab-active'); nav.classList.remove('opacity-50'); } else { el.classList.add('hidden'); nav.classList.remove('tab-active'); nav.classList.add('opacity-50'); }
             });
             closeMenu();
+            // Show/hide search bar based on tab
+            const searchContainer = $('search-bar-container');
+            if (tab === 'chat' || tab === 'contacts') {
+                searchContainer.classList.remove('hidden');
+            } else {
+                searchContainer.classList.add('hidden');
+                // Also close search if open
+                if (searchContainer.classList.contains('hidden')) {
+                    // already hidden
+                }
+            }
         };
 
-        window.toggleTopMenu = function() { $('top-menu-dropdown').classList.toggle('hidden'); };
-        window.toggleSearchBar = function() { $('search-bar-container').classList.toggle('hidden'); };
+        window.toggleTopMenu = function() { 
+            $('top-menu-dropdown').classList.toggle('hidden'); 
+        };
+        
+        window.toggleSearchBar = function() {
+            const container = $('search-bar-container');
+            container.classList.toggle('hidden');
+            if (!container.classList.contains('hidden')) {
+                $('global-search-input').focus();
+            }
+        };
+        
         window.closeMenu = function() { $('top-menu-dropdown').classList.add('hidden'); };
         window.closeModal = function(id) { document.getElementById(id).classList.add('hidden'); };
         window.openProfileFromChat = function() { if (state.activeChat && !state.activeChat.startsWith('group_') && state.activeChat !== BOT_UID) openProfileView(state.activeChat); };
@@ -3268,206 +3162,6 @@
             }, 'text', true);
         };
 
-        // ---------- ADMIN PANEL ----------
-        window.openAdminPanel = function() {
-            if (state.currentUser.uid !== ADMIN_UID) {
-                alert('Access denied. Admin only.');
-                return;
-            }
-            const container = $('admin-content');
-            container.innerHTML = '<div class="text-center text-[#2b7a4b] opacity-60 py-10">Loading admin data...</div>';
-            $('admin-panel-modal').classList.remove('hidden');
-            closeMenu();
-            
-            const snap = get(ref(db, 'users'));
-            snap.then((userSnap) => {
-                const users = userSnap.val() || {};
-                const totalUsers = Object.keys(users).length;
-                const totalPosts = state.posts.length;
-                const totalChats = Object.keys(state.chats).filter(k => k.includes(state.currentUser.uid)).length;
-                
-                let html = `
-                    <div class="grid grid-cols-3 gap-3">
-                        <div class="admin-stat-card">
-                            <div class="admin-stat-number">${totalUsers}</div>
-                            <div class="admin-stat-label">Total Users</div>
-                        </div>
-                        <div class="admin-stat-card">
-                            <div class="admin-stat-number">${totalPosts}</div>
-                            <div class="admin-stat-label">Total Posts</div>
-                        </div>
-                        <div class="admin-stat-card">
-                            <div class="admin-stat-number">${totalChats}</div>
-                            <div class="admin-stat-label">Chats</div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl border border-[#b8d0b8] p-4">
-                        <h3 class="font-bold text-[#2b7a4b] mb-3">User Management</h3>
-                `;
-                for (let uid in users) {
-                    const u = users[uid];
-                    const posts = state.posts.filter(p => p.author === uid);
-                    const isAdmin = uid === ADMIN_UID;
-                    html += `
-                        <div class="admin-user-item flex items-center justify-between">
-                            <div>
-                                <p class="font-bold text-sm text-[#1a2e1a]">${u.name} ${isAdmin ? '⭐' : ''}</p>
-                                <p class="text-[10px] text-[#2b7a4b] font-mono">@${uid} • ${posts.length} posts</p>
-                            </div>
-                            <div class="flex gap-1">
-                                ${!isAdmin ? `
-                                    <button onclick="adminDeleteUser('${uid}')" class="admin-action-btn danger">Delete</button>
-                                    <button onclick="adminSuspendUser('${uid}')" class="admin-action-btn primary">Suspend</button>
-                                ` : `<span class="text-xs text-[#2b7a4b] font-bold">Admin</span>`}
-                            </div>
-                        </div>
-                    `;
-                }
-                html += `</div>
-                    <div class="bg-white rounded-xl border border-[#b8d0b8] p-4">
-                        <h3 class="font-bold text-[#2b7a4b] mb-3">Posts Management</h3>
-                `;
-                const recentPosts = state.posts.slice(0, 5);
-                if (recentPosts.length === 0) {
-                    html += `<p class="text-sm text-[#2b7a4b] opacity-60">No posts yet</p>`;
-                } else {
-                    for (let post of recentPosts) {
-                        const author = users[post.author] || { name: 'Unknown' };
-                        html += `
-                            <div class="admin-user-item flex items-center justify-between">
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm truncate">${post.text}</p>
-                                    <p class="text-[10px] text-[#2b7a4b] opacity-60">by ${author.name} • ${new Date(post.timestamp).toLocaleString()}</p>
-                                </div>
-                                <button onclick="adminDeletePost('${post.id}')" class="admin-action-btn danger">Delete</button>
-                            </div>
-                        `;
-                    }
-                }
-                html += `</div>`;
-                container.innerHTML = html;
-            });
-        };
-
-        window.adminDeleteUser = function(uid) {
-            if (state.currentUser.uid !== ADMIN_UID) return;
-            showPopup('Delete User', `Delete user ${uid}? This will remove all their data.`, '', 'Delete', (val) => {
-                if (val !== null) {
-                    remove(ref(db, 'users/' + uid));
-                    const postRef = ref(db, 'posts');
-                    onValue(postRef, (snap) => {
-                        const data = snap.val();
-                        if (data) {
-                            for (let key in data) {
-                                if (data[key].author === uid) {
-                                    remove(ref(db, 'posts/' + key));
-                                }
-                            }
-                        }
-                    }, { onlyOnce: true });
-                    alert('User deleted.');
-                    openAdminPanel();
-                }
-            });
-        };
-
-        window.adminSuspendUser = function(uid) {
-            if (state.currentUser.uid !== ADMIN_UID) return;
-            showPopup('Suspend User', `Suspend user ${uid}? They won't be able to use the app.`, '', 'Suspend', (val) => {
-                if (val !== null) {
-                    update(ref(db, 'users/' + uid), { suspended: true });
-                    alert('User suspended.');
-                    openAdminPanel();
-                }
-            });
-        };
-
-        window.adminDeletePost = function(postId) {
-            if (state.currentUser.uid !== ADMIN_UID) return;
-            showPopup('Delete Post', 'Delete this post?', '', 'Delete', (val) => {
-                if (val !== null) {
-                    const dbRef = ref(db, 'posts');
-                    onValue(dbRef, (snap) => {
-                        const data = snap.val();
-                        if (data) {
-                            const key = Object.keys(data).find(k => data[k].id === postId);
-                            if (key) remove(ref(db, 'posts/' + key));
-                        }
-                    }, { onlyOnce: true });
-                    alert('Post deleted.');
-                    openAdminPanel();
-                }
-            });
-        };
-
-        // ---------- BOT SETTINGS ----------
-        window.openBotSettings = function() {
-            if (state.currentUser.uid !== ADMIN_UID) {
-                alert('Access denied. Admin only.');
-                return;
-            }
-            $('bot-name-input').value = state.botName;
-            $('bot-settings-modal').classList.remove('hidden');
-            closeMenu();
-        };
-
-        window.saveBotSettings = async function() {
-            if (state.currentUser.uid !== ADMIN_UID) return;
-            const name = $('bot-name-input').value.trim();
-            const file = $('bot-pfp-input').files[0];
-            if (!name) return alert('Please enter bot name');
-            let pfpUrl = state.botPfp;
-            if (file) {
-                const formData = new FormData();
-                formData.append('image', file);
-                try {
-                    const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API, { method: 'POST', body: formData });
-                    const data = await res.json();
-                    if (data.success) pfpUrl = data.data.url;
-                } catch (e) { console.error('Bot PFP upload error:', e); }
-            }
-            await set(ref(db, 'botSettings'), { name, pfp: pfpUrl });
-            state.botName = name;
-            state.botPfp = pfpUrl;
-            // Update bot user in allUsers
-            const botUser = state.allUsers.find(u => u.uid === BOT_UID);
-            if (botUser) {
-                botUser.name = name;
-                botUser.pfp = pfpUrl;
-            }
-            renderAll();
-            alert('Bot settings saved!');
-            closeModal('bot-settings-modal');
-        };
-
-        window.sendBotAnnouncement = function() {
-            if (state.currentUser.uid !== ADMIN_UID) {
-                alert('Access denied. Admin only.');
-                return;
-            }
-            const text = $('bot-announcement-input').value.trim();
-            if (!text) return alert('Please enter announcement text');
-            $('bot-announcement-input').value = '';
-            
-            // Send as bot message to all users
-            const botMsg = {
-                sender: 'bot',
-                text: '📢 ' + text,
-                timestamp: Date.now(),
-                read: false
-            };
-            // Send to each user's chat as bot
-            for (let user of state.allUsers) {
-                if (user.uid === BOT_UID) continue;
-                const key = getChatKey(BOT_UID, user.uid);
-                push(ref(db, 'chats/' + key), botMsg);
-                sendOneSignalNotification(user.uid, 'Announcement', text, { type: 'announcement' });
-            }
-            // Also send to bot chat
-            push(ref(db, 'chats/bot_messages'), botMsg);
-            alert('Announcement sent to all users!');
-        };
-
         // ---------- REPORT SYSTEM ----------
         window.submitReport = function() {
             const text = $('report-text').value.trim();
@@ -3522,16 +3216,14 @@
         });
 
         // ---------- INIT ----------
-        onAuthStateChanged(auth, (user) => { if (user) loadingScreen.classList.remove('hidden'); else loadingScreen.classList.add('hidden'); });
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden && auth.currentUser) {
                 loadingScreen.classList.remove('hidden');
                 setTimeout(() => loadingScreen.classList.add('hidden'), 500);
             }
         });
-        console.log('Stardust X Messenger loaded.');
 
-        // OneSignal initialization (Android bridge)
+        // OneSignal initialization
         if (window.OneSignal) {
             window.OneSignal.init({
                 appId: ONESIGNAL_APP_ID,
@@ -3539,6 +3231,8 @@
             });
             window.OneSignal.login(state.currentUser?.uid || '');
         }
+
+        console.log('Stardust X Messenger loaded.');
     </script>
 
 </body>
