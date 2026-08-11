@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Terms of Service - Stardust X</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        * { scrollbar-width: thin; scrollbar-color: #2b7a4b #d1e0d1; }
+        *::-webkit-scrollbar { width: 5px; }
+        *::-webkit-scrollbar-track { background: #e5f0e5; border-radius: 10px; }
+        *::-webkit-scrollbar-thumb { background: #2b7a4b; border-radius: 10px; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #e5f0e5;
+            color: #1a2e1a;
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .section-divider {
+            background: linear-gradient(90deg, transparent, #2b7a4b, transparent);
+            height: 2px;
+            opacity: 0.2;
+        }
+        .policy-icon {
+            width: 56px;
+            height: 56px;
+            background: #e5f0e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2b7a4b;
+            flex-shrink: 0;
+        }
+        .list-check {
+            list-style: none;
+            padding-left: 0;
+        }
+        .list-check li {
+            padding: 6px 0 6px 32px;
+            position: relative;
+        }
+        .list-check li::before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+            top: 6px;
+        }
+        .list-cross {
+            list-style: none;
+            padding-left: 0;
+        }
+        .list-cross li {
+            padding: 6px 0 6px 32px;
+            position: relative;
+        }
+        .list-cross li::before {
+            content: "❌";
+            position: absolute;
+            left: 0;
+            top: 6px;
+        }
+        .back-to-app {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            background: #2b7a4b;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(43, 122, 75, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .back-to-app:hover {
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 12px 40px rgba(43, 122, 75, 0.5);
+        }
+        .back-to-app:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-badge.green { background: #d1fae5; color: #065f46; }
+        .status-badge.blue { background: #dbeafe; color: #1e40af; }
+        .badge-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(43, 122, 75, 0.1);
+            padding: 2px 12px 2px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #2b7a4b;
+            font-weight: 500;
+        }
+        @media (max-width: 640px) {
+            .back-to-app { padding: 10px 20px; font-size: 12px; bottom: 16px; }
+            .policy-icon { width: 44px; height: 44px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-4xl mx-auto px-4 py-6 md:py-12 relative">
+
+        <!-- HEADER -->
+        <div class="text-center mb-8 md:mb-12">
+            <div class="flex items-center justify-center gap-2 mb-2">
+                <div class="w-14 h-14 rounded-2xl bg-[#2b7a4b] flex items-center justify-center shadow-lg shadow-[#2b7a4b]/20">
+                    <span class="text-white text-2xl font-black">✦</span>
+                </div>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-black text-[#1a2e1a] tracking-tight">
+                STARDUST <span class="text-[#2b7a4b]">X</span>
+            </h1>
+            <p class="text-[#2b7a4b] opacity-60 text-sm mt-1 font-medium">Terms of Service</p>
+            <div class="flex items-center justify-center gap-3 mt-3 text-xs flex-wrap">
+                <span class="badge-icon">🔒 End-to-End Encrypted</span>
+                <span class="badge-icon">⚡ Real-Time</span>
+                <span class="badge-icon">🌐 Secure</span>
+            </div>
+            <div class="section-divider mt-6 max-w-xs mx-auto"></div>
+            <p class="text-[#2b7a4b] opacity-50 text-xs mt-4">Last Updated: August 11, 2026</p>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="glass-card rounded-3xl p-6 md:p-8 shadow-xl border border-white/50">
+
+            <!-- Introduction -->
+            <div class="flex items-start gap-4 mb-8">
+                <div class="policy-icon">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-[#1a2e1a]">Terms of Service</h2>
+                    <p class="text-[#2b7a4b] opacity-60 text-sm">Rules of the platform</p>
+                </div>
+            </div>
+
+            <!-- 1. Acceptance -->
+            <section class="mb-6">
+                <h3 class="text-lg font-bold text-[#1a2e1a] mb-2 flex items-center gap-2">
+                    <span class="text-[#2b7a4b]">1.</span> Acceptance of Terms
+                </h3>
+                <p class="text-sm text-[#1a2e1a]/80 leading-relaxed">
+                    By using Stardust X Messenger ("the App"), you agree to be bound by these Terms of Service. 
+                    If you do not agree, please discontinue use immediately.
+                </p>
+            </section>
+
+            <!-- 2. Eligibility -->
+            <section class="mb-6">
+                <h3 class="text-lg font-bold text-[#1a2e1a] mb-2 flex items-center gap-2">
+                    <span class="text-[#2b7a4b]">2.</span> Eligibility
+                </h3>
+                <ul class="list-check text-sm text-[#1a2e1a]/80">
+                    <li>At least 13 years old</li>
+                    <li>Able to form legally binding contracts</li>
+                    <li>Not previously banned from our services</li>
+                </ul>
+            </section>
+
+            <!-- 3. Account -->
+            <section class="mb-6">
+                <h3 class="text-lg font-bold text-[#1a2e1a] mb-2 flex items-center gap-2">
+                    <span class="text-[#2b7a4b]">3.</span> Account Registration
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-[#f0f7f0] rounded-xl p-4">
+                        <h4 class="font-bold text-sm text-[#1a2e1a] mb-2">✅ Do's</h4>
+                        <ul class="text-xs space-y-1 text-[#1a2e1a]/70">
+                            <li>• Provide accurate information</li>
+                            <li>• Maintain account security</li>
+                            <li>• Keep password confidential</li>
+                        </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                        <h4 class="font-bold text-sm text-red-600 mb-2">🚫 Don'ts</h4>
+                        <ul class="text-xs space-y-1 text-red-600/70">
+                            <li>• Share your password</li>
+                            <li>• Create multiple accounts</li>
+                            <li>• Impersonate others</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. User Conduct -->
+            <section class="mb-6">
+                <h3 class="text-lg font-bold text-[#1a2e1a] mb-2 flex items-center gap-2">
+                    <span class="text-[#2b7a4b]">4.</span> User Conduct
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-bold text-sm text-[#1a2e1a] mb-2">Prohibited Activities</h4>
+                        <ul class="list-cross text-sm text-[#1a2e1a]/80">
+                            <li>Harass, threaten, or bully users</li>
+                            <li>Share illegal/explicit content</li>
+                            <li>Impersonate others</li>
+                            <li>Spread malware/viruses</li>
+                            <li>Spam or send unsolicited messages</li>
+                            <li>Attempt to hack or breach security</li>
+                            <li>Use the service for illegal activities</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-[#1a2e1a] mb-2">Content Guidelines</h4>
+                        <ul class="list-check text-sm text-[#1a2e1a]/80">
+                            <li>All content must be appropriate</li>
+                            <li>No hate speech or discrimination</li>
+                            <li>No sharing of others' personal info</li>
+                            <li>No intellectual property infringement</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Intellectual Property -->
+            <section class="mb-6">
+                <h3 class="text-lg font-bold text-[#1a2e1a] mb-2 flex items-center gap-2">
+                    <span class="text-[#2b7a4b]">5.</span> Intellectual Property
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-[#f0f7f0] rounded-xl p-4">
+                        <h4 class="font-bold text-sm text-[#1a2e1a] mb-2">Our Property</h4>
+                        <ul class="text-xs space-y-1 text-[#1a2e1a]/70">
+                            <li>• App name "Stardust X"</li>
+                            <li>• App design, logos, branding</li>
+                            <li>• All code and proprietary features</li>
+                        </ul>
+                    </div>
+                    <div class="bg-[#f0f7f0] rounded-xl p-4">
+                        <h4 class="font-bold text-sm text-[#1a2e1a] mb-2">Your Content</h4>
+                        <ul class="text-xs space-y-1 text-[#1a2e1a]/70">
+                            <li>• You retain ownership</li>
+                            <li>• You grant us license to store/display</li>
+                            <li>• You are responsible for content legality</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Disclaimer -->
+            <section class="mb-6">
+                <h3 class="text-lg font-bold text-[#1a2e1a] mb-2 flex items-center gap-2">
+                    <span class="text-[#2b7a4b]">6.</span> Disclaimer of Warranties
+                </h3>
+                <div class="bg-amber-50 rounded-xl p-4 border border-amber-200/50 text-sm text-[#1a2e1a]/80">
+                    <p>The App is provided "AS IS" and "AS AVAILABLE." We make no warranties regarding:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Service availability (100% uptime not guaranteed)</li>
+                        <li>Error-free operation</li>
+                        <li>Security against all threats</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 7. Liability -->
+            <section class="mb-6">
+                <h3 class="text-lg font-bold text-[#1a2e1a] mb-2 flex items-center gap-2">
+                    <span class="text-[#2b7a4b]">7.</span> Limitation of Liability
+                </h3>
+                <div class="bg-amber-50 rounded-xl p-4 border border-amber-200/50 text-sm text-[#1a2e1a]/80">
+                    <p>To the maximum extent permitted by law:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>We are not liable for indirect, incidental, or consequential damages</li>
+                        <li>Our total liability shall not exceed the amount paid by you (if any)</li>
+                        <li>We are not responsible for third-party content or actions</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 8. Indemnification -->
+            <section class="mb-6">
+                <h3 class="text-lg font-bold text-[#1a2e1a] mb-2 flex items-center gap-2">
+                    <span class="text-[#2b7a4b]">8.</span> Indemnification
+                </h3>
+                <p class="text-sm text-[#1a2e1a]/80 leading-relaxed">
+                    You agree to indemnify us against claims arising from:
+                </p>
+                <ul class="list-check text-sm text-[#1a2e1a]/80 mt-2">
+                    <li>Your violation of these terms</li>
+                    <li>Your use of the service</li>
+                    <li>Your violation of any law or third-party rights</li>
+                </ul>
+            </section>
+
+            <!-- 9. Termination -->
+            <section class="mb-6">
+                <h3 class="text-lg font-bold text-[#1a2e1a] mb-2 flex items-center gap-2">
+                    <span class="text-[#2b7a4b]">9.</span> Termination
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-[#f0f7f0] rounded-xl p-4">
+                        <h4 class="font-bold text-sm text-[#1a2e1a] mb-2">By You</h4>
+                        <ul class="text-xs space-y-1 text-[#1a2e1a]/70">
+                            <li>• Delete your account anytime</li>
+                            <li>• All data removed as per Privacy Policy</li>
+                        </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                        <h4 class="font-bold text-sm text-red-600 mb-2">By Us</h4>
+                        <ul class="text-xs space-y-1 text-red-600/70">
+                            <li>• Violation of terms</li>
+                            <li>• Extended inactivity</li>
+                            <li>• Requests by law enforcement</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10. Governing Law -->
+            <section class="mb-6">
+                <h3 class="text-lg font-bold text-[#1a2e1a] mb-2 flex items-center gap-2">
+                    <span class="text-[#2b7a4b]">10.</span> Governing Law
+                </h3>
+                <p class="text-sm text-[#1a2e1a]/80 leading-relaxed">
+                    These terms are governed by the laws of the jurisdiction where the service provider is located.
+                </p>
+            </section>
+
+            <!-- 11. Contact -->
+            <section>
+                <h3 class="text-lg font-bold text-[#1a2e1a] mb-2 flex items-center gap-2">
+                    <span class="text-[#2b7a4b]">11.</span> Contact Us
+                </h3>
+                <div class="bg-[#f0f7f0] rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div>
+                        <p class="text-sm text-[#1a2e1a]/80">📧 <span class="font-medium">support@stardustx.com</span></p>
+                        <p class="text-xs text-[#2b7a4b]/60">In-App: Contact via Admin Panel</p>
+                    </div>
+                    <span class="status-badge blue">📋 Questions?</span>
+                </div>
+            </section>
+
+            <div class="section-divider my-6"></div>
+            <p class="text-[9px] text-[#2b7a4b]/40 text-center">Version 1.0 • Effective August 11, 2026</p>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="text-center mt-12 pb-20 md:pb-8">
+            <div class="flex flex-wrap items-center justify-center gap-4 text-xs text-[#2b7a4b]/50">
+                <span>© 2026 Stardust X Messenger</span>
+                <span>•</span>
+                <span>🔒 End-to-End Encrypted</span>
+                <span>•</span>
+                <span><a href="privacy-policy.html" class="hover:text-[#2b7a4b] transition">Privacy Policy</a></span>
+            </div>
+        </div>
+
+        <!-- BACK TO APP BUTTON -->
+        <button class="back-to-app" onclick="goBackToApp()">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Back to App
+        </button>
+
+    </div>
+
+    <script>
+        function goBackToApp() {
+            if (document.referrer) {
+                window.location.href = document.referrer;
+            } else if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = '/';
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') goBackToApp();
+        });
+    </script>
+
+</body>
+</html>
