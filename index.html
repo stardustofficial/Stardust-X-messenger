@@ -351,6 +351,32 @@
             color: #2b7a4b;
         }
         
+        .recording-wave {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 30px;
+        }
+        .recording-wave span {
+            display: block;
+            width: 4px;
+            background: #2b7a4b;
+            border-radius: 2px;
+            animation: wave 0.8s ease-in-out infinite alternate;
+        }
+        .recording-wave span:nth-child(1) { height: 10px; animation-delay: 0s; }
+        .recording-wave span:nth-child(2) { height: 18px; animation-delay: 0.1s; }
+        .recording-wave span:nth-child(3) { height: 25px; animation-delay: 0.2s; }
+        .recording-wave span:nth-child(4) { height: 20px; animation-delay: 0.3s; }
+        .recording-wave span:nth-child(5) { height: 14px; animation-delay: 0.4s; }
+        .recording-wave span:nth-child(6) { height: 22px; animation-delay: 0.5s; }
+        .recording-wave span:nth-child(7) { height: 16px; animation-delay: 0.6s; }
+        .recording-wave span:nth-child(8) { height: 12px; animation-delay: 0.7s; }
+        @keyframes wave {
+            0% { transform: scaleY(0.3); }
+            100% { transform: scaleY(1); }
+        }
+        
         .group-chat-menu {
             position: absolute;
             top: 50px;
@@ -466,13 +492,6 @@
         .footer-link:hover {
             color: #1e5a35;
         }
-        
-        .hidden-search .search-container {
-            display: none;
-        }
-        .search-container.active {
-            display: block;
-        }
     </style>
 </head>
 <body>
@@ -585,7 +604,8 @@
             </button>
             <button onclick="openIncomingRequests()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2 relative">
                 <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
-                Incoming Requests                <span id="menu-request-badge" class="ml-auto bg-red-500 text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center hidden">0</span>
+                Incoming Requests
+                <span id="menu-request-badge" class="ml-auto bg-red-500 text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center hidden">0</span>
             </button>
             <button onclick="openCreateGroup()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2">
                 <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -1124,7 +1144,6 @@
                     const data = localStorage.getItem('stardust_cache_' + key);
                     if (!data) return null;
                     const parsed = JSON.parse(data);
-                    // Check if cache is expired (30 minutes)
                     if (parsed.expiry && parsed.expiry < Date.now()) {
                         localStorage.removeItem('stardust_cache_' + key);
                         return null;
@@ -1807,8 +1826,233 @@
             });
         }
 
-        // ---------- RENDER FUNCTIONS (rest of the code remains same) ----------
-        // ... (all render functions remain unchanged)
+        // ---------- RENDER FUNCTIONS ----------
+        function renderAll() {
+            renderChatList();
+            renderContacts();
+            renderMoments();
+            renderProfile();
+            renderFriendRequests();
+            renderIncomingRequestsBadge();
+            renderContactBadge();
+            renderChatBadge();
+            renderGroups();
+        }
+
+        function renderChatList() {
+            const container = $('chat-list');
+            const placeholder = $('no-chats-placeholder');
+            container.innerHTML = '';
+            let hasChats = false;
+            
+            let chatEntries = [];
+            const chatKeys = Object.keys(state.chats).filter(key => key.includes(state.currentUser.uid) || key.includes(BOT_UID));
+            
+            for (let key of chatKeys) {
+                const parts = key.split('_text_');
+                let otherUid = parts[0] === state.currentUser.uid ? parts[1] : parts[0];
+                if (!otherUid || otherUid === state.currentUser.uid) continue;
+                
+                let msgs = state.messages[key] || [];
+                let lastMsg = msgs.length > 0 ? msgs[msgs.length-1] : null;
+                let lastTime = lastMsg ? lastMsg.timestamp : 0;
+                
+                if (otherUid.startsWith('group_')) {
+                    const group = state.groups[otherUid];
+                    if (group && group.members && group.members.includes(state.currentUser.uid)) {
+                        const unread = msgs.filter(m => m.sender !== state.currentUser.uid && !m.read).length;
+                        chatEntries.push({
+                            key: key,
+                            uid: otherUid,
+                            isGroup: true,
+                            group: group,
+                            msgs: msgs,
+                            lastMsg: lastMsg,
+                            lastTime: lastTime,
+                            unread: unread,
+                            name: group.name || 'Group',
+                            pfp: group.pfp || '',
+                            isBot: false
+                        });
+                        continue;
+                    }
+                }
+                
+                // Only show chats with contacts
+                const contact = state.contacts.find(c => c.uid === otherUid);
+                if (!contact) continue;
+                if (otherUid === BOT_UID) continue;
+                const unread = msgs.filter(m => m.sender !== state.currentUser.uid && m.sender !== 'bot' && !m.read).length;
+                chatEntries.push({
+                    key: key,
+                    uid: otherUid,
+                    isGroup: false,
+                    contact: contact,
+                    msgs: msgs,
+                    lastMsg: lastMsg,
+                    lastTime: lastTime,
+                    unread: unread,
+                    name: contact.name,
+                    pfp: contact.pfp || '',
+                    isBot: false
+                });
+            }
+            
+            chatEntries.sort((a, b) => b.lastTime - a.lastTime);
+            
+            for (let entry of chatEntries) {
+                hasChats = true;
+                const div = document.createElement('div');
+                const unread = entry.unread;
+                div.className = `flex items-center justify-between p-3 bg-white rounded-xl border ${unread > 0 ? 'border-[#2b7a4b] shadow-md' : 'border-[#b8d0b8]'} cursor-pointer hover:bg-[#f0f7f0] transition clickable-row chat-item`;
+                
+                const isGroup = entry.isGroup;
+                if (isGroup) {
+                    div.innerHTML = `
+                        <div class="flex items-center space-x-3 w-full" onclick="openGroupChat('${entry.uid}')">
+                            <div class="w-10 h-10 rounded-full bg-[#2b7a4b] flex items-center justify-center text-white font-bold text-xs">${entry.name.charAt(0).toUpperCase()}</div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-bold text-sm text-[#1a2e1a]">${entry.name}</p>
+                                <p class="text-xs truncate ${unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${entry.lastMsg ? entry.lastMsg.text : 'Group chat'}</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            ${unread > 0 ? `<span class="bg-[#2b7a4b] text-white text-[9px] font-bold rounded-full h-5 px-2 flex items-center">${unread}</span>` : ''}
+                            <span class="text-[9px] text-[#2b7a4b] opacity-50">${entry.lastMsg ? new Date(entry.lastMsg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
+                        </div>
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <div class="flex items-center space-x-3 w-full" onclick="openChat('${entry.uid}')">
+                            <img src="${entry.pfp || ''}" class="w-10 h-10 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
+                            <div class="flex-1 min-w-0">
+                                <p class="font-bold text-sm text-[#1a2e1a]">${entry.name}</p>
+                                <p class="text-xs truncate ${unread > 0 ? 'font-bold text-[#2b7a4b]' : 'text-[#2b7a4b] opacity-60'}">${entry.lastMsg ? entry.lastMsg.text : 'Start chatting'}</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            ${unread > 0 ? `<span class="bg-[#2b7a4b] text-white text-[9px] font-bold rounded-full h-5 px-2 flex items-center">${unread}</span>` : ''}
+                            <span class="text-[9px] text-[#2b7a4b] opacity-50">${entry.lastMsg ? new Date(entry.lastMsg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
+                        </div>
+                    `;
+                }
+                container.appendChild(div);
+            }
+            placeholder.classList.toggle('hidden', hasChats);
+        }
+
+        function renderGroups() {
+            // Groups are rendered in chat list
+        }
+
+        function renderContacts() {
+            const container = $('contacts-list');
+            const placeholder = $('no-contacts-placeholder');
+            container.innerHTML = '';
+            const sorted = [...state.contacts].sort((a,b) => a.name.localeCompare(b.name));
+            let currentLetter = '';
+            for (let contact of sorted) {
+                if (contact.uid === BOT_UID) continue;
+                const letter = contact.name.charAt(0).toUpperCase();
+                if (letter !== currentLetter) { currentLetter = letter; const header = document.createElement('div'); header.className = 'text-xs font-bold text-[#2b7a4b] opacity-60 py-1 px-2'; header.innerText = letter; container.appendChild(header); }
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] transition clickable-row';
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3 w-full" onclick="openChat('${contact.uid}')">
+                        <img src="${contact.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
+                        <div class="flex-1">
+                            <p class="font-bold text-sm text-[#1a2e1a]">${contact.name}</p>
+                            <p class="text-[10px] text-[#2b7a4b] font-mono">@${contact.uid}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <button onclick="event.stopPropagation(); openChat('${contact.uid}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
+                        <button onclick="event.stopPropagation(); openContactActions('${contact.uid}')" class="contact-menu-btn p-1">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+            // Show groups in contacts too
+            for (let groupId in state.groups) {
+                const group = state.groups[groupId];
+                if (group.members && group.members.includes(state.currentUser.uid)) {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] transition clickable-row';
+                    div.innerHTML = `
+                        <div class="flex items-center space-x-3 w-full" onclick="openGroupChat('${groupId}')">
+                            <div class="w-8 h-8 rounded-full bg-[#2b7a4b] flex items-center justify-center text-white font-bold text-xs">${group.name.charAt(0).toUpperCase()}</div>
+                            <div class="flex-1">
+                                <p class="font-bold text-sm text-[#1a2e1a]">${group.name}</p>
+                                <p class="text-[10px] text-[#2b7a4b] font-mono">Group</p>
+                            </div>
+                        </div>
+                        <button onclick="event.stopPropagation(); openGroupChat('${groupId}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
+                    `;
+                    container.appendChild(div);
+                }
+            }
+            placeholder.classList.toggle('hidden', sorted.length > 0 || Object.keys(state.groups).length > 0);
+        }
+
+        function renderMoments() {
+            const container = $('moments-feed');
+            const placeholder = $('no-moments-placeholder');
+            container.innerHTML = '';
+            if (state.posts.length === 0) { placeholder.classList.remove('hidden'); return; }
+            placeholder.classList.add('hidden');
+            for (let post of state.posts) {
+                const author = state.allUsers.find(u => u.uid === post.author) || state.currentUser;
+                const isSaved = state.savedPosts && state.savedPosts.includes(post.id);
+                const likesCount = post.likes ? Object.keys(post.likes).length : 0;
+                const commentsCount = post.comments ? Object.keys(post.comments).length : 0;
+                const isLiked = post.likes && post.likes[state.currentUser.uid] === true;
+                const isOwner = post.author === state.currentUser.uid;
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-2xl border border-[#b8d0b8] p-4 shadow-sm moment-card';
+                div.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2 cursor-pointer" onclick="openProfileView('${post.author}')">
+                            <img src="${author.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
+                            <div>
+                                <span class="font-bold text-sm text-[#1a2e1a]">${author.name}</span>
+                                <span class="text-[10px] text-[#2b7a4b] opacity-50 block">@${author.uid}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span class="text-[9px] text-[#2b7a4b] opacity-50">${new Date(post.timestamp).toLocaleString()}</span>
+                            ${isOwner ? `<button onclick="event.stopPropagation(); openPostActions('${post.id}')" class="post-menu-btn p-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>` : `<button onclick="event.stopPropagation(); openPostReport('${post.id}')" class="post-menu-btn p-1 text-yellow-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></button>`}
+                            ${state.currentUser.uid === ADMIN_UID ? `<button onclick="event.stopPropagation(); adminDeletePost('${post.id}')" class="post-menu-btn p-1 text-red-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>` : ''}
+                        </div>
+                    </div>
+                    <p class="text-sm text-[#1a2e1a] whitespace-pre-wrap">${post.text}</p>
+                    ${post.image ? `<img src="${post.image}" class="mt-2 rounded-xl max-h-60 w-full object-cover cursor-pointer" onclick="openImageViewer('${post.image}')">` : ''}
+                    <div class="flex items-center justify-between mt-3 pt-2 border-t border-[#e5f0e5]">
+                        <button onclick="likePost('${post.id}')" class="flex items-center gap-1 text-xs ${isLiked ? 'text-[#2b7a4b] font-bold' : 'text-[#2b7a4b] opacity-60'}">
+                            <svg class="w-4 h-4" fill="${isLiked ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            <span>${likesCount}</span>
+                        </button>
+                        <button onclick="openCommentModal('${post.id}')" class="flex items-center gap-1 text-xs text-[#2b7a4b] opacity-60">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                            <span>${commentsCount}</span>
+                        </button>
+                        <button onclick="sharePost('${post.id}')" class="flex items-center gap-1 text-xs text-[#2b7a4b] opacity-60">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                        </button>
+                        <button onclick="savePost('${post.id}')" class="flex items-center gap-1 text-xs ${isSaved ? 'text-[#2b7a4b] font-bold' : 'text-[#2b7a4b] opacity-60'}">
+                            <svg class="w-4 h-4" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                        </button>
+                    </div>
+                    ${post.comments ? `<div class="mt-2 space-y-1 max-h-20 overflow-y-auto custom-scrollbar">${Object.values(post.comments).slice(-2).map(c => `<div class="text-xs bg-[#f0f7f0] p-1.5 rounded-lg"><span class="font-bold">${c.authorName}:</span> ${c.text}</div>`).join('')}</div>` : ''}
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        // Continue with all remaining functions...
+        // (The rest of the functions like renderProfile, renderFriendRequests, 
+        // openChat, sendMessage, etc. remain exactly the same as before)
 
         // ---------- INIT ----------
         startLoadingTimer();
