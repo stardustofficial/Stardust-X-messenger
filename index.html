@@ -39,8 +39,9 @@
         .call-reaction-float { position: fixed; font-size: 40px; pointer-events: none; z-index: 200; animation: floatUp 1.2s ease-out forwards; }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-120px) scale(1.3); } }
 
-        #loading-screen { position: fixed; inset: 0; background: #e5f0e5; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.4s ease; }
-        #loading-screen.hidden { opacity: 0; pointer-events: none; }
+        #loading-screen { position: fixed; inset: 0; background: #e5f0e5; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.6s ease, visibility 0.6s ease; }
+        #loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        #loading-screen.hidden .loading-spinner { display: none; }
         .loading-spinner { width: 40px; height: 40px; border: 3px solid rgba(0,0,0,0.1); border-top-color: #2b7a4b; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
 
         .chat-bubble-self { background: #2b7a4b; color: white; border-radius: 18px 18px 4px 18px; }
@@ -484,7 +485,7 @@
     </div>
 
     <!-- LOGIN SCREEN -->
-    <div id="login-screen" class="hidden fixed inset-0 flex flex-col items-center justify-center p-6 bg-[#e5f0e5] z-50">
+    <div id="login-screen" class="fixed inset-0 flex flex-col items-center justify-center p-6 bg-[#e5f0e5] z-50" style="display:none;">
         <div class="text-center max-w-sm w-full bg-white p-8 rounded-3xl border border-[#b8d0b8] shadow-lg">
             <h1 class="text-3xl font-black tracking-widest text-[#2b7a4b] mb-1">STARDUST X</h1>
             <p class="text-[#2b7a4b] text-xs opacity-70 mb-6">Secure Messenger</p>
@@ -559,7 +560,7 @@
     </div>
 
     <!-- MAIN APP -->
-    <div id="app-layout" class="hidden flex-1 flex-col pb-16 max-w-md mx-auto w-full bg-[#e5f0e5] min-h-screen relative border-x border-[#b8d0b8] shadow-xl">
+    <div id="app-layout" class="flex-1 flex-col pb-16 max-w-md mx-auto w-full bg-[#e5f0e5] min-h-screen relative border-x border-[#b8d0b8] shadow-xl" style="display:none;">
         
         <!-- TOP BAR -->
         <div id="top-bar" class="bg-white border-b border-[#b8d0b8] px-4 py-3 flex justify-between items-center sticky top-0 z-30">
@@ -1129,7 +1130,8 @@
             groups: {}, groupMembers: {},
             viewerFileType: null, viewerFileId: null, viewerSender: null,
             botName: 'Stardust Bot', botPfp: '',
-            isInitialLoad: true
+            isInitialLoad: true,
+            authChecked: false
         };
 
         const $ = id => document.getElementById(id);
@@ -1383,10 +1385,8 @@
             showPopup('Delete Account', 'Are you sure you want to delete your account? This action cannot be undone. All your data will be permanently removed.', '', 'Delete Account', async (val) => {
                 if (val !== null) {
                     try {
-                        // Delete user data from database
                         const uid = state.currentUser.uid;
                         await remove(ref(db, 'users/' + uid));
-                        // Delete user's posts
                         const postSnap = await get(ref(db, 'posts'));
                         const posts = postSnap.val() || {};
                         for (let key in posts) {
@@ -1394,13 +1394,11 @@
                                 await remove(ref(db, 'posts/' + key));
                             }
                         }
-                        // Delete user's chats
                         for (let key in state.chats) {
                             if (key.includes(uid)) {
                                 await remove(ref(db, 'chats/' + key));
                             }
                         }
-                        // Delete friend requests
                         const reqSnap = await get(ref(db, 'friendRequests'));
                         const reqs = reqSnap.val() || {};
                         for (let key in reqs) {
@@ -1408,7 +1406,6 @@
                                 await remove(ref(db, 'friendRequests/' + key));
                             }
                         }
-                        // Delete friendships
                         const friendSnap = await get(ref(db, 'friendships'));
                         const friends = friendSnap.val() || {};
                         for (let key in friends) {
@@ -1416,11 +1413,8 @@
                                 await remove(ref(db, 'friendships/' + key));
                             }
                         }
-                        // Delete blocked list
                         await remove(ref(db, 'blocked/' + uid));
-                        // Delete saved posts
                         await remove(ref(db, 'saved/' + uid));
-                        // Delete call history
                         const callSnap = await get(ref(db, 'callHistory'));
                         const calls = callSnap.val() || {};
                         for (let key in calls) {
@@ -1428,7 +1422,6 @@
                                 await remove(ref(db, 'callHistory/' + key));
                             }
                         }
-                        // Delete user's Firebase Auth account
                         const user = auth.currentUser;
                         if (user) {
                             await user.delete();
@@ -1442,22 +1435,30 @@
             }, 'text', true);
         };
 
+        // ---------- AUTH STATE HANDLER ----------
         onAuthStateChanged(auth, async (user) => {
+            state.authChecked = true;
+            
             if (user) {
-                // User is logged in - show loading screen directly
-                loginScreen.classList.add('hidden');
+                // User is logged in - show loading screen, hide login
+                loginScreen.style.display = 'none';
                 loadingScreen.classList.remove('hidden');
                 appLayout.style.display = 'none';
                 
                 const snap = await get(ref(db, 'users'));
                 const users = snap.val() || {};
                 let found = null;
-                for (let key in users) { if (users[key].email === user.email) found = { ...users[key], dbKey: key }; }
+                for (let key in users) { 
+                    if (users[key].email === user.email) {
+                        found = { ...users[key], dbKey: key }; 
+                        break;
+                    }
+                }
                 if (!found) { 
                     alert('User data not found. Please re-login.'); 
                     await signOut(auth); 
-                    loadingScreen.classList.add('hidden'); 
-                    loginScreen.classList.remove('hidden'); 
+                    loadingScreen.classList.add('hidden');
+                    loginScreen.style.display = 'flex';
                     return; 
                 }
                 state.currentUser = found;
@@ -1472,17 +1473,16 @@
                 loadingScreen.classList.add('hidden');
                 appLayout.style.display = 'flex';
                 listenToRealtime();
-                $('btn-login-text').classList.remove('hidden'); 
-                $('btn-login-spinner').classList.add('hidden');
-                $('btn-signup-text').classList.remove('hidden'); 
-                $('btn-signup-spinner').classList.add('hidden');
                 state.isInitialLoad = false;
             } else {
                 // User is not logged in - show login screen
                 loadingScreen.classList.add('hidden');
-                loginScreen.classList.remove('hidden');
+                loginScreen.style.display = 'flex';
                 appLayout.style.display = 'none';
-                if (state.peerInstance) { state.peerInstance.destroy(); state.peerInstance = null; }
+                if (state.peerInstance) { 
+                    state.peerInstance.destroy(); 
+                    state.peerInstance = null; 
+                }
                 if (window.OneSignal) {
                     window.OneSignal.logout();
                 }
@@ -1537,7 +1537,6 @@
             state.chats = chatSnap.val() || {};
             state.messages = {};
             for (let key in state.chats) {
-                // Only load chats that belong to this user or are bot chats
                 if (key.includes(state.currentUser.uid) || key.includes(BOT_UID)) {
                     const msgs = state.chats[key] || {};
                     state.messages[key] = Object.values(msgs).sort((a,b) => a.timestamp - b.timestamp);
@@ -1564,6 +1563,7 @@
 
         function listenToRealtime() {
             onValue(ref(db, 'users'), (snap) => { 
+                if (!state.currentUser) return;
                 const users = snap.val() || {}; 
                 state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid);
                 const botUser = state.allUsers.find(u => u.uid === BOT_UID);
@@ -1576,6 +1576,7 @@
                 renderAll(); 
             });
             onValue(ref(db, 'friendships'), (snap) => {
+                if (!state.currentUser) return;
                 const friendships = snap.val() || {};
                 state.contacts = [];
                 for (let key in friendships) {
@@ -1592,6 +1593,7 @@
                 renderAll();
             });
             onValue(ref(db, 'friendRequests'), (snap) => {
+                if (!state.currentUser) return;
                 const reqs = snap.val() || {};
                 state.friendRequests = [];
                 for (let key in reqs) {
@@ -1603,6 +1605,7 @@
                 renderAll();
             });
             onValue(ref(db, 'chats'), (snap) => {
+                if (!state.currentUser) return;
                 state.chats = snap.val() || {};
                 state.messages = {};
                 for (let key in state.chats) {
@@ -1615,20 +1618,25 @@
                 if (state.activeChat) renderChatMessages();
             });
             onValue(ref(db, 'posts'), (snap) => {
+                if (!state.currentUser) return;
                 state.posts = snap.val() ? Object.values(snap.val()).sort((a,b) => b.timestamp - a.timestamp) : [];
                 renderAll();
             });
             onValue(ref(db, 'callHistory'), (snap) => {
+                if (!state.currentUser) return;
                 state.callHistory = snap.val() ? Object.values(snap.val()).filter(c => c.user === state.currentUser.uid || c.other === state.currentUser.uid) : [];
             });
-            onValue(ref(db, 'saved/' + state.currentUser.uid), (snap) => {
+            onValue(ref(db, 'saved/' + state.currentUser?.uid), (snap) => {
+                if (!state.currentUser) return;
                 state.savedPosts = snap.val() || [];
             });
             onValue(ref(db, 'groups'), (snap) => {
+                if (!state.currentUser) return;
                 state.groups = snap.val() || {};
                 renderAll();
             });
             onValue(ref(db, 'botSettings'), (snap) => {
+                if (!state.currentUser) return;
                 const settings = snap.val() || {};
                 state.botName = settings.name || 'Stardust Bot';
                 state.botPfp = settings.pfp || '';
@@ -1927,7 +1935,6 @@
                 const parts = key.split('_text_');
                 let otherUid = parts[0] === state.currentUser.uid ? parts[1] : parts[0];
                 if (!otherUid) continue;
-                // Only count unread from contacts
                 const contact = state.contacts.find(c => c.uid === otherUid);
                 if (!contact && !otherUid.startsWith('group_')) continue;
                 total += msgs.filter(m => m.sender !== state.currentUser.uid && m.sender !== 'bot' && !m.read).length;
@@ -2662,7 +2669,7 @@
         // ---------- CALLS ----------
         let callOverlayVisible = true;
 
-        function toggleCallOverlay() {
+        window.toggleCallOverlay = function() {
             if (!state.callActive) return;
             callOverlayVisible = !callOverlayVisible;
             const overlay = document.getElementById('call-overlay-content');
@@ -2673,7 +2680,7 @@
                 overlay.style.opacity = '0';
                 overlay.style.pointerEvents = 'none';
             }
-        }
+        };
 
         function initPeer() {
             if (state.peerInstance) state.peerInstance.destroy();
@@ -2685,7 +2692,7 @@
                 if (state.blocked.includes(peerUid)) { call.close(); return; }
                 const statusLbl = document.getElementById('call-status-lbl');
                 if (statusLbl) statusLbl.innerText = 'Incoming call...';
-                showIncomingCall(user);
+                window.showIncomingCall(user);
                 sendOneSignalNotification(peerUid, 'Incoming Call', `${state.currentUser.name} is calling you`, { type: 'call' });
             });
         }
@@ -2708,20 +2715,20 @@
                     state.callActive = true;
                     const statusLbl = document.getElementById('call-status-lbl');
                     if (statusLbl) statusLbl.innerText = 'Connecting...';
-                    showCallUI(targetUid);
+                    window.showCallUI(targetUid);
                     call.on('stream', (remoteStream) => {
                         document.getElementById('call-remote-video').srcObject = remoteStream;
                         document.getElementById('call-overlay-content').style.opacity = '0';
                         document.getElementById('call-overlay-content').style.pointerEvents = 'none';
                         const statusLbl = document.getElementById('call-status-lbl');
                         if (statusLbl) statusLbl.innerText = 'Connected';
-                        startCallTimer();
+                        window.startCallTimer();
                     });
                     call.on('close', () => { 
                         document.getElementById('call-overlay-content').style.opacity = '1';
                         document.getElementById('call-overlay-content').style.pointerEvents = 'auto';
-                        terminateCall(); 
-                        closeChatWindow(); 
+                        window.terminateCall(); 
+                        window.closeChatWindow(); 
                     });
                     sendOneSignalNotification(targetUid, `${type === 'video' ? 'Video' : 'Audio'} Call`, `${state.currentUser.name} is calling you`, { type: 'call' });
                 }).catch(err => alert('Camera/Mic access denied: ' + err.message));
@@ -2744,20 +2751,20 @@
                         document.getElementById('call-remote-video').srcObject = remoteStream;
                         const statusLbl = document.getElementById('call-status-lbl');
                         if (statusLbl) statusLbl.innerText = 'Connected';
-                        startCallTimer();
+                        window.startCallTimer();
                     });
                     state.call.on('close', () => { 
                         document.getElementById('call-overlay-content').style.opacity = '1';
                         document.getElementById('call-overlay-content').style.pointerEvents = 'auto';
-                        terminateCall(); 
-                        closeChatWindow(); 
+                        window.terminateCall(); 
+                        window.closeChatWindow(); 
                     });
                 }).catch(err => alert('Failed to answer: ' + err.message));
         };
 
-        window.rejectIncomingCall = function() { if (state.call) state.call.close(); terminateCall(); };
+        window.rejectIncomingCall = function() { if (state.call) state.call.close(); window.terminateCall(); };
 
-        function showCallUI(uid) {
+        window.showCallUI = function(uid) {
             const user = state.allUsers.find(u => u.uid === uid) || state.currentUser;
             const nameEl = document.getElementById('call-peer-name');
             const uidEl = document.getElementById('call-peer-uid');
@@ -2782,9 +2789,9 @@
                 document.getElementById('call-local-video').style.display = 'none';
                 document.getElementById('call-remote-video').style.display = 'none';
             }
-        }
+        };
 
-        function showIncomingCall(user) {
+        window.showIncomingCall = function(user) {
             const nameEl = document.getElementById('call-peer-name');
             const uidEl = document.getElementById('call-peer-uid');
             const pfpEl = document.getElementById('call-peer-pfp');
@@ -2802,7 +2809,7 @@
             document.getElementById('call-bottom-nav').classList.add('hidden');
             state.callIsVideo = true;
             document.getElementById('call-remote-video').style.display = 'block';
-        }
+        };
 
         window.terminateCall = function() {
             if (state.call) { state.call.close(); state.call = null; }
@@ -2821,7 +2828,7 @@
             document.getElementById('call-mute-btn').innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>`;
         };
 
-        function startCallTimer() {
+        window.startCallTimer = function() {
             state.callSeconds = 0;
             if (state.callDurationInterval) clearInterval(state.callDurationInterval);
             state.callDurationInterval = setInterval(() => {
@@ -2830,7 +2837,7 @@
                 const secs = String(state.callSeconds % 60).padStart(2, '0');
                 document.getElementById('floating-call-duration').innerText = mins + ':' + secs;
             }, 1000);
-        }
+        };
 
         window.minimizeCallWindow = function() {
             state.callIsFloating = true;
@@ -2888,10 +2895,10 @@
             if (!state.callPeerId) return;
             push(ref(db, 'callReactions'), { from: state.currentUser.uid, to: state.callPeerId, emoji, timestamp: Date.now() });
             document.getElementById('call-reactions-popup').classList.add('hidden');
-            showCallReaction(emoji);
+            window.showCallReaction(emoji);
         };
 
-        function showCallReaction(emoji) {
+        window.showCallReaction = function(emoji) {
             const el = document.createElement('div');
             el.className = 'call-reaction-float';
             el.innerText = emoji;
@@ -2899,13 +2906,13 @@
             el.style.top = Math.random() * 40 + 20 + '%';
             document.body.appendChild(el);
             setTimeout(() => el.remove(), 1200);
-        }
+        };
 
         onValue(ref(db, 'callReactions'), (snap) => {
             const data = snap.val();
             if (data) {
                 const last = Object.values(data).pop();
-                if (last && last.to === state.currentUser.uid) showCallReaction(last.emoji);
+                if (last && last.to === state.currentUser.uid) window.showCallReaction(last.emoji);
             }
         });
 
@@ -2917,10 +2924,10 @@
             const key = getChatKey(state.currentUser.uid, state.callPeerId);
             push(ref(db, 'chats/' + key), { sender: state.currentUser.uid, text, timestamp: Date.now(), read: false, reactions: {} });
             input.value = '';
-            renderCallChatMessages();
+            window.renderCallChatMessages();
         };
 
-        function renderCallChatMessages() {
+        window.renderCallChatMessages = function() {
             if (!state.callPeerId) return;
             const key = getChatKey(state.currentUser.uid, state.callPeerId);
             const msgs = state.messages[key] || [];
@@ -2934,7 +2941,7 @@
                 container.appendChild(div);
             }
             container.scrollTop = container.scrollHeight;
-        }
+        };
 
         // ---------- POSTS ----------
         window.openCreatePost = function() { $('create-post-modal').classList.remove('hidden'); };
@@ -3069,10 +3076,6 @@
                 searchContainer.classList.remove('hidden');
             } else {
                 searchContainer.classList.add('hidden');
-                // Also close search if open
-                if (searchContainer.classList.contains('hidden')) {
-                    // already hidden
-                }
             }
         };
 
@@ -3179,7 +3182,6 @@
                         if (data.success) imageUrl = data.data.url;
                     } catch (e) { console.error(e); }
                 }
-                // Send report to admin via bot chat
                 const adminKey = getChatKey(BOT_UID, ADMIN_UID);
                 push(ref(db, 'chats/' + adminKey), {
                     sender: 'bot',
