@@ -458,13 +458,13 @@
         }
         
         .footer-link {
-            color: #2563eb;
+            color: #2b7a4b !important;
             text-decoration: underline;
             cursor: pointer;
             font-weight: 500;
         }
         .footer-link:hover {
-            color: #1d4ed8;
+            color: #1e5a35 !important;
         }
         
         .hidden-search .search-container {
@@ -472,6 +472,50 @@
         }
         .search-container.active {
             display: block;
+        }
+
+        /* Settings button fix - match other buttons */
+        .settings-link-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #f0f7f0;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a2e1a;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: none;
+            width: 100%;
+            text-align: left;
+            text-decoration: none;
+        }
+        .settings-link-btn:active {
+            background: #c8e6c9;
+        }
+        .settings-link-btn .icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .settings-link-btn .icon svg {
+            width: 24px;
+            height: 24px;
+            color: #2b7a4b;
+        }
+        .settings-link-btn.danger {
+            color: #dc2626;
+        }
+        .settings-link-btn.danger .icon svg {
+            color: #dc2626;
+        }
+        .settings-link-btn.border-top {
+            border-top: 1px solid #e5f0e5;
+            padding-top: 14px;
+            margin-top: 4px;
+            border-radius: 0;
         }
     </style>
 </head>
@@ -976,14 +1020,35 @@
                 <button onclick="closeModal('settings-modal')" class="text-[#2b7a4b]">✕</button>
             </div>
             <div class="mt-3 space-y-2 overflow-y-auto">
-                <button onclick="openSavedPosts()" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2">Saved Moments</button>
-                <button onclick="openBlockedContacts()" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2">Blocked Contacts</button>
-                <button onclick="openCallHistory()" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2">Call History</button>
+                <button onclick="openSavedPosts()" class="settings-link-btn">
+                    <span class="icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg></span>
+                    Saved Moments
+                </button>
+                <button onclick="openBlockedContacts()" class="settings-link-btn">
+                    <span class="icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></span>
+                    Blocked Contacts
+                </button>
+                <button onclick="openCallHistory()" class="settings-link-btn">
+                    <span class="icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></span>
+                    Call History
+                </button>
                 <div class="border-t border-[#b8d0b8] pt-2"></div>
-                <a href="privacy.html" target="_blank" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2 text-[#2563eb] no-underline hover:bg-[#e5f0e5]">Privacy Policy</a>
-                <a href="terms.html" target="_blank" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2 text-[#2563eb] no-underline hover:bg-[#e5f0e5]">Terms of Service</a>
-                <button onclick="logout()" class="w-full text-left px-3 py-2.5 bg-red-50 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2">Logout</button>
-                <button onclick="deleteAccount()" class="w-full text-left px-3 py-2.5 bg-red-50 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2 border-t border-red-100 pt-3">Delete Account</button>
+                <a href="privacy.html" target="_blank" class="settings-link-btn">
+                    <span class="icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></span>
+                    Privacy Policy
+                </a>
+                <a href="terms.html" target="_blank" class="settings-link-btn">
+                    <span class="icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span>
+                    Terms of Service
+                </a>
+                <button onclick="logout()" class="settings-link-btn danger">
+                    <span class="icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></span>
+                    Logout
+                </button>
+                <button onclick="deleteAccount()" class="settings-link-btn danger border-top">
+                    <span class="icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></span>
+                    Delete Account
+                </button>
             </div>
         </div>
     </div>
@@ -1117,6 +1182,42 @@
         const ONESIGNAL_APP_ID = '49d9bfd2-9125-484c-a5e6-2f29ef289b3e';
         const ONESIGNAL_API_KEY = 'os_v2_app_jhm37uureveezjpgf4u66ke3h2ayumte23mu5wmxdxvbhpi2nj7cwk3dsgsfxoqqdwxnfmsattxganjwjkwchxlwgyici2suk6aapmi';
 
+        // ---------- LOCAL STORAGE CACHE HELPERS ----------
+        function saveToCache(key, data) {
+            try {
+                localStorage.setItem('stardust_cache_' + key, JSON.stringify({
+                    data: data,
+                    timestamp: Date.now()
+                }));
+            } catch (e) {
+                console.warn('Cache save error:', e);
+            }
+        }
+
+        function loadFromCache(key, maxAge = 300000) { // 5 minutes default
+            try {
+                const raw = localStorage.getItem('stardust_cache_' + key);
+                if (!raw) return null;
+                const cached = JSON.parse(raw);
+                if (Date.now() - cached.timestamp > maxAge) {
+                    localStorage.removeItem('stardust_cache_' + key);
+                    return null;
+                }
+                return cached.data;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function clearCache() {
+            const keys = Object.keys(localStorage);
+            keys.forEach(key => {
+                if (key.startsWith('stardust_cache_')) {
+                    localStorage.removeItem(key);
+                }
+            });
+        }
+
         let state = {
             currentUser: null, allUsers: [], contacts: [], chats: {}, messages: {}, posts: [],
             friendRequests: [], callHistory: [], blocked: [], savedPosts: [], activeChat: null,
@@ -1132,7 +1233,9 @@
             botName: 'Stardust Bot', botPfp: '',
             isInitialLoad: true,
             authChecked: false,
-            appReady: false
+            appReady: false,
+            cacheLoaded: false,
+            dataLoaded: false
         };
 
         const $ = id => document.getElementById(id);
@@ -1157,16 +1260,12 @@
 
         // ---------- LOADING SCREEN TIMER ----------
         function startLoadingTimer() {
-            // 5 second fallback timer - ensures app doesn't get stuck
             setTimeout(() => {
-                // If app is not ready yet, check auth status
                 if (!state.appReady) {
                     if (auth.currentUser && state.currentUser) {
-                        // User is logged in but app not ready - show app
                         showApp();
                         console.log('Loading timer: App shown (user logged in)');
                     } else {
-                        // No user - show login
                         showLogin();
                         console.log('Loading timer: Login shown (no user)');
                     }
@@ -1296,6 +1395,8 @@
                         updates['friendships/' + key1] = null;
                         updates['friendships/' + key2] = null;
                         update(ref(db), updates);
+                        // Clear cache after action
+                        clearCache();
                     }
                 });
             } else if (action === 'block') {
@@ -1304,6 +1405,7 @@
                         if (!state.blocked.includes(uid)) {
                             state.blocked.push(uid);
                             set(ref(db, 'blocked/' + state.currentUser.uid), state.blocked);
+                            clearCache();
                         }
                     }
                 });
@@ -1343,6 +1445,7 @@
                             if (data) {
                                 const key = Object.keys(data).find(k => data[k].id === postId);
                                 if (key) remove(ref(db, 'posts/' + key));
+                                clearCache();
                             }
                         }, { onlyOnce: true });
                     }
@@ -1461,6 +1564,7 @@
                         if (user) {
                             await user.delete();
                         }
+                        clearCache();
                         alert('Your account has been deleted successfully.');
                         closeModal('settings-modal');
                     } catch (e) {
@@ -1469,6 +1573,57 @@
                 }
             }, 'text', true);
         };
+
+        // ---------- LOAD DATA FROM CACHE ----------
+        function loadDataFromCache() {
+            try {
+                const cached = loadFromCache('user_data_' + state.currentUser?.uid, 600000); // 10 minutes
+                if (cached) {
+                    state.allUsers = cached.allUsers || [];
+                    state.contacts = cached.contacts || [];
+                    state.chats = cached.chats || {};
+                    state.messages = cached.messages || {};
+                    state.posts = cached.posts || [];
+                    state.friendRequests = cached.friendRequests || [];
+                    state.callHistory = cached.callHistory || [];
+                    state.blocked = cached.blocked || [];
+                    state.savedPosts = cached.savedPosts || [];
+                    state.groups = cached.groups || {};
+                    state.botName = cached.botName || 'Stardust Bot';
+                    state.botPfp = cached.botPfp || '';
+                    state.cacheLoaded = true;
+                    return true;
+                }
+                return false;
+            } catch (e) {
+                console.warn('Cache load error:', e);
+                return false;
+            }
+        }
+
+        // ---------- SAVE DATA TO CACHE ----------
+        function saveDataToCache() {
+            if (!state.currentUser) return;
+            try {
+                const data = {
+                    allUsers: state.allUsers,
+                    contacts: state.contacts,
+                    chats: state.chats,
+                    messages: state.messages,
+                    posts: state.posts,
+                    friendRequests: state.friendRequests,
+                    callHistory: state.callHistory,
+                    blocked: state.blocked,
+                    savedPosts: state.savedPosts,
+                    groups: state.groups,
+                    botName: state.botName,
+                    botPfp: state.botPfp
+                };
+                saveToCache('user_data_' + state.currentUser.uid, data);
+            } catch (e) {
+                console.warn('Cache save error:', e);
+            }
+        }
 
         // ---------- AUTH STATE HANDLER ----------
         onAuthStateChanged(auth, async (user) => {
@@ -1504,18 +1659,36 @@
                         window.OneSignal.login(found.uid);
                     }
                     
-                    // Show app immediately - don't wait for all data
-                    showApp();
+                    // Try to load from cache FIRST for instant display
+                    const cacheLoaded = loadDataFromCache();
                     
-                    // Load data in background
+                    if (cacheLoaded && state.allUsers.length > 0) {
+                        // Show app immediately with cached data
+                        showApp();
+                        renderAll();
+                        initPeer();
+                        console.log('App loaded from cache instantly!');
+                    } else {
+                        // No cache or empty - show app but with loading state
+                        showApp();
+                        // Show a loading indicator in the UI
+                        $('chat-list').innerHTML = '<div class="text-center text-[#2b7a4b] opacity-60 text-sm py-10">Loading your data...</div>';
+                    }
+                    
+                    // Load fresh data from Firebase in background
                     try {
                         await loadAllData();
                         renderAll();
                         initPeer();
                         listenToRealtime();
+                        saveDataToCache(); // Save fresh data to cache
+                        state.dataLoaded = true;
                     } catch (dataError) {
                         console.error('Background data loading error:', dataError);
-                        // Data load failed but app is already showing
+                        // If cache was loaded, we still have data to show
+                        if (!cacheLoaded) {
+                            showLogin();
+                        }
                     }
                     
                     state.isInitialLoad = false;
@@ -1534,6 +1707,7 @@
                 if (window.OneSignal) {
                     window.OneSignal.logout();
                 }
+                clearCache();
             }
         });
 
@@ -1622,6 +1796,7 @@
                     botUser.pfp = state.botPfp;
                 }
                 renderAll(); 
+                saveDataToCache();
             });
             onValue(ref(db, 'friendships'), (snap) => {
                 if (!state.currentUser) return;
@@ -1639,6 +1814,7 @@
                     }
                 }
                 renderAll();
+                saveDataToCache();
             });
             onValue(ref(db, 'friendRequests'), (snap) => {
                 if (!state.currentUser) return;
@@ -1651,6 +1827,7 @@
                     }
                 }
                 renderAll();
+                saveDataToCache();
             });
             onValue(ref(db, 'chats'), (snap) => {
                 if (!state.currentUser) return;
@@ -1664,24 +1841,29 @@
                 }
                 renderAll();
                 if (state.activeChat) renderChatMessages();
+                saveDataToCache();
             });
             onValue(ref(db, 'posts'), (snap) => {
                 if (!state.currentUser) return;
                 state.posts = snap.val() ? Object.values(snap.val()).sort((a,b) => b.timestamp - a.timestamp) : [];
                 renderAll();
+                saveDataToCache();
             });
             onValue(ref(db, 'callHistory'), (snap) => {
                 if (!state.currentUser) return;
                 state.callHistory = snap.val() ? Object.values(snap.val()).filter(c => c.user === state.currentUser.uid || c.other === state.currentUser.uid) : [];
+                saveDataToCache();
             });
             onValue(ref(db, 'saved/' + state.currentUser?.uid), (snap) => {
                 if (!state.currentUser) return;
                 state.savedPosts = snap.val() || [];
+                saveDataToCache();
             });
             onValue(ref(db, 'groups'), (snap) => {
                 if (!state.currentUser) return;
                 state.groups = snap.val() || {};
                 renderAll();
+                saveDataToCache();
             });
             onValue(ref(db, 'botSettings'), (snap) => {
                 if (!state.currentUser) return;
@@ -1694,6 +1876,7 @@
                     botUser.pfp = state.botPfp;
                 }
                 renderAll();
+                saveDataToCache();
             });
         }
 
@@ -2013,6 +2196,7 @@
                         });
                         sendOneSignalNotification(post.author, 'Someone liked your post', `${state.currentUser.name} liked your post`, { type: 'like', postId: postId });
                     }
+                    clearCache();
                 }
             }, { onlyOnce: true });
         };
@@ -2026,6 +2210,7 @@
             set(ref(db, 'saved/' + state.currentUser.uid), saved);
             state.savedPosts = saved;
             renderAll();
+            clearCache();
         };
 
         window.sharePost = function(postId) {
@@ -2065,6 +2250,7 @@
                 read: false
             });
             sendOneSignalNotification(uid, 'Post Shared', `${state.currentUser.name} shared a post with you`, { type: 'share', postId: postId });
+            clearCache();
         };
 
         window.openCommentModal = function(postId) {
@@ -2094,6 +2280,7 @@
                                     });
                                     sendOneSignalNotification(post.author, 'New Comment', `${state.currentUser.name} commented on your post`, { type: 'comment', postId: postId });
                                 }
+                                clearCache();
                             }
                         }
                     }, { onlyOnce: true });
@@ -2167,6 +2354,7 @@
                 remove(ref(db, 'chats/' + key + '/' + msgKey));
                 closeFullscreenMedia();
                 alert('Media deleted.');
+                clearCache();
             }
         };
 
@@ -2202,7 +2390,7 @@
             if (state.contacts.find(c => c.uid === uid)) return alert('Already friends');
             if (state.friendRequests.find(r => r.from === uid)) return alert('Request already sent');
             if (state.friendRequests.find(r => r.from === state.currentUser.uid && r.to === uid)) return alert('You already sent a request to this user');
-            set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('profile-view-modal'); });
+            set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('profile-view-modal'); clearCache(); });
             push(ref(db, 'notifications/' + uid), {
                 from: state.currentUser.uid,
                 type: 'friend_request',
@@ -2251,6 +2439,7 @@
                     if (msgKey) update(ref(db, 'chats/' + key + '/' + msgKey), { read: true });
                 }
             }
+            clearCache();
         };
 
         window.closeChatWindow = function() { 
@@ -2382,6 +2571,7 @@
             }
             if (state.typingTimeout) clearTimeout(state.typingTimeout);
             update(ref(db, 'users/' + state.currentUser.uid), { typing: false });
+            clearCache();
         };
 
         window.markChatAsRead = function(uid) {
@@ -2393,6 +2583,7 @@
                     if (msgKey) update(ref(db, 'chats/' + key + '/' + msgKey), { read: true });
                 }
             }
+            clearCache();
         };
 
         let typingTimeout;
@@ -2429,6 +2620,7 @@
                 remove(ref(db, 'chats/' + key));
                 closeChatWindow();
                 alert('Group deleted.');
+                clearCache();
                 return;
             }
             if (confirm(`Leave group "${group.name}"?`)) {
@@ -2436,6 +2628,7 @@
                 update(ref(db, 'groups/' + groupId), { members });
                 closeChatWindow();
                 alert('You left the group.');
+                clearCache();
             }
             document.getElementById('group-chat-dropdown').classList.remove('active');
         };
@@ -2452,6 +2645,7 @@
                 const reactions = msgs[msgKey].reactions || {};
                 reactions[state.currentUser.uid] = emoji;
                 update(ref(db, 'chats/' + key + '/' + msgKey), { reactions });
+                clearCache();
             }
             closeContextMenu();
         };
@@ -2481,6 +2675,7 @@
             closeForwardModal();
             alert('Forwarded!');
             sendOneSignalNotification(uid, 'Message Forwarded', `${state.currentUser.name} forwarded a message to you`, { type: 'forward' });
+            clearCache();
         };
 
         window.deleteMessage = function() {
@@ -2490,7 +2685,10 @@
             const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === state.selectedMessage.timestamp && msgs[k].sender === state.selectedMessage.sender);
             if (msgKey) {
                 showPopup('Delete Message', 'Delete this message for everyone?', '', 'Delete', (val) => {
-                    if (val !== null) remove(ref(db, 'chats/' + key + '/' + msgKey));
+                    if (val !== null) {
+                        remove(ref(db, 'chats/' + key + '/' + msgKey));
+                        clearCache();
+                    }
                 });
             }
             closeContextMenu();
@@ -2523,7 +2721,7 @@
             if (state.contacts.find(c => c.uid === uid)) return alert('Already friends');
             if (state.friendRequests.find(r => r.from === uid)) return alert('Request already sent');
             if (state.friendRequests.find(r => r.from === state.currentUser.uid && r.to === uid)) return alert('You already sent a request to this user');
-            set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('add-friend-modal'); });
+            set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('add-friend-modal'); clearCache(); });
             push(ref(db, 'notifications/' + uid), {
                 from: state.currentUser.uid,
                 type: 'friend_request',
@@ -2549,10 +2747,12 @@
                 showPopup('Name this contact', 'Enter a name for this contact:', req.fromUser.name || uid, 'Save', (val) => {
                     if (val && val.trim()) {
                         update(ref(db, 'users/' + uid), { name: val.trim() });
+                        clearCache();
                     }
                     alert('Friend added!');
                 });
                 sendOneSignalNotification(uid, 'Friend Request Accepted', `${state.currentUser.name} accepted your friend request`, { type: 'friend_accept' });
+                clearCache();
             });
         };
 
@@ -2563,6 +2763,7 @@
             if (reqKey) remove(ref(db, 'friendRequests/' + reqKey));
             state.friendRequests = state.friendRequests.filter(r => r.from !== uid);
             renderAll();
+            clearCache();
         };
 
         window.openIncomingRequests = function() { $('incoming-requests-modal').classList.remove('hidden'); closeMenu(); };
@@ -2631,6 +2832,7 @@
                         }
                     }
                     renderAll();
+                    clearCache();
                 });
             });
         };
@@ -2670,6 +2872,7 @@
                         if (!state.activeChat.startsWith('group_')) {
                             sendOneSignalNotification(state.activeChat, 'Photo', `${state.currentUser.name} sent a photo`, { type: 'photo' });
                         }
+                        clearCache();
                     };
                     reader.readAsDataURL(file);
                 }
@@ -2707,6 +2910,7 @@
                     if (!state.activeChat.startsWith('group_')) {
                         sendOneSignalNotification(state.activeChat, 'Document', `${state.currentUser.name} sent a document`, { type: 'document' });
                     }
+                    clearCache();
                 };
                 reader.readAsDataURL(file);
                 document.getElementById('attachment-menu').classList.remove('active');
@@ -2973,6 +3177,7 @@
             push(ref(db, 'chats/' + key), { sender: state.currentUser.uid, text, timestamp: Date.now(), read: false, reactions: {} });
             input.value = '';
             window.renderCallChatMessages();
+            clearCache();
         };
 
         window.renderCallChatMessages = function() {
@@ -3014,6 +3219,7 @@
             $('post-text-input').value = '';
             $('post-image-input').value = '';
             closeModal('create-post-modal');
+            clearCache();
         };
 
         // ---------- PROFILE ----------
@@ -3043,6 +3249,7 @@
             state.currentUser.pfp = pfpUrl;
             closeModal('edit-profile-modal');
             renderAll();
+            clearCache();
         };
 
         // ---------- SETTINGS ----------
@@ -3087,6 +3294,7 @@
             state.blocked = state.blocked.filter(u => u !== uid);
             set(ref(db, 'blocked/' + state.currentUser.uid), state.blocked);
             openBlockedContacts();
+            clearCache();
         };
 
         window.openCallHistory = function() {
@@ -3108,7 +3316,7 @@
             closeModal('settings-modal');
         };
 
-        window.logout = function() { if (confirm('Logout?')) signOut(auth); };
+        window.logout = function() { if (confirm('Logout?')) { clearCache(); signOut(auth); } };
 
         // ---------- UI HELPERS ----------
         window.switchTab = function(tab) {
@@ -3118,7 +3326,6 @@
                 if (t === tab) { el.classList.remove('hidden'); nav.classList.add('tab-active'); nav.classList.remove('opacity-50'); } else { el.classList.add('hidden'); nav.classList.remove('tab-active'); nav.classList.add('opacity-50'); }
             });
             closeMenu();
-            // Show/hide search bar based on tab
             const searchContainer = $('search-bar-container');
             if (tab === 'chat' || tab === 'contacts') {
                 searchContainer.classList.remove('hidden');
@@ -3178,6 +3385,7 @@
                             closeModal('post-edit-modal');
                             state.editingPostId = null;
                             alert('Post updated!');
+                            clearCache();
                         });
                     }
                 }
@@ -3209,6 +3417,7 @@
                 if (val !== null) {
                     remove(ref(db, 'posts/' + postId + '/comments/' + commentKey));
                     setTimeout(() => openCommentsManagement(postId), 300);
+                    clearCache();
                 }
             }, 'text', true);
         };
@@ -3246,6 +3455,7 @@
                 closeModal('report-modal');
                 alert('Report submitted. Thank you for helping us improve!');
                 sendOneSignalNotification(ADMIN_UID, 'New Report', `Report from ${state.currentUser.name}: ${text.substring(0, 30)}...`, { type: 'report' });
+                clearCache();
             };
             uploadFile();
         };
@@ -3266,7 +3476,6 @@
         });
 
         // ---------- INIT ----------
-        // Start the loading timer
         startLoadingTimer();
 
         document.addEventListener('visibilitychange', () => {
@@ -3276,7 +3485,6 @@
             }
         });
 
-        // OneSignal initialization
         if (window.OneSignal) {
             window.OneSignal.init({
                 appId: ONESIGNAL_APP_ID,
@@ -3285,7 +3493,7 @@
             window.OneSignal.login(state.currentUser?.uid || '');
         }
 
-        console.log('Stardust X Messenger loaded.');
+        console.log('Stardust X Messenger loaded with cache optimization.');
     </script>
 
 </body>
