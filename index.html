@@ -351,32 +351,6 @@
             color: #2b7a4b;
         }
         
-        .recording-wave {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            height: 30px;
-        }
-        .recording-wave span {
-            display: block;
-            width: 4px;
-            background: #2b7a4b;
-            border-radius: 2px;
-            animation: wave 0.8s ease-in-out infinite alternate;
-        }
-        .recording-wave span:nth-child(1) { height: 10px; animation-delay: 0s; }
-        .recording-wave span:nth-child(2) { height: 18px; animation-delay: 0.1s; }
-        .recording-wave span:nth-child(3) { height: 25px; animation-delay: 0.2s; }
-        .recording-wave span:nth-child(4) { height: 20px; animation-delay: 0.3s; }
-        .recording-wave span:nth-child(5) { height: 14px; animation-delay: 0.4s; }
-        .recording-wave span:nth-child(6) { height: 22px; animation-delay: 0.5s; }
-        .recording-wave span:nth-child(7) { height: 16px; animation-delay: 0.6s; }
-        .recording-wave span:nth-child(8) { height: 12px; animation-delay: 0.7s; }
-        @keyframes wave {
-            0% { transform: scaleY(0.3); }
-            100% { transform: scaleY(1); }
-        }
-        
         .group-chat-menu {
             position: absolute;
             top: 50px;
@@ -492,6 +466,13 @@
         .footer-link:hover {
             color: #1e5a35;
         }
+        
+        .hidden-search .search-container {
+            display: none;
+        }
+        .search-container.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -604,8 +585,7 @@
             </button>
             <button onclick="openIncomingRequests()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2 relative">
                 <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
-                Incoming Requests
-                <span id="menu-request-badge" class="ml-auto bg-red-500 text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center hidden">0</span>
+                Incoming Requests                <span id="menu-request-badge" class="ml-auto bg-red-500 text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center hidden">0</span>
             </button>
             <button onclick="openCreateGroup()" class="w-full text-left px-3 py-2.5 hover:bg-[#e5f0e5] rounded-xl text-sm font-medium flex items-center gap-2">
                 <svg class="w-4 h-4 text-[#2b7a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -1000,8 +980,8 @@
                 <button onclick="openBlockedContacts()" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2">Blocked Contacts</button>
                 <button onclick="openCallHistory()" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2">Call History</button>
                 <div class="border-t border-[#b8d0b8] pt-2"></div>
-                <a href="privacy.html" target="_blank" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2 text-[#2b7a4b] no-underline hover:bg-[#e5f0e5]">Privacy Policy</a>
-                <a href="terms.html" target="_blank" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2 text-[#2b7a4b] no-underline hover:bg-[#e5f0e5]">Terms of Service</a>
+                <a href="privacy.html" target="_blank" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2 no-underline hover:bg-[#e5f0e5]">Privacy Policy</a>
+                <a href="terms.html" target="_blank" class="w-full text-left px-3 py-2.5 bg-[#f0f7f0] rounded-xl text-sm font-medium flex items-center gap-2 no-underline hover:bg-[#e5f0e5]">Terms of Service</a>
                 <button onclick="logout()" class="w-full text-left px-3 py-2.5 bg-red-50 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2">Logout</button>
                 <button onclick="deleteAccount()" class="w-full text-left px-3 py-2.5 bg-red-50 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2 border-t border-red-100 pt-3">Delete Account</button>
             </div>
@@ -1137,33 +1117,6 @@
         const ONESIGNAL_APP_ID = '49d9bfd2-9125-484c-a5e6-2f29ef289b3e';
         const ONESIGNAL_API_KEY = 'os_v2_app_jhm37uureveezjpgf4u66ke3h2ayumte23mu5wmxdxvbhpi2nj7cwk3dsgsfxoqqdwxnfmsattxganjwjkwchxlwgyici2suk6aapmi';
 
-        // ---------- CACHE HELPER ----------
-        const Cache = {
-            get(key) {
-                try {
-                    const data = localStorage.getItem('stardust_cache_' + key);
-                    if (!data) return null;
-                    const parsed = JSON.parse(data);
-                    if (parsed.expiry && parsed.expiry < Date.now()) {
-                        localStorage.removeItem('stardust_cache_' + key);
-                        return null;
-                    }
-                    return parsed.data;
-                } catch (e) { return null; }
-            },
-            set(key, data, ttl = 30 * 60 * 1000) {
-                try {
-                    localStorage.setItem('stardust_cache_' + key, JSON.stringify({
-                        data: data,
-                        expiry: Date.now() + ttl
-                    }));
-                } catch (e) { console.error('Cache set error:', e); }
-            },
-            remove(key) {
-                localStorage.removeItem('stardust_cache_' + key);
-            }
-        };
-
         let state = {
             currentUser: null, allUsers: [], contacts: [], chats: {}, messages: {}, posts: [],
             friendRequests: [], callHistory: [], blocked: [], savedPosts: [], activeChat: null,
@@ -1179,14 +1132,58 @@
             botName: 'Stardust Bot', botPfp: '',
             isInitialLoad: true,
             authChecked: false,
-            appReady: false,
-            dataLoaded: false
+            appReady: false
         };
 
         const $ = id => document.getElementById(id);
         const loadingScreen = $('loading-screen');
         const loginScreen = $('login-screen');
         const appLayout = $('app-layout');
+
+        // ---------- LOCAL CACHE (instant load on open, Firebase stays source of truth) ----------
+        // Data is cached per-user in localStorage so the UI can render immediately on the
+        // next app open instead of showing empty screens while Firebase responds. Firebase
+        // is always fetched right after and overwrites the cache, so a user who deletes the
+        // app and logs back in on a fresh device still gets everything from Firebase as before.
+        const CACHE_PREFIX = 'sdx_cache_';
+        const CACHE_KEYS = ['currentUser', 'allUsers', 'contacts', 'friendRequests', 'chats', 'messages', 'posts', 'callHistory', 'blocked', 'savedPosts', 'groups', 'botName', 'botPfp'];
+
+        function saveLocalCache() {
+            if (!state.currentUser || !state.currentUser.uid) return;
+            try {
+                const cache = {};
+                for (let k of CACHE_KEYS) cache[k] = state[k];
+                localStorage.setItem(CACHE_PREFIX + state.currentUser.uid, JSON.stringify(cache));
+            } catch (e) {
+                // Storage full/unavailable - safe to ignore, Firebase remains the source of truth
+                console.warn('Local cache save skipped:', e);
+            }
+        }
+
+        let cacheSaveTimer = null;
+        function saveLocalCacheDebounced() {
+            clearTimeout(cacheSaveTimer);
+            cacheSaveTimer = setTimeout(saveLocalCache, 400);
+        }
+
+        function loadLocalCache(uid) {
+            try {
+                const raw = localStorage.getItem(CACHE_PREFIX + uid);
+                if (!raw) return false;
+                const cache = JSON.parse(raw);
+                for (let k of CACHE_KEYS) {
+                    if (cache[k] !== undefined) state[k] = cache[k];
+                }
+                return true;
+            } catch (e) {
+                console.warn('Local cache load skipped:', e);
+                return false;
+            }
+        }
+
+        function clearLocalCache(uid) {
+            try { localStorage.removeItem(CACHE_PREFIX + uid); } catch (e) {}
+        }
 
         // ---------- SHOW APP OR LOGIN ----------
         function showApp() {
@@ -1205,12 +1202,16 @@
 
         // ---------- LOADING SCREEN TIMER ----------
         function startLoadingTimer() {
+            // 5 second fallback timer - ensures app doesn't get stuck
             setTimeout(() => {
+                // If app is not ready yet, check auth status
                 if (!state.appReady) {
                     if (auth.currentUser && state.currentUser) {
+                        // User is logged in but app not ready - show app
                         showApp();
                         console.log('Loading timer: App shown (user logged in)');
                     } else {
+                        // No user - show login
                         showLogin();
                         console.log('Loading timer: Login shown (no user)');
                     }
@@ -1505,6 +1506,7 @@
                         if (user) {
                             await user.delete();
                         }
+                        clearLocalCache(uid);
                         alert('Your account has been deleted successfully.');
                         closeModal('settings-modal');
                     } catch (e) {
@@ -1519,31 +1521,11 @@
             state.authChecked = true;
             
             if (user) {
+                // User is logged in - show loading screen, hide login
                 loginScreen.style.display = 'none';
                 loadingScreen.classList.remove('hidden');
                 
                 try {
-                    // Check cache first for user data
-                    const cachedUser = Cache.get('user_' + user.uid);
-                    if (cachedUser) {
-                        state.currentUser = cachedUser;
-                        // Show app immediately from cache
-                        showApp();
-                        // Load fresh data in background
-                        try {
-                            await loadAllData();
-                            renderAll();
-                            initPeer();
-                            listenToRealtime();
-                            // Update cache with fresh data
-                            Cache.set('user_' + user.uid, state.currentUser);
-                        } catch (e) {
-                            console.error('Background data load error:', e);
-                        }
-                        return;
-                    }
-
-                    // No cache - load from Firebase
                     const snap = await get(ref(db, 'users'));
                     const users = snap.val() || {};
                     let found = null;
@@ -1561,24 +1543,36 @@
                     }
                     state.currentUser = found;
                     
-                    // Cache user data
-                    Cache.set('user_' + user.uid, found);
+                    // Instantly restore last-known data from local cache (if any) so the
+                    // user sees their chats/contacts/posts right away instead of a blank
+                    // screen while Firebase responds. This is purely a fast first paint -
+                    // the real data still comes from Firebase a moment later below.
+                    const hadLocalCache = loadLocalCache(found.uid);
+                    state.currentUser = found;
+                    if (hadLocalCache) {
+                        try { renderAll(); } catch (e) { console.warn('Cache render skipped:', e); }
+                    }
                     
+                    // Update online status
                     await update(ref(db, 'users/' + found.uid), { online: true, lastSeen: Date.now() });
                     
                     if (window.OneSignal) {
                         window.OneSignal.login(found.uid);
                     }
                     
+                    // Show app immediately - don't wait for all data
                     showApp();
                     
+                    // Load data in background
                     try {
                         await loadAllData();
                         renderAll();
+                        saveLocalCache();
                         initPeer();
                         listenToRealtime();
                     } catch (dataError) {
                         console.error('Background data loading error:', dataError);
+                        // Data load failed but app is already showing
                     }
                     
                     state.isInitialLoad = false;
@@ -1588,6 +1582,7 @@
                     showLogin();
                 }
             } else {
+                // User is not logged in
                 showLogin();
                 if (state.peerInstance) { 
                     state.peerInstance.destroy(); 
@@ -1599,37 +1594,27 @@
             }
         });
 
-        // ---------- DATA LOADING WITH CACHE ----------
+        // ---------- DATA LOADING ----------
+        // All the independent reads are fired in parallel (instead of one-by-one) so the
+        // total wait is as long as the single slowest request, not the sum of all of them -
+        // this is the main fix for the slow "user's data disappeared" feeling on open.
         async function loadAllData() {
-            const uid = state.currentUser.uid;
-            
-            // Try to load from cache first
-            const cachedData = Cache.get('full_data_' + uid);
-            if (cachedData) {
-                // Merge cached data
-                state.allUsers = cachedData.allUsers || [];
-                state.contacts = cachedData.contacts || [];
-                state.chats = cachedData.chats || {};
-                state.messages = cachedData.messages || {};
-                state.posts = cachedData.posts || [];
-                state.friendRequests = cachedData.friendRequests || [];
-                state.callHistory = cachedData.callHistory || [];
-                state.blocked = cachedData.blocked || [];
-                state.savedPosts = cachedData.savedPosts || [];
-                state.groups = cachedData.groups || {};
-                state.botName = cachedData.botName || 'Stardust Bot';
-                state.botPfp = cachedData.botPfp || '';
-                state.dataLoaded = true;
-                renderAll();
-                return;
-            }
+            const [snap, botSnap, friendSnap, reqSnap, chatSnap, postSnap, callSnap, blockSnap, savedSnap, groupSnap] = await Promise.all([
+                get(ref(db, 'users')),
+                get(ref(db, 'botSettings')),
+                get(ref(db, 'friendships')),
+                get(ref(db, 'friendRequests')),
+                get(ref(db, 'chats')),
+                get(ref(db, 'posts')),
+                get(ref(db, 'callHistory')),
+                get(ref(db, 'blocked/' + state.currentUser.uid)),
+                get(ref(db, 'saved/' + state.currentUser.uid)),
+                get(ref(db, 'groups'))
+            ]);
 
-            // Load fresh from Firebase
-            const snap = await get(ref(db, 'users'));
             const users = snap.val() || {};
             state.allUsers = Object.values(users).filter(u => u.uid !== state.currentUser.uid);
             
-            const botSnap = await get(ref(db, 'botSettings'));
             const botSettings = botSnap.val() || {};
             state.botName = botSettings.name || 'Stardust Bot';
             state.botPfp = botSettings.pfp || '';
@@ -1642,7 +1627,6 @@
                 botUser.pfp = state.botPfp;
             }
             
-            const friendSnap = await get(ref(db, 'friendships'));
             const friendships = friendSnap.val() || {};
             state.contacts = [];
             for (let key in friendships) {
@@ -1657,7 +1641,6 @@
                 }
             }
             
-            const reqSnap = await get(ref(db, 'friendRequests'));
             const reqs = reqSnap.val() || {};
             state.friendRequests = [];
             for (let key in reqs) {
@@ -1667,7 +1650,6 @@
                 }
             }
             
-            const chatSnap = await get(ref(db, 'chats'));
             state.chats = chatSnap.val() || {};
             state.messages = {};
             for (let key in state.chats) {
@@ -1677,45 +1659,20 @@
                 }
             }
             
-            const postSnap = await get(ref(db, 'posts'));
             state.posts = postSnap.val() ? Object.values(postSnap.val()).sort((a,b) => b.timestamp - a.timestamp) : [];
             
-            const callSnap = await get(ref(db, 'callHistory'));
             state.callHistory = callSnap.val() ? Object.values(callSnap.val()).filter(c => c.user === state.currentUser.uid || c.other === state.currentUser.uid) : [];
             
-            const blockSnap = await get(ref(db, 'blocked/' + state.currentUser.uid));
             state.blocked = blockSnap.val() || [];
             
-            const savedSnap = await get(ref(db, 'saved/' + state.currentUser.uid));
             state.savedPosts = savedSnap.val() || [];
             
-            const groupSnap = await get(ref(db, 'groups'));
             state.groups = groupSnap.val() || {};
             
             $('bot-name-input').value = state.botName;
-            
-            // Cache all data
-            Cache.set('full_data_' + uid, {
-                allUsers: state.allUsers,
-                contacts: state.contacts,
-                chats: state.chats,
-                messages: state.messages,
-                posts: state.posts,
-                friendRequests: state.friendRequests,
-                callHistory: state.callHistory,
-                blocked: state.blocked,
-                savedPosts: state.savedPosts,
-                groups: state.groups,
-                botName: state.botName,
-                botPfp: state.botPfp
-            });
-            
-            state.dataLoaded = true;
         }
 
         function listenToRealtime() {
-            if (!state.currentUser) return;
-            
             onValue(ref(db, 'users'), (snap) => { 
                 if (!state.currentUser) return;
                 const users = snap.val() || {}; 
@@ -1728,23 +1685,8 @@
                     botUser.pfp = state.botPfp;
                 }
                 renderAll(); 
-                // Update cache
-                Cache.set('full_data_' + state.currentUser.uid, {
-                    allUsers: state.allUsers,
-                    contacts: state.contacts,
-                    chats: state.chats,
-                    messages: state.messages,
-                    posts: state.posts,
-                    friendRequests: state.friendRequests,
-                    callHistory: state.callHistory,
-                    blocked: state.blocked,
-                    savedPosts: state.savedPosts,
-                    groups: state.groups,
-                    botName: state.botName,
-                    botPfp: state.botPfp
-                });
+                saveLocalCacheDebounced();
             });
-            
             onValue(ref(db, 'friendships'), (snap) => {
                 if (!state.currentUser) return;
                 const friendships = snap.val() || {};
@@ -1761,8 +1703,8 @@
                     }
                 }
                 renderAll();
+                saveLocalCacheDebounced();
             });
-            
             onValue(ref(db, 'friendRequests'), (snap) => {
                 if (!state.currentUser) return;
                 const reqs = snap.val() || {};
@@ -1774,8 +1716,8 @@
                     }
                 }
                 renderAll();
+                saveLocalCacheDebounced();
             });
-            
             onValue(ref(db, 'chats'), (snap) => {
                 if (!state.currentUser) return;
                 state.chats = snap.val() || {};
@@ -1788,30 +1730,30 @@
                 }
                 renderAll();
                 if (state.activeChat) renderChatMessages();
+                saveLocalCacheDebounced();
             });
-            
             onValue(ref(db, 'posts'), (snap) => {
                 if (!state.currentUser) return;
                 state.posts = snap.val() ? Object.values(snap.val()).sort((a,b) => b.timestamp - a.timestamp) : [];
                 renderAll();
+                saveLocalCacheDebounced();
             });
-            
             onValue(ref(db, 'callHistory'), (snap) => {
                 if (!state.currentUser) return;
                 state.callHistory = snap.val() ? Object.values(snap.val()).filter(c => c.user === state.currentUser.uid || c.other === state.currentUser.uid) : [];
+                saveLocalCacheDebounced();
             });
-            
             onValue(ref(db, 'saved/' + state.currentUser?.uid), (snap) => {
                 if (!state.currentUser) return;
                 state.savedPosts = snap.val() || [];
+                saveLocalCacheDebounced();
             });
-            
             onValue(ref(db, 'groups'), (snap) => {
                 if (!state.currentUser) return;
                 state.groups = snap.val() || {};
                 renderAll();
+                saveLocalCacheDebounced();
             });
-            
             onValue(ref(db, 'botSettings'), (snap) => {
                 if (!state.currentUser) return;
                 const settings = snap.val() || {};
@@ -1823,10 +1765,11 @@
                     botUser.pfp = state.botPfp;
                 }
                 renderAll();
+                saveLocalCacheDebounced();
             });
         }
 
-        // ---------- RENDER FUNCTIONS ----------
+        // ---------- RENDER ----------
         function renderAll() {
             renderChatList();
             renderContacts();
@@ -2050,11 +1993,1352 @@
             }
         }
 
-        // Continue with all remaining functions...
-        // (The rest of the functions like renderProfile, renderFriendRequests, 
-        // openChat, sendMessage, etc. remain exactly the same as before)
+        window.openPostReport = function(postId) {
+            state.reportTarget = { type: 'post', postId: postId };
+            $('report-text').value = '';
+            $('report-image').value = '';
+            $('report-modal').classList.remove('hidden');
+        };
+
+        function renderProfile() {
+            const u = state.currentUser;
+            if (!u) return;
+            $('profile-pfp-display').src = u.pfp || '';
+            $('profile-name-display').innerText = u.name || 'User';
+            $('profile-uid-display').innerText = '@' + u.uid;
+            $('profile-bio-display').innerText = u.bio || 'Hey there! I\'m using Stardust X.';
+        }
+
+        function renderFriendRequests() {
+            const container = $('incoming-requests-list');
+            const placeholder = $('no-incoming-requests');
+            container.innerHTML = '';
+            if (state.friendRequests.length === 0) { placeholder.classList.remove('hidden'); return; }
+            placeholder.classList.add('hidden');
+            for (let req of state.friendRequests) {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-3 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3" onclick="openProfileView('${req.from}')">
+                        <img src="${req.fromUser.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
+                        <div>
+                            <p class="font-bold text-sm">${req.fromUser.name}</p>
+                            <p class="text-[10px] text-[#2b7a4b] font-mono">@${req.fromUser.uid}</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="acceptFriendRequest('${req.from}')" class="bg-[#2b7a4b] text-white px-3 py-1.5 rounded-lg text-xs font-bold">Accept</button>
+                        <button onclick="denyFriendRequest('${req.from}')" class="bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold">Deny</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function renderIncomingRequestsBadge() {
+            const badge = $('menu-request-badge');
+            const count = state.friendRequests.length;
+            if (count > 0) { badge.innerText = count; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
+        }
+
+        function renderContactBadge() {
+            const badge = $('nav-contact-badge');
+            const count = state.friendRequests.length;
+            if (count > 0) { badge.innerText = count; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
+        }
+
+        function renderChatBadge() {
+            const badge = $('nav-chat-badge');
+            let total = 0;
+            for (let key in state.messages) {
+                const msgs = state.messages[key] || [];
+                const parts = key.split('_text_');
+                let otherUid = parts[0] === state.currentUser.uid ? parts[1] : parts[0];
+                if (!otherUid) continue;
+                const contact = state.contacts.find(c => c.uid === otherUid);
+                if (!contact && !otherUid.startsWith('group_')) continue;
+                total += msgs.filter(m => m.sender !== state.currentUser.uid && m.sender !== 'bot' && !m.read).length;
+            }
+            if (total > 0) { badge.innerText = total; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
+        }
+
+        // ---------- POST INTERACTIONS ----------
+        window.likePost = function(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post) return;
+            const likes = post.likes || {};
+            if (likes[state.currentUser.uid]) delete likes[state.currentUser.uid];
+            else likes[state.currentUser.uid] = true;
+            const dbRef = ref(db, 'posts');
+            onValue(dbRef, (snap) => {
+                const data = snap.val();
+                if (data) {
+                    const key = Object.keys(data).find(k => data[k].id === postId);
+                    if (key) update(ref(db, 'posts/' + key), { likes });
+                    if (post.author !== state.currentUser.uid) {
+                        push(ref(db, 'notifications/' + post.author), {
+                            from: state.currentUser.uid,
+                            type: 'like',
+                            postId: postId,
+                            timestamp: Date.now(),
+                            read: false
+                        });
+                        sendOneSignalNotification(post.author, 'Someone liked your post', `${state.currentUser.name} liked your post`, { type: 'like', postId: postId });
+                    }
+                }
+            }, { onlyOnce: true });
+        };
+
+        window.savePost = function(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post) return;
+            let saved = state.savedPosts || [];
+            if (saved.includes(postId)) saved = saved.filter(id => id !== postId);
+            else saved.push(postId);
+            set(ref(db, 'saved/' + state.currentUser.uid), saved);
+            state.savedPosts = saved;
+            renderAll();
+        };
+
+        window.sharePost = function(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post) return;
+            const container = $('forward-contact-list');
+            container.innerHTML = '';
+            for (let contact of state.contacts) {
+                if (contact.uid === state.currentUser.uid || contact.uid === BOT_UID) continue;
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#e5f0e5]';
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <img src="${contact.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''">
+                        <span class="text-sm font-medium">${contact.name}</span>
+                    </div>
+                    <button onclick="executeSharePost('${contact.uid}','${postId}')" class="bg-[#2b7a4b] text-white px-3 py-1 rounded-full text-xs font-bold">Share</button>
+                `;
+                container.appendChild(div);
+            }
+            $('forward-modal').classList.remove('hidden');
+        };
+
+        window.executeSharePost = function(uid, postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post) return;
+            const key = getChatKey(state.currentUser.uid, uid);
+            const msg = { sender: state.currentUser.uid, text: '📤 Shared Moment: ' + post.text + (post.image ? ' [Image]' : ''), timestamp: Date.now(), read: false, reactions: {}, replyTo: null };
+            push(ref(db, 'chats/' + key), msg);
+            closeForwardModal();
+            alert('Shared!');
+            push(ref(db, 'notifications/' + uid), {
+                from: state.currentUser.uid,
+                type: 'share',
+                postId: postId,
+                timestamp: Date.now(),
+                read: false
+            });
+            sendOneSignalNotification(uid, 'Post Shared', `${state.currentUser.name} shared a post with you`, { type: 'share', postId: postId });
+        };
+
+        window.openCommentModal = function(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post) return;
+            showPopup('Add Comment', 'Write your comment below:', 'Type comment...', 'Post', (val) => {
+                if (val && val.trim()) {
+                    const dbRef = ref(db, 'posts');
+                    onValue(dbRef, (snap) => {
+                        const data = snap.val();
+                        if (data) {
+                            const key = Object.keys(data).find(k => data[k].id === postId);
+                            if (key) {
+                                push(ref(db, 'posts/' + key + '/comments'), {
+                                    authorUID: state.currentUser.uid,
+                                    authorName: state.currentUser.name,
+                                    text: val.trim(),
+                                    timestamp: Date.now()
+                                });
+                                if (post.author !== state.currentUser.uid) {
+                                    push(ref(db, 'notifications/' + post.author), {
+                                        from: state.currentUser.uid,
+                                        type: 'comment',
+                                        postId: postId,
+                                        timestamp: Date.now(),
+                                        read: false
+                                    });
+                                    sendOneSignalNotification(post.author, 'New Comment', `${state.currentUser.name} commented on your post`, { type: 'comment', postId: postId });
+                                }
+                            }
+                        }
+                    }, { onlyOnce: true });
+                }
+            });
+        };
+
+        window.openImageViewer = function(src) {
+            showFullscreenMedia('image', src, null, null);
+        };
+
+        // ---------- FULLSCREEN MEDIA VIEWER ----------
+        function showFullscreenMedia(type, url, key, timestamp) {
+            const viewer = document.getElementById('fullscreen-media');
+            const content = document.getElementById('fullscreen-media-content');
+            const actions = document.getElementById('fullscreen-media-actions');
+            
+            content.innerHTML = '';
+            actions.innerHTML = '';
+            
+            if (type === 'image') {
+                const img = document.createElement('img');
+                img.src = url;
+                content.appendChild(img);
+                actions.innerHTML = `
+                    <button class="save-btn" onclick="saveMediaToGallery('${url}')">Save</button>
+                    ${state.viewerSender === state.currentUser.uid ? `<button class="delete-btn" onclick="deleteMediaFromChat('${key}','${timestamp}')">Delete</button>` : ''}
+                `;
+            } else if (type === 'document') {
+                const iframe = document.createElement('iframe');
+                iframe.src = url;
+                iframe.style.width = '100%';
+                iframe.style.height = '70vh';
+                iframe.style.border = 'none';
+                iframe.style.borderRadius = '12px';
+                content.appendChild(iframe);
+                actions.innerHTML = `
+                    <button class="save-btn" onclick="downloadDocument('${url}')">Download</button>
+                    ${state.viewerSender === state.currentUser.uid ? `<button class="delete-btn" onclick="deleteMediaFromChat('${key}','${timestamp}')">Delete</button>` : ''}
+                `;
+            }
+            
+            viewer.classList.add('active');
+        }
+
+        window.closeFullscreenMedia = function() {
+            document.getElementById('fullscreen-media').classList.remove('active');
+        };
+
+        window.saveMediaToGallery = function(url) {
+            const link = document.createElement('a');
+            link.download = 'stardust_image.jpg';
+            link.href = url;
+            link.click();
+            alert('Image saved!');
+        };
+
+        window.downloadDocument = function(url) {
+            const link = document.createElement('a');
+            link.download = 'document';
+            link.href = url;
+            link.click();
+            alert('Document downloaded!');
+        };
+
+        window.deleteMediaFromChat = function(key, timestamp) {
+            if (!confirm('Delete this media?')) return;
+            const msgs = state.chats[key] || {};
+            const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === parseInt(timestamp));
+            if (msgKey) {
+                remove(ref(db, 'chats/' + key + '/' + msgKey));
+                closeFullscreenMedia();
+                alert('Media deleted.');
+            }
+        };
+
+        // ---------- PROFILE VIEW ----------
+        window.openProfileView = function(uid) {
+            const user = state.allUsers.find(u => u.uid === uid) || state.contacts.find(c => c.uid === uid);
+            if (!user) return;
+            if (user.isBot) {
+                alert('This is Stardust Bot. You cannot interact with it.');
+                return;
+            }
+            state.viewProfileUid = uid;
+            $('view-profile-pfp').src = user.pfp || '';
+            $('view-profile-name').innerText = user.name;
+            $('view-profile-uid').innerText = '@' + user.uid;
+            $('view-profile-bio').innerText = user.bio || 'No bio';
+            const isFriend = state.contacts.find(c => c.uid === uid);
+            const actions = $('view-profile-actions');
+            if (isFriend) {
+                actions.innerHTML = `<button onclick="viewProfileSendMsg()" class="flex-1 bg-[#2b7a4b] text-white py-2 rounded-xl text-sm font-bold">Send Message</button><button class="flex-1 bg-[#e5f0e5] text-[#2b7a4b] py-2 rounded-xl text-sm font-bold border border-[#b8d0b8]">Already Friend</button>`;
+            } else {
+                actions.innerHTML = `<button onclick="viewProfileSendMsg()" class="flex-1 bg-[#2b7a4b] text-white py-2 rounded-xl text-sm font-bold">Send Message</button><button onclick="viewProfileAddFriend()" class="flex-1 bg-[#e5f0e5] text-[#2b7a4b] py-2 rounded-xl text-sm font-bold border border-[#b8d0b8]">Add Friend</button>`;
+            }
+            $('profile-view-modal').classList.remove('hidden');
+        };
+
+        window.viewProfileSendMsg = function() { if (state.viewProfileUid) { closeModal('profile-view-modal'); openChat(state.viewProfileUid); } };
+        window.viewProfileAddFriend = function() {
+            if (!state.viewProfileUid) return;
+            const uid = state.viewProfileUid;
+            const user = state.allUsers.find(u => u.uid === uid);
+            if (!user) return alert('User not found');
+            if (state.contacts.find(c => c.uid === uid)) return alert('Already friends');
+            if (state.friendRequests.find(r => r.from === uid)) return alert('Request already sent');
+            if (state.friendRequests.find(r => r.from === state.currentUser.uid && r.to === uid)) return alert('You already sent a request to this user');
+            set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('profile-view-modal'); });
+            push(ref(db, 'notifications/' + uid), {
+                from: state.currentUser.uid,
+                type: 'friend_request',
+                timestamp: Date.now(),
+                read: false
+            });
+            sendOneSignalNotification(uid, 'Friend Request', `${state.currentUser.name} sent you a friend request`, { type: 'friend_request' });
+        };
+
+        // ---------- CHAT ----------
+        window.openChat = function(uid) {
+            if (uid === BOT_UID) { 
+                alert('Bot chat is not available for regular users.');
+                return;
+            }
+            if (state.blocked.includes(uid)) { alert('This user is blocked.'); return; }
+            state.activeChat = uid;
+            const contact = state.contacts.find(c => c.uid === uid) || state.allUsers.find(c => c.uid === uid);
+            if (!contact) return alert('Contact not found');
+            $('chat-window-name').innerText = contact.name;
+            $('chat-window-uid').innerText = '@' + contact.uid;
+            $('chat-window-avatar').src = contact.pfp || '';
+            $('chat-window-modal').classList.remove('hidden');
+            document.getElementById('group-chat-menu-btn').classList.add('hidden');
+            renderChatMessages();
+            markChatAsRead(uid);
+            document.querySelector('#chat-window-modal footer').style.display = 'flex';
+        };
+
+        window.openGroupChat = function(groupId) {
+            const group = state.groups[groupId];
+            if (!group) return alert('Group not found');
+            state.activeChat = groupId;
+            $('chat-window-name').innerText = group.name || 'Group';
+            $('chat-window-uid').innerText = groupId;
+            $('chat-window-avatar').src = group.pfp || '';
+            $('chat-window-modal').classList.remove('hidden');
+            document.getElementById('group-chat-menu-btn').classList.remove('hidden');
+            document.querySelector('#chat-window-modal footer').style.display = 'flex';
+            renderChatMessages();
+            const key = getChatKey(state.currentUser.uid, groupId);
+            const msgs = state.messages[key] || [];
+            for (let msg of msgs) {
+                if (msg.sender !== state.currentUser.uid && !msg.read) {
+                    const msgKey = Object.keys(state.chats[key]).find(k => state.chats[key][k].timestamp === msg.timestamp && state.chats[key][k].sender === msg.sender);
+                    if (msgKey) update(ref(db, 'chats/' + key + '/' + msgKey), { read: true });
+                }
+            }
+        };
+
+        window.closeChatWindow = function() { 
+            state.activeChat = null; 
+            $('chat-window-modal').classList.add('hidden'); 
+            $('msg-context-menu').classList.add('hidden');
+            document.querySelector('#chat-window-modal footer').style.display = 'flex';
+            document.getElementById('group-chat-menu-btn').classList.add('hidden');
+            document.getElementById('group-chat-dropdown').classList.remove('active');
+            $('attachment-menu').classList.remove('active');
+        };
+
+        function getChatKey(uid1, uid2) {
+            if (uid1 === BOT_UID || uid2 === BOT_UID) {
+                return uid1 + '_text_' + uid2;
+            }
+            if (uid1.startsWith('group_') || uid2.startsWith('group_')) {
+                return uid1 + '_text_' + uid2;
+            }
+            return uid1 < uid2 ? uid1 + '_text_' + uid2 : uid2 + '_text_' + uid1;
+        }
+
+        function renderChatMessages() {
+            const container = $('chat-messages-container');
+            container.innerHTML = '';
+            if (!state.activeChat) return;
+            const key = getChatKey(state.currentUser.uid, state.activeChat);
+            const msgs = state.messages[key] || [];
+            const isGroup = state.activeChat.startsWith('group_');
+            const isBot = state.activeChat === BOT_UID;
+            
+            for (let msg of msgs) {
+                const isMe = msg.sender === state.currentUser.uid;
+                const isBotMsg = msg.sender === 'bot';
+                const sender = isGroup ? state.allUsers.find(u => u.uid === msg.sender) : null;
+                const div = document.createElement('div');
+                div.className = `max-w-[80%] p-2.5 rounded-2xl text-sm ${isMe ? 'chat-bubble-self self-end' : (isBotMsg ? 'bg-[#2b7a4b] text-white self-start' : 'chat-bubble-other self-start')} relative group`;
+                
+                let reactionsHtml = '';
+                if (msg.reactions && Object.keys(msg.reactions).length > 0) {
+                    reactionsHtml = `<div class="flex gap-0.5 mt-1 flex-wrap">${Object.values(msg.reactions).map(r => `<span class="text-xs">${r}</span>`).join('')}</div>`;
+                }
+                
+                let contentHtml = '';
+                if (msg.type === 'image') {
+                    contentHtml = `
+                        <div class="cursor-pointer" onclick="openMediaInFullscreen('${key}','${msg.timestamp}','image','${msg.sender}','${msg.url}')">
+                            <img src="${msg.url}" class="max-w-[200px] max-h-[200px] rounded-lg object-cover">
+                        </div>
+                    `;
+                } else if (msg.type === 'document') {
+                    contentHtml = `
+                        <div class="flex items-center space-x-2 bg-white/10 p-2 rounded-lg cursor-pointer" onclick="openMediaInFullscreen('${key}','${msg.timestamp}','document','${msg.sender}','${msg.url}')">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            <span class="text-xs truncate max-w-[120px]">${msg.filename || 'Document'}</span>
+                        </div>
+                    `;
+                } else {
+                    contentHtml = `<p class="break-words">${msg.text}</p>`;
+                }
+                
+                div.innerHTML = `
+                    ${isGroup && !isMe && !isBotMsg ? `<div class="text-[8px] font-bold text-[#2b7a4b] mb-0.5">${sender ? sender.name : 'Unknown'}</div>` : ''}
+                    ${isBotMsg ? `<div class="text-[8px] font-bold text-[#6fcf97] mb-0.5">🤖 ${state.botName}</div>` : ''}
+                    ${contentHtml}
+                    <span class="text-[8px] opacity-60 block text-right mt-0.5">${new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                    ${!isBotMsg && (msg.read ? '<span class="text-[8px] text-blue-400 ml-1">✓✓</span>' : isMe ? '<span class="text-[8px] opacity-40 ml-1">✓</span>' : '')}
+                    ${reactionsHtml}
+                `;
+                if (!isBotMsg && !isBot) {
+                    div.oncontextmenu = (e) => {
+                        e.preventDefault();
+                        state.selectedMessage = msg;
+                        const menu = $('msg-context-menu');
+                        menu.classList.remove('hidden');
+                        menu.style.bottom = '80px';
+                    };
+                }
+                container.appendChild(div);
+            }
+            container.scrollTop = container.scrollHeight;
+        }
+
+        window.openMediaInFullscreen = function(key, timestamp, type, sender, url) {
+            state.viewerSender = sender;
+            state.viewerFileId = { key, timestamp };
+            showFullscreenMedia(type, url, key, timestamp);
+        };
+
+        window.sendMessage = function() {
+            if (!state.activeChat || state.activeChat === BOT_UID) {
+                if (state.activeChat === BOT_UID) {
+                    alert('Bot chat is not available for regular users.');
+                }
+                return;
+            }
+            const input = $('chat-input-field');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+            const key = getChatKey(state.currentUser.uid, state.activeChat);
+            const msg = { sender: state.currentUser.uid, text, timestamp: Date.now(), read: false, reactions: {}, replyTo: null };
+            push(ref(db, 'chats/' + key), msg);
+            // Send notification
+            if (state.activeChat.startsWith('group_')) {
+                const group = state.groups[state.activeChat];
+                if (group) {
+                    for (let member of group.members) {
+                        if (member !== state.currentUser.uid) {
+                            push(ref(db, 'notifications/' + member), {
+                                from: state.currentUser.uid,
+                                type: 'group_msg',
+                                groupId: state.activeChat,
+                                timestamp: Date.now(),
+                                read: false
+                            });
+                            sendOneSignalNotification(member, 'New Group Message', `${state.currentUser.name} sent a message in ${group.name}`, { type: 'group_msg', groupId: state.activeChat });
+                        }
+                    }
+                }
+            } else {
+                push(ref(db, 'notifications/' + state.activeChat), {
+                    from: state.currentUser.uid,
+                    type: 'msg',
+                    timestamp: Date.now(),
+                    read: false
+                });
+                sendOneSignalNotification(state.activeChat, 'New Message', `${state.currentUser.name} sent you a message`, { type: 'msg' });
+            }
+            if (state.typingTimeout) clearTimeout(state.typingTimeout);
+            update(ref(db, 'users/' + state.currentUser.uid), { typing: false });
+        };
+
+        window.markChatAsRead = function(uid) {
+            const key = getChatKey(state.currentUser.uid, uid);
+            const msgs = state.messages[key] || [];
+            for (let msg of msgs) {
+                if (msg.sender !== state.currentUser.uid && !msg.read) {
+                    const msgKey = Object.keys(state.chats[key]).find(k => state.chats[key][k].timestamp === msg.timestamp && state.chats[key][k].sender === msg.sender);
+                    if (msgKey) update(ref(db, 'chats/' + key + '/' + msgKey), { read: true });
+                }
+            }
+        };
+
+        let typingTimeout;
+        $('chat-input-field')?.addEventListener('input', function() {
+            if (!state.activeChat || state.activeChat === BOT_UID) return;
+            if (typingTimeout) clearTimeout(typingTimeout);
+            update(ref(db, 'users/' + state.currentUser.uid), { typing: true });
+            typingTimeout = setTimeout(() => update(ref(db, 'users/' + state.currentUser.uid), { typing: false }), 2000);
+        });
+
+        onValue(ref(db, 'users'), (snap) => {
+            const users = snap.val() || {};
+            if (state.activeChat && state.activeChat !== BOT_UID && !state.activeChat.startsWith('group_')) {
+                const other = users[state.activeChat];
+                if (other && other.typing) $('chat-typing-indicator').classList.remove('hidden');
+                else $('chat-typing-indicator').classList.add('hidden');
+            }
+        });
+
+        // ---------- GROUP CHAT MENU ----------
+        window.toggleGroupChatMenu = function() {
+            document.getElementById('group-chat-dropdown').classList.toggle('active');
+        };
+
+        window.leaveGroupChat = function() {
+            if (!state.activeChat || !state.activeChat.startsWith('group_')) return;
+            const groupId = state.activeChat;
+            const group = state.groups[groupId];
+            if (!group) return;
+            if (group.admin === state.currentUser.uid) {
+                if (!confirm('You are the admin. Deleting the group will remove it for everyone. Continue?')) return;
+                remove(ref(db, 'groups/' + groupId));
+                const key = getChatKey(state.currentUser.uid, groupId);
+                remove(ref(db, 'chats/' + key));
+                closeChatWindow();
+                alert('Group deleted.');
+                return;
+            }
+            if (confirm(`Leave group "${group.name}"?`)) {
+                const members = group.members.filter(m => m !== state.currentUser.uid);
+                update(ref(db, 'groups/' + groupId), { members });
+                closeChatWindow();
+                alert('You left the group.');
+            }
+            document.getElementById('group-chat-dropdown').classList.remove('active');
+        };
+
+        // ---------- CONTEXT MENU ----------
+        window.closeContextMenu = function() { $('msg-context-menu').classList.add('hidden'); };
+
+        window.reactToMessage = function(emoji) {
+            if (!state.selectedMessage || !state.activeChat) return;
+            const key = getChatKey(state.currentUser.uid, state.activeChat);
+            const msgs = state.chats[key] || {};
+            const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === state.selectedMessage.timestamp && msgs[k].sender === state.selectedMessage.sender);
+            if (msgKey) {
+                const reactions = msgs[msgKey].reactions || {};
+                reactions[state.currentUser.uid] = emoji;
+                update(ref(db, 'chats/' + key + '/' + msgKey), { reactions });
+            }
+            closeContextMenu();
+        };
+
+        window.copyMessage = function() { if (state.selectedMessage) { navigator.clipboard.writeText(state.selectedMessage.text); alert('Copied!'); } closeContextMenu(); };
+        window.replyToMessage = function() { if (state.selectedMessage) { $('chat-input-field').value = '> ' + state.selectedMessage.text + '\n'; $('chat-input-field').focus(); } closeContextMenu(); };
+        window.forwardMessage = function() {
+            if (!state.selectedMessage) return;
+            const container = $('forward-contact-list');
+            container.innerHTML = '';
+            for (let contact of state.contacts) {
+                if (contact.uid === state.currentUser.uid || contact.uid === BOT_UID) continue;
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#e5f0e5]';
+                div.innerHTML = `<div class="flex items-center space-x-3"><img src="${contact.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''"><span class="text-sm font-medium">${contact.name}</span></div><button onclick="executeForward('${contact.uid}')" class="bg-[#2b7a4b] text-white px-3 py-1 rounded-full text-xs font-bold">Forward</button>`;
+                container.appendChild(div);
+            }
+            $('forward-modal').classList.remove('hidden');
+            closeContextMenu();
+        };
+
+        window.executeForward = function(uid) {
+            if (!state.selectedMessage) return;
+            const key = getChatKey(state.currentUser.uid, uid);
+            const msg = { sender: state.currentUser.uid, text: '📤 Forwarded: ' + state.selectedMessage.text, timestamp: Date.now(), read: false, reactions: {}, replyTo: null };
+            push(ref(db, 'chats/' + key), msg);
+            closeForwardModal();
+            alert('Forwarded!');
+            sendOneSignalNotification(uid, 'Message Forwarded', `${state.currentUser.name} forwarded a message to you`, { type: 'forward' });
+        };
+
+        window.deleteMessage = function() {
+            if (!state.selectedMessage || !state.activeChat) return;
+            const key = getChatKey(state.currentUser.uid, state.activeChat);
+            const msgs = state.chats[key] || {};
+            const msgKey = Object.keys(msgs).find(k => msgs[k].timestamp === state.selectedMessage.timestamp && msgs[k].sender === state.selectedMessage.sender);
+            if (msgKey) {
+                showPopup('Delete Message', 'Delete this message for everyone?', '', 'Delete', (val) => {
+                    if (val !== null) remove(ref(db, 'chats/' + key + '/' + msgKey));
+                });
+            }
+            closeContextMenu();
+        };
+
+        window.closeForwardModal = function() { $('forward-modal').classList.add('hidden'); };
+
+        // ---------- CONTACTS ----------
+        window.openAddFriend = function() { $('add-friend-modal').classList.remove('hidden'); $('add-friend-preview').classList.add('hidden'); $('add-friend-uid-input').value = ''; closeMenu(); };
+        $('add-friend-uid-input')?.addEventListener('input', function() {
+            const uid = this.value.trim();
+            const preview = $('add-friend-preview');
+            if (uid.length === 6) {
+                const user = state.allUsers.find(u => u.uid === uid);
+                if (user && user.uid !== BOT_UID) { 
+                    $('add-friend-preview-pfp').src = user.pfp || ''; 
+                    $('add-friend-preview-name').innerText = user.name; 
+                    $('add-friend-preview-uid').innerText = '@' + user.uid; 
+                    preview.classList.remove('hidden'); 
+                } else preview.classList.add('hidden');
+            } else preview.classList.add('hidden');
+        });
+
+        window.sendFriendRequest = function() {
+            const uid = $('add-friend-uid-input').value.trim();
+            if (!uid) return;
+            const user = state.allUsers.find(u => u.uid === uid);
+            if (!user) return alert('User not found');
+            if (user.uid === BOT_UID) return alert('Cannot add bot as friend');
+            if (state.contacts.find(c => c.uid === uid)) return alert('Already friends');
+            if (state.friendRequests.find(r => r.from === uid)) return alert('Request already sent');
+            if (state.friendRequests.find(r => r.from === state.currentUser.uid && r.to === uid)) return alert('You already sent a request to this user');
+            set(ref(db, 'friendRequests/' + Date.now()), { from: state.currentUser.uid, to: uid, status: 'pending', timestamp: Date.now() }).then(() => { alert('Friend request sent!'); closeModal('add-friend-modal'); });
+            push(ref(db, 'notifications/' + uid), {
+                from: state.currentUser.uid,
+                type: 'friend_request',
+                timestamp: Date.now(),
+                read: false
+            });
+            sendOneSignalNotification(uid, 'Friend Request', `${state.currentUser.name} sent you a friend request`, { type: 'friend_request' });
+        };
+
+        window.acceptFriendRequest = function(uid) {
+            const req = state.friendRequests.find(r => r.from === uid);
+            if (!req) return;
+            const key1 = 'bond_' + state.currentUser.uid + '_' + uid;
+            const key2 = 'bond_' + uid + '_' + state.currentUser.uid;
+            const updates = {};
+            updates['friendships/' + key1] = 'confirmed';
+            updates['friendships/' + key2] = 'confirmed';
+            const reqKey = Object.keys(state.chats).find(k => state.chats[k]?.from === uid && state.chats[k]?.to === state.currentUser.uid);
+            if (reqKey) updates['friendRequests/' + reqKey] = null;
+            update(ref(db), updates).then(() => {
+                state.friendRequests = state.friendRequests.filter(r => r.from !== uid);
+                renderAll();
+                showPopup('Name this contact', 'Enter a name for this contact:', req.fromUser.name || uid, 'Save', (val) => {
+                    if (val && val.trim()) {
+                        update(ref(db, 'users/' + uid), { name: val.trim() });
+                    }
+                    alert('Friend added!');
+                });
+                sendOneSignalNotification(uid, 'Friend Request Accepted', `${state.currentUser.name} accepted your friend request`, { type: 'friend_accept' });
+            });
+        };
+
+        window.denyFriendRequest = function(uid) {
+            const req = state.friendRequests.find(r => r.from === uid);
+            if (!req) return;
+            const reqKey = Object.keys(state.chats).find(k => state.chats[k]?.from === uid && state.chats[k]?.to === state.currentUser.uid);
+            if (reqKey) remove(ref(db, 'friendRequests/' + reqKey));
+            state.friendRequests = state.friendRequests.filter(r => r.from !== uid);
+            renderAll();
+        };
+
+        window.openIncomingRequests = function() { $('incoming-requests-modal').classList.remove('hidden'); closeMenu(); };
+
+        // ---------- GROUPS ----------
+        window.openCreateGroup = function() {
+            const container = $('group-contact-selection');
+            container.innerHTML = '';
+            for (let contact of state.contacts) {
+                if (contact.uid === BOT_UID) continue;
+                const div = document.createElement('div');
+                div.className = 'flex items-center space-x-2 p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
+                div.innerHTML = `<input type="checkbox" value="${contact.uid}" class="group-contact-check"><img src="${contact.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''"><span class="text-sm">${contact.name}</span>`;
+                container.appendChild(div);
+            }
+            $('create-group-modal').classList.remove('hidden');
+            closeMenu();
+        };
+
+        window.createGroup = function() {
+            const name = $('group-name-input').value.trim();
+            const bio = $('group-bio-input').value.trim();
+            if (!name) return alert('Please enter group name');
+            const checkboxes = document.querySelectorAll('.group-contact-check:checked');
+            const members = [state.currentUser.uid];
+            checkboxes.forEach(cb => members.push(cb.value));
+            if (members.length < 2) return alert('Select at least one member');
+            const file = $('group-pfp-input').files[0];
+            showLoading('Creating group...');
+            const uploadPfp = async () => {
+                let pfpUrl = '';
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    try {
+                        const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API, { method: 'POST', body: formData });
+                        const data = await res.json();
+                        if (data.success) pfpUrl = data.data.url;
+                    } catch (e) { console.error(e); }
+                }
+                return pfpUrl;
+            };
+            uploadPfp().then(pfpUrl => {
+                const groupId = 'group_' + Date.now();
+                const groupData = { id: groupId, name, bio, pfp: pfpUrl, members, admin: state.currentUser.uid, created: Date.now() };
+                set(ref(db, 'groups/' + groupId), groupData).then(() => {
+                    const key = getChatKey(state.currentUser.uid, groupId);
+                    push(ref(db, 'chats/' + key), { sender: state.currentUser.uid, text: 'Group "' + name + '" created!', timestamp: Date.now(), read: false, reactions: {} });
+                    hideLoading();
+                    alert('Group created!');
+                    closeModal('create-group-modal');
+                    $('group-name-input').value = '';
+                    $('group-bio-input').value = '';
+                    $('group-pfp-input').value = '';
+                    for (let member of members) {
+                        if (member !== state.currentUser.uid) {
+                            push(ref(db, 'notifications/' + member), {
+                                from: state.currentUser.uid,
+                                type: 'group_invite',
+                                groupId: groupId,
+                                groupName: name,
+                                timestamp: Date.now(),
+                                read: false
+                            });
+                            sendOneSignalNotification(member, 'Group Invite', `${state.currentUser.name} added you to "${name}"`, { type: 'group_invite', groupId: groupId });
+                        }
+                    }
+                    renderAll();
+                });
+            });
+        };
+
+        // ---------- ATTACHMENT MENU ----------
+        window.toggleAttachmentMenu = function() {
+            document.getElementById('attachment-menu').classList.toggle('active');
+        };
+
+        window.sendPhoto = function() {
+            if (!state.activeChat || state.activeChat === BOT_UID) {
+                if (state.activeChat === BOT_UID) alert('Cannot send to bot.');
+                return;
+            }
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.multiple = true;
+            input.onchange = function(e) {
+                const files = e.target.files;
+                for (let file of files) {
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        const base64 = ev.target.result;
+                        const key = getChatKey(state.currentUser.uid, state.activeChat);
+                        const msg = {
+                            sender: state.currentUser.uid,
+                            type: 'image',
+                            url: base64,
+                            filename: file.name,
+                            timestamp: Date.now(),
+                            read: false,
+                            reactions: {},
+                            replyTo: null
+                        };
+                        push(ref(db, 'chats/' + key), msg);
+                        if (!state.activeChat.startsWith('group_')) {
+                            sendOneSignalNotification(state.activeChat, 'Photo', `${state.currentUser.name} sent a photo`, { type: 'photo' });
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+                document.getElementById('attachment-menu').classList.remove('active');
+            };
+            input.click();
+        };
+
+        window.sendDocument = function() {
+            if (!state.activeChat || state.activeChat === BOT_UID) {
+                if (state.activeChat === BOT_UID) alert('Cannot send to bot.');
+                return;
+            }
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '*/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const base64 = ev.target.result;
+                    const key = getChatKey(state.currentUser.uid, state.activeChat);
+                    const msg = {
+                        sender: state.currentUser.uid,
+                        type: 'document',
+                        url: base64,
+                        filename: file.name,
+                        timestamp: Date.now(),
+                        read: false,
+                        reactions: {},
+                        replyTo: null
+                    };
+                    push(ref(db, 'chats/' + key), msg);
+                    if (!state.activeChat.startsWith('group_')) {
+                        sendOneSignalNotification(state.activeChat, 'Document', `${state.currentUser.name} sent a document`, { type: 'document' });
+                    }
+                };
+                reader.readAsDataURL(file);
+                document.getElementById('attachment-menu').classList.remove('active');
+            };
+            input.click();
+        };
+
+        // ---------- CALLS ----------
+        let callOverlayVisible = true;
+
+        window.toggleCallOverlay = function() {
+            if (!state.callActive) return;
+            callOverlayVisible = !callOverlayVisible;
+            const overlay = document.getElementById('call-overlay-content');
+            if (callOverlayVisible) {
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = 'auto';
+            } else {
+                overlay.style.opacity = '0';
+                overlay.style.pointerEvents = 'none';
+            }
+        };
+
+        function initPeer() {
+            if (state.peerInstance) state.peerInstance.destroy();
+            state.peerInstance = new Peer('stardust_' + state.currentUser.uid);
+            state.peerInstance.on('call', (call) => {
+                state.call = call;
+                const peerUid = call.peer.replace('stardust_', '');
+                const user = state.allUsers.find(u => u.uid === peerUid) || state.currentUser;
+                if (state.blocked.includes(peerUid)) { call.close(); return; }
+                const statusLbl = document.getElementById('call-status-lbl');
+                if (statusLbl) statusLbl.innerText = 'Incoming call...';
+                window.showIncomingCall(user);
+                sendOneSignalNotification(peerUid, 'Incoming Call', `${state.currentUser.name} is calling you`, { type: 'call' });
+            });
+        }
+
+        window.initiateCall = function(type) {
+            if (!state.activeChat) return alert('Open a chat first');
+            const targetUid = state.activeChat;
+            if (targetUid.startsWith('group_') || targetUid === BOT_UID) { alert('Calls not supported for groups or bot.'); return; }
+            if (state.blocked.includes(targetUid)) { alert('This user is blocked.'); return; }
+            const targetPeerId = 'stardust_' + targetUid;
+            if (!state.peerInstance) return alert('Peer not ready');
+            state.callIsVideo = type === 'video';
+            callOverlayVisible = true;
+            navigator.mediaDevices.getUserMedia({ audio: true, video: type === 'video' })
+                .then(stream => {
+                    state.callStream = stream;
+                    const call = state.peerInstance.call(targetPeerId, stream);
+                    state.call = call;
+                    state.callPeerId = targetUid;
+                    state.callActive = true;
+                    const statusLbl = document.getElementById('call-status-lbl');
+                    if (statusLbl) statusLbl.innerText = 'Connecting...';
+                    window.showCallUI(targetUid);
+                    call.on('stream', (remoteStream) => {
+                        document.getElementById('call-remote-video').srcObject = remoteStream;
+                        document.getElementById('call-overlay-content').style.opacity = '0';
+                        document.getElementById('call-overlay-content').style.pointerEvents = 'none';
+                        const statusLbl = document.getElementById('call-status-lbl');
+                        if (statusLbl) statusLbl.innerText = 'Connected';
+                        window.startCallTimer();
+                    });
+                    call.on('close', () => { 
+                        document.getElementById('call-overlay-content').style.opacity = '1';
+                        document.getElementById('call-overlay-content').style.pointerEvents = 'auto';
+                        window.terminateCall(); 
+                        window.closeChatWindow(); 
+                    });
+                    sendOneSignalNotification(targetUid, `${type === 'video' ? 'Video' : 'Audio'} Call`, `${state.currentUser.name} is calling you`, { type: 'call' });
+                }).catch(err => alert('Camera/Mic access denied: ' + err.message));
+        };
+
+        window.acceptIncomingCall = function() {
+            if (!state.call) return;
+            navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+                .then(stream => {
+                    state.callStream = stream;
+                    state.callActive = true;
+                    document.getElementById('call-local-video').srcObject = stream;
+                    document.getElementById('call-local-video').style.display = 'block';
+                    document.getElementById('incoming-call-actions').classList.add('hidden');
+                    document.getElementById('call-bottom-nav').classList.remove('hidden');
+                    document.getElementById('call-overlay-content').style.opacity = '0';
+                    document.getElementById('call-overlay-content').style.pointerEvents = 'none';
+                    state.call.answer(stream);
+                    state.call.on('stream', (remoteStream) => {
+                        document.getElementById('call-remote-video').srcObject = remoteStream;
+                        const statusLbl = document.getElementById('call-status-lbl');
+                        if (statusLbl) statusLbl.innerText = 'Connected';
+                        window.startCallTimer();
+                    });
+                    state.call.on('close', () => { 
+                        document.getElementById('call-overlay-content').style.opacity = '1';
+                        document.getElementById('call-overlay-content').style.pointerEvents = 'auto';
+                        window.terminateCall(); 
+                        window.closeChatWindow(); 
+                    });
+                }).catch(err => alert('Failed to answer: ' + err.message));
+        };
+
+        window.rejectIncomingCall = function() { if (state.call) state.call.close(); window.terminateCall(); };
+
+        window.showCallUI = function(uid) {
+            const user = state.allUsers.find(u => u.uid === uid) || state.currentUser;
+            const nameEl = document.getElementById('call-peer-name');
+            const uidEl = document.getElementById('call-peer-uid');
+            const pfpEl = document.getElementById('call-peer-pfp');
+            if (nameEl) nameEl.innerText = user.name;
+            if (uidEl) uidEl.innerText = '@' + user.uid;
+            if (pfpEl) pfpEl.src = user.pfp || '';
+            document.getElementById('call-overlay-content').style.opacity = '1';
+            document.getElementById('call-overlay-content').style.pointerEvents = 'auto';
+            callOverlayVisible = true;
+            const overlay = document.getElementById('call-interface-overlay');
+            if (overlay) overlay.classList.remove('hidden');
+            const statusLbl = document.getElementById('call-status-lbl');
+            if (statusLbl) statusLbl.innerText = 'Connecting...';
+            document.getElementById('incoming-call-actions').classList.add('hidden');
+            document.getElementById('call-bottom-nav').classList.remove('hidden');
+            if (state.callIsVideo) {
+                document.getElementById('call-local-video').style.display = 'block';
+                document.getElementById('call-local-video').srcObject = state.callStream;
+                document.getElementById('call-remote-video').style.display = 'block';
+            } else {
+                document.getElementById('call-local-video').style.display = 'none';
+                document.getElementById('call-remote-video').style.display = 'none';
+            }
+        };
+
+        window.showIncomingCall = function(user) {
+            const nameEl = document.getElementById('call-peer-name');
+            const uidEl = document.getElementById('call-peer-uid');
+            const pfpEl = document.getElementById('call-peer-pfp');
+            if (nameEl) nameEl.innerText = user.name;
+            if (uidEl) uidEl.innerText = '@' + user.uid;
+            if (pfpEl) pfpEl.src = user.pfp || '';
+            document.getElementById('call-overlay-content').style.opacity = '1';
+            document.getElementById('call-overlay-content').style.pointerEvents = 'auto';
+            callOverlayVisible = true;
+            const overlay = document.getElementById('call-interface-overlay');
+            if (overlay) overlay.classList.remove('hidden');
+            const statusLbl = document.getElementById('call-status-lbl');
+            if (statusLbl) statusLbl.innerText = 'Incoming call...';
+            document.getElementById('incoming-call-actions').classList.remove('hidden');
+            document.getElementById('call-bottom-nav').classList.add('hidden');
+            state.callIsVideo = true;
+            document.getElementById('call-remote-video').style.display = 'block';
+        };
+
+        window.terminateCall = function() {
+            if (state.call) { state.call.close(); state.call = null; }
+            if (state.callStream) { state.callStream.getTracks().forEach(t => t.stop()); state.callStream = null; }
+            state.callActive = false; state.callIsFloating = false;
+            document.getElementById('call-overlay-content').style.opacity = '1';
+            document.getElementById('call-overlay-content').style.pointerEvents = 'auto';
+            const overlay = document.getElementById('call-interface-overlay');
+            if (overlay) overlay.classList.add('hidden');
+            document.getElementById('floating-call-window').classList.add('hidden');
+            document.getElementById('call-local-video').srcObject = null;
+            document.getElementById('call-remote-video').srcObject = null;
+            if (state.callDurationInterval) clearInterval(state.callDurationInterval);
+            state.callSeconds = 0; state.isMuted = false;
+            document.getElementById('floating-call-duration').innerText = '00:00';
+            document.getElementById('call-mute-btn').innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>`;
+        };
+
+        window.startCallTimer = function() {
+            state.callSeconds = 0;
+            if (state.callDurationInterval) clearInterval(state.callDurationInterval);
+            state.callDurationInterval = setInterval(() => {
+                state.callSeconds++;
+                const mins = String(Math.floor(state.callSeconds / 60)).padStart(2, '0');
+                const secs = String(state.callSeconds % 60).padStart(2, '0');
+                document.getElementById('floating-call-duration').innerText = mins + ':' + secs;
+            }, 1000);
+        };
+
+        window.minimizeCallWindow = function() {
+            state.callIsFloating = true;
+            const win = document.getElementById('floating-call-window');
+            win.classList.remove('hidden');
+            document.getElementById('floating-caller-img').src = document.getElementById('call-peer-pfp').src;
+            const remoteStream = document.getElementById('call-remote-video').srcObject;
+            if (remoteStream) {
+                document.getElementById('floating-remote-video').srcObject = remoteStream;
+                document.getElementById('floating-remote-video').style.display = 'block';
+                document.getElementById('floating-caller-pfp').style.display = 'none';
+            } else {
+                document.getElementById('floating-remote-video').style.display = 'none';
+                document.getElementById('floating-caller-pfp').style.display = 'flex';
+            }
+            document.getElementById('call-interface-overlay').classList.add('hidden');
+        };
+
+        window.restoreCallWindow = function() {
+            state.callIsFloating = false;
+            document.getElementById('floating-call-window').classList.add('hidden');
+            document.getElementById('floating-remote-video').srcObject = null;
+            document.getElementById('call-interface-overlay').classList.remove('hidden');
+            if (state.callIsVideo) {
+                document.getElementById('call-local-video').style.display = 'block';
+            }
+        };
+
+        window.swapPipFullscreen = function() {
+            const remoteVideo = document.getElementById('call-remote-video');
+            const localVideo = document.getElementById('call-local-video');
+            const remoteStream = remoteVideo.srcObject;
+            const localStream = localVideo.srcObject;
+            if (remoteStream && localStream) {
+                remoteVideo.srcObject = localStream;
+                localVideo.srcObject = remoteStream;
+            }
+        };
+
+        window.toggleMute = function() {
+            if (!state.callStream) return;
+            state.isMuted = !state.isMuted;
+            const audioTrack = state.callStream.getAudioTracks()[0];
+            if (audioTrack) audioTrack.enabled = !state.isMuted;
+            const btn = document.getElementById('call-mute-btn');
+            if (state.isMuted) {
+                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" stroke="currentColor"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path></svg>`;
+            } else {
+                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>`;
+            }
+        };
+
+        window.toggleCallReactions = function() { document.getElementById('call-reactions-popup').classList.toggle('hidden'); };
+        window.sendCallReaction = function(emoji) {
+            if (!state.callPeerId) return;
+            push(ref(db, 'callReactions'), { from: state.currentUser.uid, to: state.callPeerId, emoji, timestamp: Date.now() });
+            document.getElementById('call-reactions-popup').classList.add('hidden');
+            window.showCallReaction(emoji);
+        };
+
+        window.showCallReaction = function(emoji) {
+            const el = document.createElement('div');
+            el.className = 'call-reaction-float';
+            el.innerText = emoji;
+            el.style.left = Math.random() * 60 + 20 + '%';
+            el.style.top = Math.random() * 40 + 20 + '%';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 1200);
+        };
+
+        onValue(ref(db, 'callReactions'), (snap) => {
+            const data = snap.val();
+            if (data) {
+                const last = Object.values(data).pop();
+                if (last && last.to === state.currentUser.uid) window.showCallReaction(last.emoji);
+            }
+        });
+
+        window.toggleCallChat = function() { document.getElementById('call-chat-overlay').classList.toggle('hidden'); };
+        window.sendCallChatMessage = function() {
+            const input = document.getElementById('call-chat-input');
+            const text = input.value.trim();
+            if (!text || !state.callPeerId) return;
+            const key = getChatKey(state.currentUser.uid, state.callPeerId);
+            push(ref(db, 'chats/' + key), { sender: state.currentUser.uid, text, timestamp: Date.now(), read: false, reactions: {} });
+            input.value = '';
+            window.renderCallChatMessages();
+        };
+
+        window.renderCallChatMessages = function() {
+            if (!state.callPeerId) return;
+            const key = getChatKey(state.currentUser.uid, state.callPeerId);
+            const msgs = state.messages[key] || [];
+            const container = document.getElementById('call-chat-messages');
+            container.innerHTML = '';
+            const recent = msgs.slice(-10);
+            for (let msg of recent) {
+                const div = document.createElement('div');
+                div.className = `text-xs p-1.5 rounded-lg ${msg.sender === state.currentUser.uid ? 'bg-[#2b7a4b] text-white self-end' : 'bg-white/10 text-white'}`;
+                div.innerText = msg.text;
+                container.appendChild(div);
+            }
+            container.scrollTop = container.scrollHeight;
+        };
+
+        // ---------- POSTS ----------
+        window.openCreatePost = function() { $('create-post-modal').classList.remove('hidden'); };
+
+        window.publishPost = async function() {
+            const text = $('post-text-input').value.trim();
+            const file = $('post-image-input').files[0];
+            if (!text && !file) return alert('Write something or add an image');
+            let imageUrl = '';
+            if (file) {
+                const formData = new FormData();
+                formData.append('image', file);
+                try {
+                    const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API, { method: 'POST', body: formData });
+                    const data = await res.json();
+                    if (data.success) imageUrl = data.data.url;
+                    else { alert('Image upload failed'); return; }
+                } catch (e) { alert('Upload error: ' + e.message); return; }
+            }
+            const post = { id: 'post_' + Date.now() + '_' + Math.floor(Math.random() * 1000), author: state.currentUser.uid, text: text || '', image: imageUrl, timestamp: Date.now(), likes: {}, comments: {} };
+            push(ref(db, 'posts'), post);
+            $('post-text-input').value = '';
+            $('post-image-input').value = '';
+            closeModal('create-post-modal');
+        };
+
+        // ---------- PROFILE ----------
+        window.openEditProfile = function() {
+            $('edit-profile-name').value = state.currentUser.name || '';
+            $('edit-profile-bio').value = state.currentUser.bio || '';
+            $('edit-profile-modal').classList.remove('hidden');
+        };
+
+        window.saveProfile = async function() {
+            const name = $('edit-profile-name').value.trim();
+            const bio = $('edit-profile-bio').value.trim();
+            const file = $('edit-profile-pfp').files[0];
+            let pfpUrl = state.currentUser.pfp || '';
+            if (file) {
+                const formData = new FormData();
+                formData.append('image', file);
+                try {
+                    const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API, { method: 'POST', body: formData });
+                    const data = await res.json();
+                    if (data.success) pfpUrl = data.data.url;
+                } catch (e) { alert('Image upload error'); return; }
+            }
+            await update(ref(db, 'users/' + state.currentUser.uid), { name: name || state.currentUser.name, bio: bio || state.currentUser.bio, pfp: pfpUrl });
+            state.currentUser.name = name || state.currentUser.name;
+            state.currentUser.bio = bio || state.currentUser.bio;
+            state.currentUser.pfp = pfpUrl;
+            closeModal('edit-profile-modal');
+            renderAll();
+        };
+
+        // ---------- SETTINGS ----------
+        window.openSettings = function() { $('settings-modal').classList.remove('hidden'); closeMenu(); };
+
+        window.openSavedPosts = function() {
+            const container = $('saved-posts-list');
+            container.innerHTML = '';
+            const saved = state.posts.filter(p => state.savedPosts && state.savedPosts.includes(p.id));
+            if (saved.length === 0) { $('no-saved-posts').classList.remove('hidden'); } else {
+                $('no-saved-posts').classList.add('hidden');
+                for (let post of saved) {
+                    const div = document.createElement('div');
+                    div.className = 'bg-[#f0f7f0] p-3 rounded-xl border border-[#b8d0b8] text-sm';
+                    div.innerHTML = `<p>${post.text}</p><span class="text-[10px] text-[#2b7a4b] opacity-50">${new Date(post.timestamp).toLocaleString()}</span>`;
+                    container.appendChild(div);
+                }
+            }
+            $('saved-posts-modal').classList.remove('hidden');
+            closeModal('settings-modal');
+        };
+
+        window.openBlockedContacts = function() {
+            const container = $('blocked-list');
+            container.innerHTML = '';
+            if (state.blocked.length === 0) { $('no-blocked').classList.remove('hidden'); } else {
+                $('no-blocked').classList.add('hidden');
+                for (let uid of state.blocked) {
+                    const user = state.allUsers.find(u => u.uid === uid);
+                    if (!user) continue;
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
+                    div.innerHTML = `<span>${user.name}</span><button onclick="unblockUser('${uid}')" class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold">Unblock</button>`;
+                    container.appendChild(div);
+                }
+            }
+            $('blocked-contacts-modal').classList.remove('hidden');
+            closeModal('settings-modal');
+        };
+
+        window.unblockUser = function(uid) {
+            state.blocked = state.blocked.filter(u => u !== uid);
+            set(ref(db, 'blocked/' + state.currentUser.uid), state.blocked);
+            openBlockedContacts();
+        };
+
+        window.openCallHistory = function() {
+            const container = $('call-history-list');
+            container.innerHTML = '';
+            if (state.callHistory.length === 0) { $('no-call-history').classList.remove('hidden'); } else {
+                $('no-call-history').classList.add('hidden');
+                for (let call of state.callHistory) {
+                    const otherUid = call.user === state.currentUser.uid ? call.other : call.user;
+                    const user = state.allUsers.find(u => u.uid === otherUid) || state.contacts.find(c => c.uid === otherUid);
+                    if (!user) continue;
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
+                    div.innerHTML = `<div class="flex items-center space-x-3"><img src="${user.pfp || ''}" class="w-6 h-6 rounded-full object-cover" onerror="this.src=''"><span class="text-sm">${user.name}</span></div><span class="text-xs text-[#2b7a4b] opacity-60">${new Date(call.timestamp).toLocaleString()}</span>`;
+                    container.appendChild(div);
+                }
+            }
+            $('call-history-modal').classList.remove('hidden');
+            closeModal('settings-modal');
+        };
+
+        window.logout = function() { if (confirm('Logout?')) signOut(auth); };
+
+        // ---------- UI HELPERS ----------
+        window.switchTab = function(tab) {
+            ['chat', 'contacts', 'moments', 'profile'].forEach(t => {
+                const el = $(t + '-tab');
+                const nav = $('nav-' + t);
+                if (t === tab) { el.classList.remove('hidden'); nav.classList.add('tab-active'); nav.classList.remove('opacity-50'); } else { el.classList.add('hidden'); nav.classList.remove('tab-active'); nav.classList.add('opacity-50'); }
+            });
+            closeMenu();
+            // Show/hide search bar based on tab
+            const searchContainer = $('search-bar-container');
+            if (tab === 'chat' || tab === 'contacts') {
+                searchContainer.classList.remove('hidden');
+            } else {
+                searchContainer.classList.add('hidden');
+            }
+        };
+
+        window.toggleTopMenu = function() { 
+            $('top-menu-dropdown').classList.toggle('hidden'); 
+        };
+        
+        window.toggleSearchBar = function() {
+            const container = $('search-bar-container');
+            container.classList.toggle('hidden');
+            if (!container.classList.contains('hidden')) {
+                $('global-search-input').focus();
+            }
+        };
+        
+        window.closeMenu = function() { $('top-menu-dropdown').classList.add('hidden'); };
+        window.closeModal = function(id) { document.getElementById(id).classList.add('hidden'); };
+        window.openProfileFromChat = function() { if (state.activeChat && !state.activeChat.startsWith('group_') && state.activeChat !== BOT_UID) openProfileView(state.activeChat); };
+
+        window.handleGlobalSearch = function() {
+            const query = $('global-search-input').value.trim().toLowerCase();
+            const container = $('contacts-list');
+            container.innerHTML = '';
+            const filtered = state.contacts.filter(c => c.name.toLowerCase().includes(query) || c.uid.includes(query));
+            for (let contact of filtered) {
+                if (contact.uid === BOT_UID) continue;
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-[#b8d0b8] cursor-pointer hover:bg-[#f0f7f0] transition clickable-row';
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3 w-full" onclick="openChat('${contact.uid}')">
+                        <img src="${contact.pfp || ''}" class="w-8 h-8 rounded-full object-cover bg-[#e5f0e5]" onerror="this.src=''">
+                        <div><p class="font-bold text-sm text-[#1a2e1a]">${contact.name}</p><p class="text-[10px] text-[#2b7a4b] font-mono">@${contact.uid}</p></div>
+                    </div>
+                    <button onclick="event.stopPropagation(); openChat('${contact.uid}')" class="bg-[#e5f0e5] text-[#2b7a4b] px-3 py-1 rounded-full text-xs font-bold">Chat</button>
+                `;
+                container.appendChild(div);
+            }
+            if (filtered.length === 0) container.innerHTML = '<p class="text-center text-[#2b7a4b] opacity-50 text-sm py-4">No contacts found</p>';
+        };
+
+        // ---------- FIX: Save Edited Post ----------
+        window.saveEditedPost = function() {
+            const text = $('post-edit-text').value.trim();
+            if (!text || !state.editingPostId) return;
+            const dbRef = ref(db, 'posts');
+            onValue(dbRef, (snap) => {
+                const data = snap.val();
+                if (data) {
+                    const key = Object.keys(data).find(k => data[k].id === state.editingPostId);
+                    if (key) {
+                        update(ref(db, 'posts/' + key), { text }).then(() => {
+                            closeModal('post-edit-modal');
+                            state.editingPostId = null;
+                            alert('Post updated!');
+                        });
+                    }
+                }
+            }, { onlyOnce: true });
+        };
+
+        // ---------- FIX: Manage Comments ----------
+        window.openCommentsManagement = function(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (!post || !post.comments) { alert('No comments to manage.'); return; }
+            const container = $('comments-management-list');
+            container.innerHTML = '';
+            const comments = Object.entries(post.comments);
+            if (comments.length === 0) { container.innerHTML = '<p class="text-center text-[#2b7a4b] opacity-50 text-sm py-4">No comments.</p>'; }
+            for (let [key, comment] of comments) {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-2 bg-[#f0f7f0] rounded-xl border border-[#b8d0b8]';
+                div.innerHTML = `
+                    <span class="text-xs"><span class="font-bold">${comment.authorName}:</span> ${comment.text}</span>
+                    <button onclick="deleteComment('${postId}','${key}')" class="bg-red-100 text-red-600 px-2 py-1 rounded-lg text-xs font-bold">Delete</button>
+                `;
+                container.appendChild(div);
+            }
+            $('post-comments-modal').classList.remove('hidden');
+        };
+
+        window.deleteComment = function(postId, commentKey) {
+            showPopup('Delete Comment', 'Delete this comment?', '', 'Delete', (val) => {
+                if (val !== null) {
+                    remove(ref(db, 'posts/' + postId + '/comments/' + commentKey));
+                    setTimeout(() => openCommentsManagement(postId), 300);
+                }
+            }, 'text', true);
+        };
+
+        // ---------- REPORT SYSTEM ----------
+        window.submitReport = function() {
+            const text = $('report-text').value.trim();
+            const file = $('report-image').files[0];
+            if (!text) { alert('Please describe your issue.'); return; }
+            
+            let imageUrl = '';
+            const uploadFile = async () => {
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    try {
+                        const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API, { method: 'POST', body: formData });
+                        const data = await res.json();
+                        if (data.success) imageUrl = data.data.url;
+                    } catch (e) { console.error(e); }
+                }
+                const adminKey = getChatKey(BOT_UID, ADMIN_UID);
+                push(ref(db, 'chats/' + adminKey), {
+                    sender: 'bot',
+                    text: `📋 Report from @${state.currentUser.uid} (${state.currentUser.name}):\n${text}`,
+                    timestamp: Date.now(),
+                    read: false
+                });
+                push(ref(db, 'chats/bot_messages'), {
+                    sender: 'bot',
+                    text: `📋 Report from @${state.currentUser.uid} (${state.currentUser.name}):\n${text}`,
+                    timestamp: Date.now(),
+                    read: false
+                });
+                closeModal('report-modal');
+                alert('Report submitted. Thank you for helping us improve!');
+                sendOneSignalNotification(ADMIN_UID, 'New Report', `Report from ${state.currentUser.name}: ${text.substring(0, 30)}...`, { type: 'report' });
+            };
+            uploadFile();
+        };
+
+        // ---------- NOTIFICATIONS ----------
+        onValue(ref(db, 'notifications/' + state.currentUser?.uid), (snap) => {
+            const data = snap.val();
+            if (data) {
+                const notifs = Object.values(data).filter(n => !n.read);
+                if (notifs.length > 0) {
+                    const badge = $('top-menu-badge');
+                    if (badge) {
+                        badge.innerText = notifs.length;
+                        badge.classList.remove('hidden');
+                    }
+                }
+            }
+        });
 
         // ---------- INIT ----------
+        // Start the loading timer
         startLoadingTimer();
 
         document.addEventListener('visibilitychange', () => {
@@ -2064,6 +3348,7 @@
             }
         });
 
+        // OneSignal initialization
         if (window.OneSignal) {
             window.OneSignal.init({
                 appId: ONESIGNAL_APP_ID,
@@ -2072,7 +3357,7 @@
             window.OneSignal.login(state.currentUser?.uid || '');
         }
 
-        console.log('Stardust X Messenger loaded with cache.');
+        console.log('Stardust X Messenger loaded.');
     </script>
 
 </body>
