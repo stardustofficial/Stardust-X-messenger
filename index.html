@@ -1132,7 +1132,7 @@
             botName: 'Stardust Bot', botPfp: '',
             isInitialLoad: true,
             authChecked: false,
-            loadingTimer: null
+            appReady: false
         };
 
         const $ = id => document.getElementById(id);
@@ -1140,24 +1140,37 @@
         const loginScreen = $('login-screen');
         const appLayout = $('app-layout');
 
+        // ---------- SHOW APP OR LOGIN ----------
+        function showApp() {
+            loadingScreen.classList.add('hidden');
+            loginScreen.style.display = 'none';
+            appLayout.style.display = 'flex';
+            state.appReady = true;
+        }
+
+        function showLogin() {
+            loadingScreen.classList.add('hidden');
+            loginScreen.style.display = 'flex';
+            appLayout.style.display = 'none';
+            state.appReady = false;
+        }
+
         // ---------- LOADING SCREEN TIMER ----------
         function startLoadingTimer() {
-            // Show loading screen for 5 seconds then decide
-            if (state.loadingTimer) clearTimeout(state.loadingTimer);
-            state.loadingTimer = setTimeout(() => {
-                // If auth hasn't been checked yet or no user, show login
-                if (!state.authChecked || !auth.currentUser) {
-                    loadingScreen.classList.add('hidden');
-                    loginScreen.style.display = 'flex';
-                    appLayout.style.display = 'none';
-                } else {
-                    // User is logged in, but if app isn't showing, show it
-                    if (appLayout.style.display === 'none' || appLayout.style.display === '') {
-                        loadingScreen.classList.add('hidden');
-                        appLayout.style.display = 'flex';
+            // 5 second fallback timer - ensures app doesn't get stuck
+            setTimeout(() => {
+                // If app is not ready yet, check auth status
+                if (!state.appReady) {
+                    if (auth.currentUser && state.currentUser) {
+                        // User is logged in but app not ready - show app
+                        showApp();
+                        console.log('Loading timer: App shown (user logged in)');
+                    } else {
+                        // No user - show login
+                        showLogin();
+                        console.log('Loading timer: Login shown (no user)');
                     }
                 }
-                state.loadingTimer = null;
             }, 5000);
         }
 
@@ -1461,56 +1474,59 @@
         onAuthStateChanged(auth, async (user) => {
             state.authChecked = true;
             
-            // Clear any existing loading timer
-            if (state.loadingTimer) {
-                clearTimeout(state.loadingTimer);
-                state.loadingTimer = null;
-            }
-            
             if (user) {
-                // User is logged in
+                // User is logged in - show loading screen, hide login
                 loginScreen.style.display = 'none';
-                
-                // Make sure loading screen is visible
                 loadingScreen.classList.remove('hidden');
                 
-                const snap = await get(ref(db, 'users'));
-                const users = snap.val() || {};
-                let found = null;
-                for (let key in users) { 
-                    if (users[key].email === user.email) {
-                        found = { ...users[key], dbKey: key }; 
-                        break;
+                try {
+                    const snap = await get(ref(db, 'users'));
+                    const users = snap.val() || {};
+                    let found = null;
+                    for (let key in users) { 
+                        if (users[key].email === user.email) {
+                            found = { ...users[key], dbKey: key }; 
+                            break;
+                        }
                     }
+                    if (!found) { 
+                        alert('User data not found. Please re-login.'); 
+                        await signOut(auth); 
+                        showLogin();
+                        return; 
+                    }
+                    state.currentUser = found;
+                    
+                    // Update online status
+                    await update(ref(db, 'users/' + found.uid), { online: true, lastSeen: Date.now() });
+                    
+                    if (window.OneSignal) {
+                        window.OneSignal.login(found.uid);
+                    }
+                    
+                    // Show app immediately - don't wait for all data
+                    showApp();
+                    
+                    // Load data in background
+                    try {
+                        await loadAllData();
+                        renderAll();
+                        initPeer();
+                        listenToRealtime();
+                    } catch (dataError) {
+                        console.error('Background data loading error:', dataError);
+                        // Data load failed but app is already showing
+                    }
+                    
+                    state.isInitialLoad = false;
+                    
+                } catch (error) {
+                    console.error('Auth handler error:', error);
+                    showLogin();
                 }
-                if (!found) { 
-                    alert('User data not found. Please re-login.'); 
-                    await signOut(auth); 
-                    loadingScreen.classList.add('hidden');
-                    loginScreen.style.display = 'flex';
-                    appLayout.style.display = 'none';
-                    return; 
-                }
-                state.currentUser = found;
-                await update(ref(db, 'users/' + found.uid), { online: true, lastSeen: Date.now() });
-                if (window.OneSignal) {
-                    window.OneSignal.login(found.uid);
-                }
-                await loadAllData();
-                renderAll();
-                initPeer();
-                listenToRealtime();
-                state.isInitialLoad = false;
-                
-                // Hide loading and show app
-                loadingScreen.classList.add('hidden');
-                appLayout.style.display = 'flex';
-                
             } else {
-                // User is not logged in - show login
-                loadingScreen.classList.add('hidden');
-                loginScreen.style.display = 'flex';
-                appLayout.style.display = 'none';
+                // User is not logged in
+                showLogin();
                 if (state.peerInstance) { 
                     state.peerInstance.destroy(); 
                     state.peerInstance = null; 
@@ -3250,6 +3266,9 @@
         });
 
         // ---------- INIT ----------
+        // Start the loading timer
+        startLoadingTimer();
+
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden && auth.currentUser) {
                 loadingScreen.classList.remove('hidden');
